@@ -1,0 +1,39 @@
+.input-area-wrapper
+  .error-list
+    color: #ff6600
+.input-text-default, .input-select-default
+  padding: 13px
+  border: 1px solid #d0d1d5
+  border-radius: 4px
+  min-width: 300px
+  outline: none
+  box-sizing: border-box
+  &:focus
+    box-shadow: 0 0 5px #d0d1d5
+.input-select-default
+  cursor: pointer
+.btn-submit-default.disabled
+  opacity: 0.6
+  cursor: not-allowed
+.btn-submit-default:not(.disabled)
+  &:hover
+    opacity: 1
+.btn-submit-default
+  display: block
+  padding: 13px
+  border: 1px solid #009933
+  background: #00cc44
+  border-radius: 4px
+  cursor: pointer
+  color: #fff
+  opacity: 0.8
+.btn-submit-default.icon-active
+  position: relative
+  padding-left: 38px
+  .sending
+    position: absolute
+    left: 13px
+    +vCenter
+    img
+      width: 20px
+      height: auto

@@ -1,0 +1,25 @@
+.splash-screen-wrapper
+  width: 100vw
+  height: 100vh
+  cursor: wait !important
+  background: url('../images/splash-bg.jpg')
+  background-repeat: no-repeat
+  background-position: top left
+  background-size: 100%
+  color: #333333
+  .splash-screen-container
+    position: absolute
+    width: 90%
+    +fitHeight
+    +pCenter
+    h1
+      font-weight: normal
+      margin-bottom: 10px
+    .with-icon
+      position: relative
+      padding-left: 30px
+      img
+        position: absolute
+        left: 0
+        width: 20px
+        height: auto

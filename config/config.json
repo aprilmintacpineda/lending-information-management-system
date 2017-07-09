@@ -1,0 +1,14 @@
+{
+  "development": {
+    "storage": "database/main.sqlite",
+    "dialect": "sqlite"
+  },
+  "test": {
+    "storage": "database/main.sqlite",
+    "dialect": "sqlite"
+  },
+  "production": {
+    "storage": "database/main.sqlite",
+    "dialect": "sqlite"
+  }
+}

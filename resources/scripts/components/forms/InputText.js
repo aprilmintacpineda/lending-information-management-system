@@ -1,0 +1,68 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+class InputText extends Component {
+  static propTypes = {
+    value: (props, propName, componentName) => {
+      if(props[propName] === undefined) {
+        console.error('Prop `' + propName + '` is required at ' +
+        ' `' + componentName);
+      }
+    },
+    placeholder: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    errors: PropTypes.array.isRequired,
+    disabled: PropTypes.bool.isRequired,
+    maxlength: PropTypes.number,
+    children: PropTypes.element,
+    password: PropTypes.bool,
+    numberOnly: PropTypes.bool
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(changeEvent) {
+    let value = changeEvent.target.value;
+
+    if(this.props.numberOnly !== undefined) {
+      if(value.length) {
+        if(!isNaN(value)
+        && value > 0) {
+          this.props.onChange(value);
+        }
+      } else {
+        this.props.onChange(value);
+      }
+    } else if(this.props.numberOnly === undefined) {
+      this.props.onChange(value);
+    }
+  }
+
+  render() {
+    let errors = this.props.errors.map((error, index) => <p className="errors" key={index}>{error}</p>);
+
+    return (
+      <div className="input-area-wrapper">
+        <div className="input-type-box">
+          <input
+            disabled={this.props.disabled}
+            className="input-text-default"
+            maxLength={this.props.maxlength? this.props.maxlength : false}
+            ref="input"
+            type={this.props.password? 'password' : 'text'}
+            value={this.props.value}
+            onChange={this.handleChange}
+            placeholder={this.props.placeholder} /><br/>
+          {this.props.children}
+        </div>
+        {this.props.errors.length? <div className="error-list">{errors}</div> : null}
+      </div>
+    );
+  }
+}
+
+export default InputText;

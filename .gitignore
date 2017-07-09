@@ -1,0 +1,4 @@
+node_modules
+database/main.sqlite
+app/scripts/*
+app/styles/*
