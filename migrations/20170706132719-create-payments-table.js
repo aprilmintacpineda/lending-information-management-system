@@ -8,7 +8,7 @@ module.exports = {
         autoIncrement: false,
         primaryKey: true
       },
-      load_id: {
+      loan_id: {
         type: Sequelize.INTEGER,
         allowNull: false
       },

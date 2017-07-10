@@ -19,9 +19,26 @@ export default DB.createModel('loan', {
     type: Sequelize.BIGINT,
     allowNull: false
   },
-  interest: {
+  interest_rate: {
     type: Sequelize.INTEGER,
     allowNull: false
+  },
+  times_to_pay: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  per_payment: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  mode_of_payment: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  fully_paid: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   },
   created_at: {
     type: Sequelize.NOW,

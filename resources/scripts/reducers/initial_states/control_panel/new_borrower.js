@@ -15,16 +15,20 @@ export default {
     value: 1,
     errors: []
   },
-  amountLoan: {
+  amount_loan: {
     value: '',
     errors: []
   },
-  monthsToPay: {
+  mode_of_payment: {
     value: 1,
     errors: []
   },
-  interestRate: {
-    value: 2,
+  times_to_pay: {
+    value: '1',
+    errors: []
+  },
+  interest_rate: {
+    value: '',
     errors: []
   },
   backend: {

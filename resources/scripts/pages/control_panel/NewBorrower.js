@@ -5,10 +5,12 @@ import { connect } from 'react-redux';
 import WithSidebar from '../../components/WithSidebar';
 // helpers
 import { ucfirst } from '../../helpers/Strings';
+import { currency } from '../../helpers/Numbers';
 // components
 import InputText from '../../components/forms/InputText';
 import InputSelect from '../../components/forms/InputSelect';
 import InputButton from '../../components/forms/InputButton';
+import DisplayTextBox from '../../components/forms/DisplayTextBox';
 // actions
 import * as newBorrowerActions from '../../actions/control_panel/new_borrower';
 
@@ -81,31 +83,59 @@ class NewBorrower extends Component {
               </li>
               <li>
                 <InputText
-                value={this.props.new_borrower.amountLoan.value}
+                value={this.props.new_borrower.amount_loan.value}
                 placeholder="Amount of loan..."
                 numberOnly={true}
                 onChange={this.props.changeAmountLoan}
-                errors={this.props.new_borrower.amountLoan.errors}
+                errors={this.props.new_borrower.amount_loan.errors}
                 disabled={this.props.new_borrower.backend.processing}
                 maxlength={50} />
+                <p>PHP {currency(this.props.new_borrower.amount_loan.value)}</p>
               </li>
               <li>
                 <InputText
-                value={this.props.new_borrower.monthsToPay.value}
-                placeholder="Number of months to pay..."
-                numberOnly={true}
-                onChange={this.props.changeMonthsToPay}
-                errors={this.props.new_borrower.monthsToPay.errors}
-                disabled={this.props.new_borrower.backend.processing}
-                maxlength={50} />
-              </li>
-              <li>
-                <InputText
-                value={this.props.new_borrower.interestRate.value}
+                value={this.props.new_borrower.interest_rate.value}
                 placeholder="Interest percentage..."
                 numberOnly={true}
                 onChange={this.props.changeInterest}
-                errors={this.props.new_borrower.interestRate.errors}
+                errors={this.props.new_borrower.interest_rate.errors}
+                disabled={this.props.new_borrower.backend.processing}
+                maxlength={50} />
+                <p>{currency(this.props.new_borrower.interest_rate.value)}%</p>
+              </li>
+              <li>
+                Mode of payment...
+                <InputSelect
+                onChange={this.props.changeModeOfPayment}
+                value={this.props.new_borrower.mode_of_payment.value}
+                disabled={this.props.new_borrower.backend.processing}
+                errors={this.props.new_borrower.mode_of_payment.errors}>
+                  <option value="1">Daily</option>
+                  <option value="2">Weekly</option>
+                  <option value="3">Monthly</option>
+                  <option value="4">Tri-anually</option>
+                  <option value="5">Quarterly</option>
+                  <option value="6">Semi-annually</option>
+                  <option value="7">Annually</option>
+                </InputSelect>
+              </li>
+              <li>
+                <InputText
+                placeholder={this.props.new_borrower.mode_of_payment.value == '1'?
+                    'Number of days to pay...'
+                  : this.props.new_borrower.mode_of_payment.value == '2'?
+                    'Number of weeks to pay...'
+                  : this.props.new_borrower.mode_of_payment.value == '3'?
+                    'Number of months to pay...'
+                  : this.props.new_borrower.mode_of_payment.value == '4'?
+                    'Number of triennials to pay...'
+                  : this.props.new_borrower.mode_of_payment.value == '5'?
+                    'Number of Semi-annuals to pay...'
+                  : 'Number of annuals to pay...'}
+                numberOnly={true}
+                onChange={this.props.changeTimesToPay}
+                value={this.props.new_borrower.times_to_pay.value}
+                errors={this.props.new_borrower.times_to_pay.errors}
                 disabled={this.props.new_borrower.backend.processing}
                 maxlength={50} />
               </li>
@@ -133,6 +163,7 @@ export default connect(store => ({
   changeSurname: newBorrowerActions.changeSurname,
   changeGender: newBorrowerActions.changeGender,
   changeAmountLoan: newBorrowerActions.changeAmountLoan,
-  changeMonthsToPay: newBorrowerActions.changeMonthsToPay,
-  changeInterest: newBorrowerActions.changeInterest
+  changeInterest: newBorrowerActions.changeInterest,
+  changeModeOfPayment: newBorrowerActions.changeModeOfPayment,
+  changeTimesToPay: newBorrowerActions.changeTimesToPay
 })(NewBorrower);

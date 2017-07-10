@@ -6,8 +6,9 @@ import {
   validatePasswordAgain,
   validateBirthdates,
   validateAmountLoan,
-  validateMonthsToPay,
-  validateInterestRate
+  validateTimesToPay,
+  validateInterestRate,
+  validateModeOfPayment
 } from '../../helpers/Validator';
 
 export default function new_borrower(state = initial_state, action) {
@@ -47,24 +48,32 @@ export default function new_borrower(state = initial_state, action) {
     case 'NEWBORROWER_CAL':
       return {
         ...state,
-        amountLoan: {
+        amount_loan: {
           errors: validateAmountLoan(action.value),
           value: action.value
         }
       }
-    case 'NEWBORROWER_MTP':
+    case 'NEWBORROWER_CTP':
       return {
         ...state,
-        monthsToPay: {
-          errors: validateMonthsToPay(action.value),
+        times_to_pay: {
+          errors: validateTimesToPay(action.value),
           value: action.value
         }
       }
     case 'NEWBORROWER_CIR':
       return {
         ...state,
-        interestRate: {
+        interest_rate: {
           errors: validateInterestRate(action.value),
+          value: action.value
+        }
+      }
+    case 'NEWBORROWER_CMP':
+      return {
+        ...state,
+        mode_of_payment: {
+          errors: validateModeOfPayment(action.value),
           value: action.value
         }
       }

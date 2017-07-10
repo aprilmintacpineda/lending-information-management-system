@@ -17,7 +17,19 @@ module.exports = {
         type: Sequelize.BIGINT,
         allowNull: false
       },
-      interest: {
+      interest_rate: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      times_to_pay: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      per_payment: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      mode_of_payment: {
         type: Sequelize.INTEGER,
         allowNull: false
       },

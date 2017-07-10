@@ -1,9 +1,34 @@
 import { monthMaxdays, monthList, maxYear, minYear } from './DateTime';
 
 /**
+ * validates mode of payments
+ * @param  value, number
+ * @return array errors
+ *
+ * 1 = daily
+ * 2 = weekly
+ * 3 = monthly
+ * 4 = trianually
+ * 5 = quarterly
+ * 6 = semianually
+ * 7 = anually
+ */
+export function validateModeOfPayment(value) {
+  let errors = [];
+
+  if(value != 1 && value != 2
+  && value != 3 && value != 4
+  && value != 5 && value != 6) {
+    errors.push('Invalid mode of payment.');
+  }
+
+  return errors;
+}
+
+/**
  * validates interest rate
- * @param  {[type]} rate [description]
- * @return {[type]}      [description]
+ * @param  value, number
+ * @return array errors
  */
 export function validateInterestRate(value) {
   let errors = [];
@@ -17,14 +42,14 @@ export function validateInterestRate(value) {
 
 /**
  * validates months to pay
- * @param  {[type]} months [description]
- * @return {[type]}        [description]
+ * @param  value, number
+ * @return array, errors
  */
-export function validateMonthsToPay(value) {
+export function validateTimesToPay(value) {
   let errors = [];
 
   if(!isNaN(value) && Number(value) < 0) {
-    errors.push('Invalid months to pay.');
+    errors.push('Invalid times to pay.');
   }
 
   return errors;
@@ -32,8 +57,8 @@ export function validateMonthsToPay(value) {
 
 /**
  * validates the amount of loan
- * @param  {[type]} amount [description]
- * @return {[type]}        [description]
+ * @param  value, number
+ * @return array, errors
  */
 export function validateAmountLoan(value) {
   let errors = [];
