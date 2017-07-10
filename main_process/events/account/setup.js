@@ -1,10 +1,10 @@
 import { ipcMain } from 'electron';
 import path from 'path';
 import PasswordHash from 'password-hash';
-import Admin from '../../models/admin';
-import { uniqueId } from '../helpers/generators';
-import { ucfirst } from '../helpers/strings';
-import Database from '../Database';
+import Admin from '../../../models/admin';
+import { uniqueId } from '../../helpers/generators';
+import { ucfirst } from '../../helpers/strings';
+import Database from '../../Database';
 
 ipcMain.on('SETUP_SUBMIT', (event, arg) => {
   const DB = new Database;

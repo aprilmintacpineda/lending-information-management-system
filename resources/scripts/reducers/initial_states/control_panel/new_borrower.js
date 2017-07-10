@@ -24,7 +24,7 @@ export default {
     errors: []
   },
   times_to_pay: {
-    value: '1',
+    value: '',
     errors: []
   },
   interest_rate: {

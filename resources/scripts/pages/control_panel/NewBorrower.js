@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 // components
 import WithSidebar from '../../components/WithSidebar';
 // helpers
-import { ucfirst } from '../../helpers/Strings';
+import { ucwords } from '../../helpers/Strings';
 import { currency } from '../../helpers/Numbers';
 // components
 import InputText from '../../components/forms/InputText';
@@ -19,6 +19,10 @@ class NewBorrower extends Component {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.computeInterestPercentage = this.computeInterestPercentage.bind(this);
+    this.computeInterest = this.computeInterest.bind(this);
+    this.computeProfit = this.computeProfit.bind(this);
+    this.computerPerPayment = this.computerPerPayment.bind(this);
   }
 
   componentWillMount() {
@@ -28,10 +32,60 @@ class NewBorrower extends Component {
   handleSubmit(event) {
     if(event) event.preventDefaut();
 
-    console.log('handleSubmit');
+    this.props.submit({
+      firstname: this.props.new_borrower.firstname.value,
+      middlename: this.props.new_borrower.middlename.value,
+      surname: this.props.new_borrower.surname.value,
+      gender: this.props.new_borrower.gender.value,
+      amount_loan: this.props.new_borrower.amount_loan.value,
+      mode_of_payment: this.props.new_borrower.mode_of_payment.value,
+      times_to_pay: this.props.new_borrower.times_to_pay.value,
+      interest_rate: this.props.new_borrower.interest_rate.value,
+      interest: this.computeInterest(),
+      profit: this.computeProfit(),
+      per_payment: this.computerPerPayment()
+    });
+  }
+
+  computeInterestPercentage() {
+    // interest rate / 100
+    return Number(this.props.new_borrower.interest_rate.value) / 100;
+  }
+
+  computeInterest() {
+    // amount loan * interest percentage
+    return Number(this.props.new_borrower.amount_loan.value) * this.computeInterestPercentage();
+  }
+
+  computeProfit() {
+    // profit = (loan amount * interest percentage) * times to pay
+    return this.computeInterest() * Number(this.props.new_borrower.times_to_pay.value);
+  }
+
+  computerPerPayment() {
+    // per payment = (profit + loan amount) / times to pay
+    return (this.computeProfit() + Number(this.props.new_borrower.amount_loan.value)) /
+        Number(this.props.new_borrower.times_to_pay.value);
   }
 
   render() {
+    let per_payment = 0;
+    let profit = 0;
+    let interest_percentage = 0;
+    let interest = 0;
+
+    if(this.props.new_borrower.interest_rate.value.length
+    && this.props.new_borrower.amount_loan.value.length
+    && this.props.new_borrower.times_to_pay.value.length
+    && !this.props.new_borrower.interest_rate.errors.length
+    && !this.props.new_borrower.amount_loan.errors.length
+    && !this.props.new_borrower.times_to_pay.errors.length) {
+      interest_percentage = this.computeInterestPercentage();
+      interest = this.computeInterest();
+      profit = this.computeProfit();
+      per_payment = this.computerPerPayment();
+    }
+
     return (
       <WithSidebar>
         <div className="new-loan-wrapper">
@@ -44,7 +98,7 @@ class NewBorrower extends Component {
                 <InputText
                 value={this.props.new_borrower.firstname.value}
                 placeholder="Borrower's first name..."
-                onChange={value => this.props.changeFirstname(ucfirst(value))}
+                onChange={value => this.props.changeFirstname(ucwords(value))}
                 errors={this.props.new_borrower.firstname.errors}
                 disabled={this.props.new_borrower.backend.processing}
                 maxlength={50} />
@@ -53,7 +107,7 @@ class NewBorrower extends Component {
                 <InputText
                 value={this.props.new_borrower.middlename.value}
                 placeholder="Borrower's middle name..."
-                onChange={value => this.props.changeMiddlename(ucfirst(value))}
+                onChange={value => this.props.changeMiddlename(ucwords(value))}
                 errors={this.props.new_borrower.middlename.errors}
                 disabled={this.props.new_borrower.backend.processing}
                 maxlength={50} />
@@ -62,7 +116,7 @@ class NewBorrower extends Component {
                 <InputText
                 value={this.props.new_borrower.surname.value}
                 placeholder="Borrower's surname..."
-                onChange={value => this.props.changeSurname(ucfirst(value))}
+                onChange={value => this.props.changeSurname(ucwords(value))}
                 errors={this.props.new_borrower.surname.errors}
                 disabled={this.props.new_borrower.backend.processing}
                 maxlength={50} />
@@ -130,7 +184,9 @@ class NewBorrower extends Component {
                   : this.props.new_borrower.mode_of_payment.value == '4'?
                     'Number of triennials to pay...'
                   : this.props.new_borrower.mode_of_payment.value == '5'?
-                    'Number of Semi-annuals to pay...'
+                    'Number of quarters to pay...'
+                  : this.props.new_borrower.mode_of_payment.value == '6'?
+                    'Number of semi-annuals to pay...'
                   : 'Number of annuals to pay...'}
                 numberOnly={true}
                 onChange={this.props.changeTimesToPay}
@@ -138,6 +194,27 @@ class NewBorrower extends Component {
                 errors={this.props.new_borrower.times_to_pay.errors}
                 disabled={this.props.new_borrower.backend.processing}
                 maxlength={50} />
+              </li>
+            </ul>
+
+            <ul>
+              <li>
+                <p>Interest</p>
+                <DisplayTextBox value={currency(interest)} />
+              </li>
+              <li>
+                <p>Profit</p>
+                <DisplayTextBox value={currency(profit)} />
+              </li>
+              <li>
+                <p>{this.props.new_borrower.mode_of_payment.value == 1? 'Daily'
+                  : this.props.new_borrower.mode_of_payment.value == 2? 'Weekly'
+                  : this.props.new_borrower.mode_of_payment.value == 3? 'Monthly'
+                  : this.props.new_borrower.mode_of_payment.value == 4? 'Tri-annually'
+                  : this.props.new_borrower.mode_of_payment.value == 5? 'Quarterly'
+                  : this.props.new_borrower.mode_of_payment.value == 6? 'Semi-annually'
+                  : 'Annually'} payment of</p>
+                <DisplayTextBox value={currency(per_payment)} />
               </li>
               <li>
                 <InputButton
@@ -165,5 +242,6 @@ export default connect(store => ({
   changeAmountLoan: newBorrowerActions.changeAmountLoan,
   changeInterest: newBorrowerActions.changeInterest,
   changeModeOfPayment: newBorrowerActions.changeModeOfPayment,
-  changeTimesToPay: newBorrowerActions.changeTimesToPay
+  changeTimesToPay: newBorrowerActions.changeTimesToPay,
+  submit: newBorrowerActions.submit
 })(NewBorrower);

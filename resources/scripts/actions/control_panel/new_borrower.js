@@ -53,3 +53,10 @@ export function changeModeOfPayment(value) {
     value
   }
 }
+
+export function submit(fields) {
+  return {
+    type: '_NEWBORROWER_SUBMIT',
+    ...fields
+  }
+}

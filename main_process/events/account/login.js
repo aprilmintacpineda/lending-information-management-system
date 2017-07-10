@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron';
 import path from 'path';
 import PasswordHash from 'password-hash';
-import Database from '../Database';
-import Admin from '../../models/admin';
+import Database from '../../Database';
+import Admin from '../../../models/admin';
 
 ipcMain.on('LOGIN', (event, arg) => {
   const DB = new Database;

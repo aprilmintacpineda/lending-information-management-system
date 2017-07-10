@@ -1,4 +1,5 @@
 import './session';
-import './setup';
 import './app';
-import './login';
+import './account/setup';
+import './account/login';
+import './control_panel/new_borrower';

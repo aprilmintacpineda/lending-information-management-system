@@ -1,13 +1,22 @@
 .new-loan-wrapper
-  ul
+  form
+    +clearFloat
     +fitWidth
     margin: 0 auto
-    li
-      list-style: none
-      margin-bottom: 10px
+    ul
+      @media all and (max-width: $fluid-width)
+        float: none
+      float: left
+      margin-right: 20px
       &:last-child
-        margin-bottom: 0
-      h1
-        letter-spacing: 5px
-        color: #33cccc
-        font-size: 18px
+        margin-right: 0
+        li
+          &:last-child
+            margin-bottom: 0
+      li
+        list-style: none
+        margin-bottom: 10px
+        h1
+          letter-spacing: 5px
+          color: #33cccc
+          font-size: 18px

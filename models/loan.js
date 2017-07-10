@@ -23,6 +23,14 @@ export default DB.createModel('loan', {
     type: Sequelize.INTEGER,
     allowNull: false
   },
+  interest: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  profit: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
   times_to_pay: {
     type: Sequelize.INTEGER,
     allowNull: false

@@ -56,8 +56,13 @@ class InputText extends Component {
             type={this.props.password? 'password' : 'text'}
             value={this.props.value}
             onChange={this.handleChange}
-            placeholder={this.props.placeholder} /><br/>
-          {this.props.children}
+            placeholder={this.props.placeholder} />
+          {this.props.children !== undefined?
+            <div>
+              <br/>
+              {this.props.children}
+            </div>
+          : null}
         </div>
         {this.props.errors.length? <div className="error-list">{errors}</div> : null}
       </div>
