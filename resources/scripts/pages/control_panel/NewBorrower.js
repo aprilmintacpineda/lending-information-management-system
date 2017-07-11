@@ -30,6 +30,12 @@ class NewBorrower extends Component {
     document.title = 'Add new borrower - Lending Information System';
   }
 
+  componentWillUpdate(nextProps) {
+    if(nextProps.new_borrower.backend.status == 'successful') {
+      nextProps.router.push('/borrowers/' + nextProps.new_borrower.id);
+    }
+  }
+
   handleSubmit(event) {
     if(event) event.preventDefaut();
 
@@ -106,6 +112,8 @@ class NewBorrower extends Component {
       per_month = this.computePerMonth();
       per_day = this.computePerDay();
     }
+
+    console.log(this.props.new_borrower.backend);
 
     return (
       <WithSidebar>
@@ -219,7 +227,7 @@ class NewBorrower extends Component {
                 <InputButton
                 value="Next"
                 onClick={this.handleSubmit}
-                sending={false}
+                sending={this.props.new_borrower.backend.processing}
                 disabled={this.props.new_borrower.backend.processing
                 || !this.props.new_borrower.firstname.value.length
                 || this.props.new_borrower.firstname.errors.length
@@ -234,7 +242,7 @@ class NewBorrower extends Component {
                 || !this.props.new_borrower.months_to_pay.value.length
                 || this.props.new_borrower.months_to_pay.errors.length
                 || this.props.new_borrower.gender.errors.length? true: false}
-                errors={[]} />
+                errors={[this.props.new_borrower.backend.message]} />
               </li>
             </ul>
           </form>

@@ -32,6 +32,7 @@ class InputSelect extends Component {
       <div className="input-area-wrapper">
         <div className="input-select-box">
           <select
+          disabled={this.props.disabled}
           className={this.props.className? 'input-select-default ' + this.props.className : 'input-select-default'}
           onChange={(event) => this.props.onChange(event.target.value)}>
             {this.props.children}

@@ -1,10 +1,11 @@
 import path from 'path';
 import Sequelize from 'sequelize';
 import Database from '../main_process/Database';
+import borrower from './borrower';
 
 const DB = new Database;
 
-export default DB.createModel('loan', {
+let loan = DB.createModel('loan', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: false,
@@ -64,3 +65,8 @@ export default DB.createModel('loan', {
   charset: 'latin1',
   timestamps: false
 });
+
+// synchronize
+DB.sync();
+
+export default loan;

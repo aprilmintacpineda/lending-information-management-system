@@ -41,16 +41,19 @@ let borrower = DB.createModel('borrower', {
   timestamps: false
 });
 
+// one to many association to contact numbers
 borrower.hasMany(contactNumber, {
   foreignKey: 'borrower_id',
   localKey: 'id'
 });
 
+// one to many association to loans
 borrower.hasMany(loan, {
   foreignKey: 'borrower_id',
   localKey: 'id'
 });
 
+// synchronize
 DB.sync();
 
 export default borrower;

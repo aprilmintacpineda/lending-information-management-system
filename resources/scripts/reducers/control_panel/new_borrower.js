@@ -75,6 +75,34 @@ export default function new_borrower(state = initial_state, action) {
         ...state,
         apply_interest: action.value
       }
+    case '_NEWBORROWER_SUBMIT':
+      return {
+        ...state,
+        backend: {
+          processing: true,
+          status: null,
+          message: null
+        }
+      }
+    case 'NEWBORROWER_SUBMIT_FAILED':
+      return {
+        ...state,
+        backend: {
+          processing: false,
+          status: 'failed',
+          message: 'Failed to create new borrower: ' + action.message
+        }
+      }
+    case 'NEWBORROWER_SUBMIT_SUCCESSFUL':
+      return {
+        ...state,
+        id: action.id,
+        backend: {
+          processing: false,
+          status: 'successful',
+          message: null
+        }
+      }
     default:
       return {...state}
   }

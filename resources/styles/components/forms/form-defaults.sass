@@ -1,4 +1,4 @@
-.input-area-wrapper
+.input-area-wrapper, .input-button-wrapper
   .error-list
     color: #ff6600
 .input-text-default, .input-select-default
@@ -9,6 +9,11 @@
   outline: none
   box-sizing: border-box
   display: block
+  &:disabled
+    border: 1px solid #bfbfbf
+    background: #cccccc
+    color: #808080
+    cursor: default
   &:focus
     box-shadow: 0 0 5px #d0d1d5
 .input-select-default

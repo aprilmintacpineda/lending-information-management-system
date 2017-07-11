@@ -14,6 +14,7 @@ import Welcome from './pages/account/Welcome';
 import Logout from './pages/account/Logout';
 import Dashboard from './pages/control_panel/Dashboard';
 import NewBorrower from './pages/control_panel/NewBorrower';
+import BorrowerProfile from './pages/control_panel/BorrowerProfile';
 
 import store from './createStore';
 
@@ -26,7 +27,9 @@ render(
 
       <Route path="/logout" component={Logout} />
       <Route path="/dashboard" component={Dashboard} />
+
       <Route path="/new-borrower" component={NewBorrower} />
+      <Route path="/borrowers/:id" component={BorrowerProfile} />
 
       <Route path="/login" component={Login} />
       <Route path="*" component={Landing} />
