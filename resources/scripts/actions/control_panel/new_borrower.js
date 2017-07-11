@@ -81,3 +81,9 @@ export function changeDateLoanMonth(value) {
     value
   }
 }
+
+export function reset() {
+  return {
+    type: 'NEWBORROWER_RESET'
+  }
+}

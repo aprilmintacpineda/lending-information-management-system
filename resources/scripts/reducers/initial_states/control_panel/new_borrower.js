@@ -1,3 +1,5 @@
+import { monthList } from '../../../helpers/DateTime';
+
 let current_date = new Date();
 let current_year = current_date.getFullYear();
 
@@ -31,9 +33,9 @@ export default {
     errors: []
   },
   loan_date: {
-    month: 'January',
-    date: 1,
-    year: current_year - 10,
+    month: monthList()[current_date.getMonth()],
+    date: current_date.getDate(),
+    year: current_year,
     errors: []
   },
   apply_interest: true,

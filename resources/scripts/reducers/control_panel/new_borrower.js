@@ -1,4 +1,5 @@
 import initial_state from '../initial_states/control_panel/new_borrower';
+
 import {
   validateName,
   validateGender,
@@ -130,6 +131,8 @@ export default function new_borrower(state = initial_state, action) {
           errors: validateLoanDate(action.value, state.loan_date.date, state.loan_date.year)
         }
       }
+    case 'NEWBORROWER_RESET':
+      return {...initial_state}
     default:
       return {...state}
   }

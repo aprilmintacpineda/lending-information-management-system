@@ -32,6 +32,10 @@ class NewBorrower extends Component {
     document.title = 'Add new borrower - Lending Information System';
   }
 
+  componentWillUnmount() {
+    this.props.reset();
+  }
+
   componentWillUpdate(nextProps) {
     if(nextProps.new_borrower.backend.status == 'successful') {
       nextProps.router.push('/borrowers/' + nextProps.new_borrower.id);
@@ -308,7 +312,8 @@ class NewBorrower extends Component {
                 || this.props.new_borrower.interest_rate.errors.length
                 || !this.props.new_borrower.months_to_pay.value.length
                 || this.props.new_borrower.months_to_pay.errors.length
-                || this.props.new_borrower.gender.errors.length? true: false}
+                || this.props.new_borrower.gender.errors.length
+                || this.props.new_borrower.loan_date.errors.length? true: false}
                 errors={[this.props.new_borrower.backend.message]} />
               </li>
             </ul>
@@ -333,5 +338,6 @@ export default connect(store => ({
   changeDateLoanMonth: newBorrowerActions.changeDateLoanMonth,
   changeDateLoanDate: newBorrowerActions.changeDateLoanDate,
   changeDateLoanYear: newBorrowerActions.changeDateLoanYear,
+  reset: newBorrowerActions.reset,
   submit: newBorrowerActions.submit
 })(NewBorrower);
