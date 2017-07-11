@@ -6,7 +6,7 @@ import {
   validatePasswordAgain,
   validateBirthdates,
   validateAmountLoan,
-  validateTimesToPay,
+  validateMonthsToPay,
   validateInterestRate,
   validateModeOfPayment
 } from '../../helpers/Validator';
@@ -53,11 +53,12 @@ export default function new_borrower(state = initial_state, action) {
           value: action.value
         }
       }
-    case 'NEWBORROWER_CTP':
+    case 'NEWBORROWER_CMP':
       return {
         ...state,
-        times_to_pay: {
-          errors: validateTimesToPay(action.value),
+        months_to_pay: {
+          ...state.months_to_pay,
+          errors: validateMonthsToPay(action.value),
           value: action.value
         }
       }
@@ -69,13 +70,10 @@ export default function new_borrower(state = initial_state, action) {
           value: action.value
         }
       }
-    case 'NEWBORROWER_CMP':
+    case 'NEWBORROWER_CAI':
       return {
         ...state,
-        mode_of_payment: {
-          errors: validateModeOfPayment(action.value),
-          value: action.value
-        }
+        apply_interest: action.value
       }
     default:
       return {...state}

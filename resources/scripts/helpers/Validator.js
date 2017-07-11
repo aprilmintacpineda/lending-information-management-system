@@ -45,7 +45,7 @@ export function validateInterestRate(value) {
  * @param  value, number
  * @return array, errors
  */
-export function validateTimesToPay(value) {
+export function validateMonthsToPay(value) {
   let errors = [];
 
   if(!isNaN(value) && Number(value) < 0) {
@@ -130,7 +130,7 @@ export function validateName(what, name) {
           errors.push(what + ' contains excessive spaces.');
           excessiveSpaces = true;
         }
-      } else if(!/^[a-zA-Z ]+$/.test(substr) || substr.length <= 2 || substr.length > 75) {
+      } else if(!/^[a-zA-Z ]+$/.test(substr) || substr.length <= 1 || name.length > 50) {
         if(!invalidName) {
           errors.push(what + ' is invalid.');
           invalidName = true;

@@ -33,9 +33,9 @@ export function changeAmountLoan(value) {
   }
 }
 
-export function changeTimesToPay(value) {
+export function changeMonthsToPay(value) {
   return {
-    type: 'NEWBORROWER_CTP',
+    type: 'NEWBORROWER_CMP',
     value
   }
 }
@@ -47,16 +47,16 @@ export function changeInterest(value) {
   }
 }
 
-export function changeModeOfPayment(value) {
-  return {
-    type: 'NEWBORROWER_CMP',
-    value
-  }
-}
-
 export function submit(fields) {
   return {
     type: '_NEWBORROWER_SUBMIT',
     ...fields
+  }
+}
+
+export function changeApplyInterest(value) {
+  return {
+    type: 'NEWBORROWER_CAI',
+    value
   }
 }

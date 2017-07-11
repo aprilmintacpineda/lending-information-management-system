@@ -29,15 +29,15 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      times_to_pay: {
+      months_to_pay: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      per_payment: {
+      per_month: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      mode_of_payment: {
+      per_day: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
@@ -45,6 +45,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false
+      },
+      apply_interest: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
       },
       created_at: {
         type: Sequelize.NOW,

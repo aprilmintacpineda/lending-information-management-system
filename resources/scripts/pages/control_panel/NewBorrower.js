@@ -22,7 +22,8 @@ class NewBorrower extends Component {
     this.computeInterestPercentage = this.computeInterestPercentage.bind(this);
     this.computeInterest = this.computeInterest.bind(this);
     this.computeProfit = this.computeProfit.bind(this);
-    this.computerPerPayment = this.computerPerPayment.bind(this);
+    this.computePerMonth = this.computePerMonth.bind(this);
+    this.computePerDay = this.computePerDay.bind(this);
   }
 
   componentWillMount() {
@@ -38,12 +39,13 @@ class NewBorrower extends Component {
       surname: this.props.new_borrower.surname.value,
       gender: this.props.new_borrower.gender.value,
       amount_loan: this.props.new_borrower.amount_loan.value,
-      mode_of_payment: this.props.new_borrower.mode_of_payment.value,
-      times_to_pay: this.props.new_borrower.times_to_pay.value,
-      interest_rate: this.props.new_borrower.interest_rate.value,
-      interest: this.computeInterest(),
-      profit: this.computeProfit(),
-      per_payment: this.computerPerPayment()
+      months_to_pay: this.props.new_borrower.months_to_pay.value,
+      apply_interest: this.props.new_borrower.apply_interest,
+      interest: this.props.new_borrower.apply_interest? this.computeInterest() : 0,
+      profit: this.props.new_borrower.apply_interest? this.computeProfit() : 0,
+      interest_rate: this.props.new_borrower.apply_interest? this.props.new_borrower.interest_rate.value : 0,
+      per_month: this.computePerMonth(),
+      per_day: this.computePerDay()
     });
   }
 
@@ -59,31 +61,50 @@ class NewBorrower extends Component {
 
   computeProfit() {
     // profit = (loan amount * interest percentage) * times to pay
-    return this.computeInterest() * Number(this.props.new_borrower.times_to_pay.value);
+    return this.computeInterest() * Number(this.props.new_borrower.months_to_pay.value);
   }
 
-  computerPerPayment() {
-    // per payment = (profit + loan amount) / times to pay
-    return (this.computeProfit() + Number(this.props.new_borrower.amount_loan.value)) /
-        Number(this.props.new_borrower.times_to_pay.value);
+  computePerMonth() {
+    if(this.props.new_borrower.apply_interest) {
+      // per payment = (profit + loan amount) / times to pay
+      return (this.computeProfit() + Number(this.props.new_borrower.amount_loan.value)) /
+        Number(this.props.new_borrower.months_to_pay.value);
+    }
+
+    return Number(this.props.new_borrower.amount_loan.value) /
+      Number(this.props.new_borrower.months_to_pay.value);
+  }
+
+  computePerDay() {
+    // (loan amount + profit) / (30 * months to pay)
+    return (Number(this.props.new_borrower.amount_loan.value) + this.computeProfit()) / (30 * this.props.new_borrower.months_to_pay.value);
   }
 
   render() {
-    let per_payment = 0;
+    let per_month = 0;
     let profit = 0;
     let interest_percentage = 0;
     let interest = 0;
+    let per_day = 0;
 
-    if(this.props.new_borrower.interest_rate.value.length
+    if(!this.props.new_borrower.apply_interest
     && this.props.new_borrower.amount_loan.value.length
-    && this.props.new_borrower.times_to_pay.value.length
+    && this.props.new_borrower.months_to_pay.value.length
+    && !this.props.new_borrower.amount_loan.errors.length
+    && !this.props.new_borrower.months_to_pay.errors.length) {
+      per_month = this.computePerMonth();
+      per_day = this.computePerDay();
+    } else if(this.props.new_borrower.interest_rate.value.length
+    && this.props.new_borrower.amount_loan.value.length
+    && this.props.new_borrower.months_to_pay.value.length
     && !this.props.new_borrower.interest_rate.errors.length
     && !this.props.new_borrower.amount_loan.errors.length
-    && !this.props.new_borrower.times_to_pay.errors.length) {
+    && !this.props.new_borrower.months_to_pay.errors.length) {
       interest_percentage = this.computeInterestPercentage();
       interest = this.computeInterest();
       profit = this.computeProfit();
-      per_payment = this.computerPerPayment();
+      per_month = this.computePerMonth();
+      per_day = this.computePerDay();
     }
 
     return (
@@ -122,7 +143,7 @@ class NewBorrower extends Component {
                 maxlength={50} />
               </li>
               <li>
-                He is a...
+                The borrower is a...
                 <InputSelect
                 onChange={this.props.changeGender}
                 value={this.props.new_borrower.gender.value}
@@ -138,7 +159,7 @@ class NewBorrower extends Component {
               <li>
                 <InputText
                 value={this.props.new_borrower.amount_loan.value}
-                placeholder="Amount of loan..."
+                placeholder="Utang..."
                 numberOnly={true}
                 onChange={this.props.changeAmountLoan}
                 errors={this.props.new_borrower.amount_loan.errors}
@@ -148,50 +169,22 @@ class NewBorrower extends Component {
               </li>
               <li>
                 <InputText
-                value={this.props.new_borrower.interest_rate.value}
+                value={!this.props.new_borrower.apply_interest? 'N/A' : this.props.new_borrower.interest_rate.value}
                 placeholder="Interest percentage..."
                 numberOnly={true}
                 onChange={this.props.changeInterest}
                 errors={this.props.new_borrower.interest_rate.errors}
-                disabled={this.props.new_borrower.backend.processing}
+                disabled={this.props.new_borrower.backend.processing || !this.props.new_borrower.apply_interest}
                 maxlength={50} />
                 <p>{currency(this.props.new_borrower.interest_rate.value)}%</p>
               </li>
               <li>
-                Mode of payment...
-                <InputSelect
-                onChange={this.props.changeModeOfPayment}
-                value={this.props.new_borrower.mode_of_payment.value}
-                disabled={this.props.new_borrower.backend.processing}
-                errors={this.props.new_borrower.mode_of_payment.errors}>
-                  <option value="1">Daily</option>
-                  <option value="2">Weekly</option>
-                  <option value="3">Monthly</option>
-                  <option value="4">Tri-anually</option>
-                  <option value="5">Quarterly</option>
-                  <option value="6">Semi-annually</option>
-                  <option value="7">Annually</option>
-                </InputSelect>
-              </li>
-              <li>
                 <InputText
-                placeholder={this.props.new_borrower.mode_of_payment.value == '1'?
-                    'Number of days to pay...'
-                  : this.props.new_borrower.mode_of_payment.value == '2'?
-                    'Number of weeks to pay...'
-                  : this.props.new_borrower.mode_of_payment.value == '3'?
-                    'Number of months to pay...'
-                  : this.props.new_borrower.mode_of_payment.value == '4'?
-                    'Number of triennials to pay...'
-                  : this.props.new_borrower.mode_of_payment.value == '5'?
-                    'Number of quarters to pay...'
-                  : this.props.new_borrower.mode_of_payment.value == '6'?
-                    'Number of semi-annuals to pay...'
-                  : 'Number of annuals to pay...'}
+                placeholder={'Months to pay...'}
                 numberOnly={true}
-                onChange={this.props.changeTimesToPay}
-                value={this.props.new_borrower.times_to_pay.value}
-                errors={this.props.new_borrower.times_to_pay.errors}
+                onChange={this.props.changeMonthsToPay}
+                value={this.props.new_borrower.months_to_pay.value}
+                errors={this.props.new_borrower.months_to_pay.errors}
                 disabled={this.props.new_borrower.backend.processing}
                 maxlength={50} />
               </li>
@@ -199,29 +192,48 @@ class NewBorrower extends Component {
 
             <ul>
               <li>
-                <p>Interest</p>
-                <DisplayTextBox value={currency(interest)} />
+                <p>Tubo kada buwan</p>
+                <DisplayTextBox value={'PHP ' + currency(interest)} />
               </li>
               <li>
-                <p>Profit</p>
-                <DisplayTextBox value={currency(profit)} />
+                <p>Tubo</p>
+                <DisplayTextBox value={'PHP ' + currency(profit)} />
               </li>
               <li>
-                <p>{this.props.new_borrower.mode_of_payment.value == 1? 'Daily'
-                  : this.props.new_borrower.mode_of_payment.value == 2? 'Weekly'
-                  : this.props.new_borrower.mode_of_payment.value == 3? 'Monthly'
-                  : this.props.new_borrower.mode_of_payment.value == 4? 'Tri-annually'
-                  : this.props.new_borrower.mode_of_payment.value == 5? 'Quarterly'
-                  : this.props.new_borrower.mode_of_payment.value == 6? 'Semi-annually'
-                  : 'Annually'} payment of</p>
-                <DisplayTextBox value={currency(per_payment)} />
+                <p>Per month</p>
+                <DisplayTextBox value={'PHP ' + currency(per_month)} />
+              </li>
+              <li>
+                <p>Per day</p>
+                <DisplayTextBox value={'PHP ' + currency(per_day)} />
+              </li>
+              <li>
+                <input
+                id="apply-interest"
+                type="checkbox"
+                checked={this.props.new_borrower.apply_interest}
+                onChange={(changeEvent) => this.props.changeApplyInterest(changeEvent.target.checked)} />
+                <label htmlFor="apply-interest"> Apply interest</label>
               </li>
               <li>
                 <InputButton
                 value="Next"
                 onClick={this.handleSubmit}
                 sending={false}
-                disabled={this.props.new_borrower.backend.processing}
+                disabled={this.props.new_borrower.backend.processing
+                || !this.props.new_borrower.firstname.value.length
+                || this.props.new_borrower.firstname.errors.length
+                || !this.props.new_borrower.middlename.value.length
+                || this.props.new_borrower.middlename.errors.length
+                || !this.props.new_borrower.surname.value.length
+                || this.props.new_borrower.surname.errors.length
+                || !this.props.new_borrower.amount_loan.value.length
+                || this.props.new_borrower.amount_loan.errors.length
+                || !this.props.new_borrower.interest_rate.value.length
+                || this.props.new_borrower.interest_rate.errors.length
+                || !this.props.new_borrower.months_to_pay.value.length
+                || this.props.new_borrower.months_to_pay.errors.length
+                || this.props.new_borrower.gender.errors.length? true: false}
                 errors={[]} />
               </li>
             </ul>
@@ -241,7 +253,7 @@ export default connect(store => ({
   changeGender: newBorrowerActions.changeGender,
   changeAmountLoan: newBorrowerActions.changeAmountLoan,
   changeInterest: newBorrowerActions.changeInterest,
-  changeModeOfPayment: newBorrowerActions.changeModeOfPayment,
-  changeTimesToPay: newBorrowerActions.changeTimesToPay,
+  changeMonthsToPay: newBorrowerActions.changeMonthsToPay,
+  changeApplyInterest: newBorrowerActions.changeApplyInterest,
   submit: newBorrowerActions.submit
 })(NewBorrower);

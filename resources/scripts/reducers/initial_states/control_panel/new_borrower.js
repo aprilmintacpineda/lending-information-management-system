@@ -19,11 +19,7 @@ export default {
     value: '',
     errors: []
   },
-  mode_of_payment: {
-    value: 1,
-    errors: []
-  },
-  times_to_pay: {
+  months_to_pay: {
     value: '',
     errors: []
   },
@@ -31,6 +27,7 @@ export default {
     value: '',
     errors: []
   },
+  apply_interest: true,
   backend: {
     processing: false,
     status: null,
