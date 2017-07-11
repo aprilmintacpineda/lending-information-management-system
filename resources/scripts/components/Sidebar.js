@@ -8,6 +8,7 @@ class Sidebar extends Component {
         <nav>
           <ul>
             <li><Link to="/dashboard">Dashboard</Link></li>
+            <li><Link to="/borrowers">Borrowers</Link></li>
             <li><Link to="/new-borrower">New Borrower</Link></li>
             <li><Link to="/logout">Logout</Link></li>
             <li><Link to="/about">About</Link></li>

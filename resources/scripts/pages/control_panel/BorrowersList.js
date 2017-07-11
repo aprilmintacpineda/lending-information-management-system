@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 // components
 import WithSidebar from '../../components/WithSidebar';
 
-class BorrowerProfile extends Component {
+class BorrowersList extends Component {
   render() {
     return (
       <WithSidebar>
-        <h1>BorrowerProfile</h1>
+        <h1>BorrowersList</h1>
       </WithSidebar>
     );
   }
@@ -18,4 +18,4 @@ export default connect(store => ({
 
 }), {
 
-})(BorrowerProfile);
+})(BorrowersList);

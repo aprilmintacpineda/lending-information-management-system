@@ -77,6 +77,35 @@ export function validateAmountLoan(value) {
  */
 export function validateBirthdates(month, date, year) {
   let errors = [];
+
+  if(!isValidDate(month, date, year)) {
+    errors.push('Invalid birthdate.');
+  }
+
+  return errors;
+}
+
+/**
+ * validates the loan date
+ * @param  str month, int date, int year
+ * @return array      error list
+ */
+export function validateLoanDate(month, date, year) {
+  let errors = [];
+  
+  if(!isValidDate(month, date, year)) {
+    errors.push('Invalid loan date.');
+  }
+
+  return errors;
+}
+
+/**
+ * validates the birthdate
+ * @param  str month, int date, int year
+ * @return array      error list
+ */
+export function isValidDate(month, date, year) {
   let max_days_in_month = monthMaxdays(month, year);
   let month_list = monthList();
   let max_year = maxYear();
@@ -88,10 +117,10 @@ export function validateBirthdates(month, date, year) {
   || isNaN(date)
   || year > max_year
   || year < min_year) {
-    errors.push('Invalid birthdate.');
+    return false;
   }
 
-  return errors;
+  return true;
 }
 
 /**

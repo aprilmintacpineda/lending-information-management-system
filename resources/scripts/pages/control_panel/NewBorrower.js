@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 // components
 import WithSidebar from '../../components/WithSidebar';
 // helpers
+import { monthList, monthMaxdays } from '../../helpers/DateTime';
 import { ucwords } from '../../helpers/Strings';
 import { currency } from '../../helpers/Numbers';
 // components
@@ -24,6 +25,7 @@ class NewBorrower extends Component {
     this.computeProfit = this.computeProfit.bind(this);
     this.computePerMonth = this.computePerMonth.bind(this);
     this.computePerDay = this.computePerDay.bind(this);
+    this.computePerHalfMonth = this.computePerHalfMonth.bind(this);
   }
 
   componentWillMount() {
@@ -51,7 +53,8 @@ class NewBorrower extends Component {
       profit: this.props.new_borrower.apply_interest? this.computeProfit() : 0,
       interest_rate: this.props.new_borrower.apply_interest? this.props.new_borrower.interest_rate.value : 0,
       per_month: this.computePerMonth(),
-      per_day: this.computePerDay()
+      per_day: this.computePerDay(),
+      loan_date: this.props.new_borrower.loan_date.month + ' ' + this.props.new_borrower.loan_date.date + ', ' + this.props.new_borrower.loan_date.year
     });
   }
 
@@ -86,12 +89,35 @@ class NewBorrower extends Component {
     return (Number(this.props.new_borrower.amount_loan.value) + this.computeProfit()) / (30 * this.props.new_borrower.months_to_pay.value);
   }
 
+  computePerHalfMonth() {
+    // (loan amount + profit) / (30 * months to pay)
+    return this.computePerMonth() / 2;
+  }
+
   render() {
     let per_month = 0;
+    let per_day = 0;
+    let per_half_month = 0;
     let profit = 0;
     let interest_percentage = 0;
     let interest = 0;
-    let per_day = 0;
+
+    let date = new Date;
+    let month_list = monthList();
+    let months = month_list.map((month, index) => <option key={index}>{month}</option>);
+    let max_days_in_month = monthMaxdays(this.props.new_borrower.loan_date.month, this.props.new_borrower.loan_date.year);
+    let max_year = date.getFullYear();
+    let min_year = max_year - 10;
+    let dates = [];
+    let years = [];
+
+    for(let a = 1; a <= max_days_in_month; a++) {
+      dates.push(<option key={a}>{a}</option>);
+    }
+
+    for(let a = max_year; a >= min_year; a--) {
+      years .push(<option key={a}>{a}</option>);
+    }
 
     if(!this.props.new_borrower.apply_interest
     && this.props.new_borrower.amount_loan.value.length
@@ -100,6 +126,7 @@ class NewBorrower extends Component {
     && !this.props.new_borrower.months_to_pay.errors.length) {
       per_month = this.computePerMonth();
       per_day = this.computePerDay();
+      per_half_month = this.computePerHalfMonth();
     } else if(this.props.new_borrower.interest_rate.value.length
     && this.props.new_borrower.amount_loan.value.length
     && this.props.new_borrower.months_to_pay.value.length
@@ -111,9 +138,8 @@ class NewBorrower extends Component {
       profit = this.computeProfit();
       per_month = this.computePerMonth();
       per_day = this.computePerDay();
+      per_half_month = this.computePerHalfMonth();
     }
-
-    console.log(this.props.new_borrower.backend);
 
     return (
       <WithSidebar>
@@ -164,6 +190,43 @@ class NewBorrower extends Component {
               <li>
                 <h1>Loan information</h1>
               </li>
+              <li className="clear-floats">
+                Date loan...
+                <InputSelect
+                className="date-loan"
+                onChange={this.props.changeDateLoanMonth}
+                value={this.props.new_borrower.loan_date.month}
+                disabled={this.props.new_borrower.backend.processing}
+                errors={[]}>
+                  {months}
+                </InputSelect>
+
+                <InputSelect
+                className="date-loan"
+                onChange={this.props.changeDateLoanDate}
+                value={this.props.new_borrower.loan_date.date}
+                disabled={this.props.new_borrower.backend.processing}
+                errors={[]}>
+                  {dates}
+                </InputSelect>
+
+                <InputSelect
+                className="date-loan"
+                onChange={this.props.changeDateLoanYear}
+                value={this.props.new_borrower.loan_date.year}
+                disabled={this.props.new_borrower.backend.processing}
+                errors={[]}>
+                  {years}
+                </InputSelect>
+
+                {this.props.new_borrower.loan_date.errors.length?
+                  <div className="error-list">
+                    {this.props.new_borrower.loan_date.errors.map((error, index) => (
+                      <p key={index}>{error}</p>
+                    ))}
+                  </div>
+                : null}
+            </li>
               <li>
                 <InputText
                 value={this.props.new_borrower.amount_loan.value}
@@ -210,6 +273,10 @@ class NewBorrower extends Component {
               <li>
                 <p>Per month</p>
                 <DisplayTextBox value={'PHP ' + currency(per_month)} />
+              </li>
+              <li>
+                <p>Half a month</p>
+                <DisplayTextBox value={'PHP ' + currency(per_half_month)} />
               </li>
               <li>
                 <p>Per day</p>
@@ -263,5 +330,8 @@ export default connect(store => ({
   changeInterest: newBorrowerActions.changeInterest,
   changeMonthsToPay: newBorrowerActions.changeMonthsToPay,
   changeApplyInterest: newBorrowerActions.changeApplyInterest,
+  changeDateLoanMonth: newBorrowerActions.changeDateLoanMonth,
+  changeDateLoanDate: newBorrowerActions.changeDateLoanDate,
+  changeDateLoanYear: newBorrowerActions.changeDateLoanYear,
   submit: newBorrowerActions.submit
 })(NewBorrower);

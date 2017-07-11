@@ -15,6 +15,7 @@ import Logout from './pages/account/Logout';
 import Dashboard from './pages/control_panel/Dashboard';
 import NewBorrower from './pages/control_panel/NewBorrower';
 import BorrowerProfile from './pages/control_panel/BorrowerProfile';
+import BorrowersList from './pages/control_panel/BorrowersList';
 
 import store from './createStore';
 
@@ -29,6 +30,7 @@ render(
       <Route path="/dashboard" component={Dashboard} />
 
       <Route path="/new-borrower" component={NewBorrower} />
+      <Route path="/borrowers" component={BorrowersList} />
       <Route path="/borrowers/:id" component={BorrowerProfile} />
 
       <Route path="/login" component={Login} />

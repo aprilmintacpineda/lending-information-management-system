@@ -1,6 +1,6 @@
 .greet-wrapper
   position: absolute
-  width: 70%
+  +fitWidth
   +fitHeight
   +pCenter
   h1 
@@ -25,9 +25,9 @@
         display: block
         position: absolute
         bottom: 0
-        left: 0
+        +hCenter
         opacity: 0
-        transition: width 350ms
+        transition: width 200ms
       &:hover
         .decor
           width: 100%

@@ -13,6 +13,8 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
   let updated_at = created_at = created_at.toISOString();
 
   let new_borrower_id = uniqueId();
+  let loan_date = new Date(arg.loan_date);
+  loan_date = loan_date.toISOString();
 
   Borrower.create({
     id: new_borrower_id,
@@ -26,6 +28,7 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
     id: uniqueId(),
     borrower_id: new_borrower.dataValues.id,
     amount: Number(arg.amount_loan),
+    loan_date,
     interest_rate: Number(arg.interest_rate),
     months_to_pay: Number(arg.months_to_pay),
     per_month: arg.per_month,

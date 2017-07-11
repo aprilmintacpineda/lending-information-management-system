@@ -4,11 +4,11 @@ import {
   validateGender,
   validatePasswords,
   validatePasswordAgain,
-  validateBirthdates,
   validateAmountLoan,
   validateMonthsToPay,
   validateInterestRate,
-  validateModeOfPayment
+  validateModeOfPayment,
+  validateLoanDate
 } from '../../helpers/Validator';
 
 export default function new_borrower(state = initial_state, action) {
@@ -101,6 +101,33 @@ export default function new_borrower(state = initial_state, action) {
           processing: false,
           status: 'successful',
           message: null
+        }
+      }
+    case 'NEWBORROWER_CLY':
+      return {
+        ...state,
+        loan_date: {
+          ...state.loan_date,
+          year: action.value,
+          errors: validateLoanDate(state.loan_date.month, state.loan_date.date, action.value)
+        }
+      }
+    case 'NEWBORROWER_CLD':
+      return {
+        ...state,
+        loan_date: {
+          ...state.loan_date,
+          date: action.value,
+          errors: validateLoanDate(state.loan_date.month, action.value, state.loan_date.year)
+        }
+      }
+    case 'NEWBORROWER_CLM':
+      return {
+        ...state,
+        loan_date: {
+          ...state.loan_date,
+          month: action.value,
+          errors: validateLoanDate(action.value, state.loan_date.date, state.loan_date.year)
         }
       }
     default:

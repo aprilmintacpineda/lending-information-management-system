@@ -125,7 +125,6 @@ class Setup extends Component {
               disabled={this.props.setup.backend.processing}
               errors={[]}>
                 {years}
-                <option>2017</option>
               </InputSelect>
 
               {this.props.setup.birth_date.errors.length?

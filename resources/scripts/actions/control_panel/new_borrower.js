@@ -60,3 +60,24 @@ export function changeApplyInterest(value) {
     value
   }
 }
+
+export function changeDateLoanYear(value) {
+  return {
+    type: 'NEWBORROWER_CLY',
+    value
+  }
+}
+
+export function changeDateLoanDate(value) {
+  return {
+    type: 'NEWBORROWER_CLD',
+    value
+  }
+}
+
+export function changeDateLoanMonth(value) {
+  return {
+    type: 'NEWBORROWER_CLM',
+    value
+  }
+}

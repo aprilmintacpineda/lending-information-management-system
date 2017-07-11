@@ -16,6 +16,10 @@ let loan = DB.createModel('loan', {
     autoIncrement: false,
     primaryKey: true
   },
+  loan_date: {
+    type: Sequelize.DATE,
+    allowNull: false
+  },
   amount: {
     type: Sequelize.BIGINT,
     allowNull: false

@@ -13,6 +13,15 @@
         li
           &:last-child
             margin-bottom: 0
+      .clear-floats
+        +clearFloat
+        .error-list
+          color: #ff6600
+        .date-loan
+          min-width: 0px !important
+          +fitWidth
+          float: left
+          margin-right: 15px
       li
         list-style: none
         margin-bottom: 10px
