@@ -8,8 +8,9 @@ import {
   validateAmountLoan,
   validateMonthsToPay,
   validateInterestRate,
-  validateModeOfPayment,
-  validateLoanDate
+  validateLoanDate,
+  validatePaymentMethod,
+  validatePhoneNumber
 } from '../../helpers/Validator';
 
 export default function new_borrower(state = initial_state, action) {
@@ -71,10 +72,90 @@ export default function new_borrower(state = initial_state, action) {
           value: action.value
         }
       }
-    case 'NEWBORROWER_CAI':
+    case 'NEWBORROWER_CADDI':
       return {
         ...state,
-        apply_interest: action.value
+        apply_due_date_interest: true,
+        apply_due_date_only: false,
+        apply_interest_only: false,
+        no_due_date_no_interest: false
+      }
+    case 'NEWBORROWER_CADDO':
+      return {
+        ...state,
+        apply_due_date_interest: false,
+        apply_due_date_only: true,
+        apply_interest_only: false,
+        no_due_date_no_interest: false
+      }
+    case 'NEWBORROWER_CAIO':
+      return {
+        ...state,
+        apply_due_date_interest: false,
+        apply_due_date_only: false,
+        apply_interest_only: true,
+        no_due_date_no_interest: false
+      }
+    case 'NEWBORROWER_CNDDNI':
+      return {
+        ...state,
+        apply_due_date_interest: false,
+        apply_due_date_only: false,
+        apply_interest_only: false,
+        no_due_date_no_interest: true
+      }
+    case 'NEWBORROWER_CLY':
+      return {
+        ...state,
+        loan_date: {
+          ...state.loan_date,
+          year: action.value,
+          errors: validateLoanDate(state.loan_date.month, state.loan_date.date, action.value)
+        }
+      }
+    case 'NEWBORROWER_CLD':
+      return {
+        ...state,
+        loan_date: {
+          ...state.loan_date,
+          date: action.value,
+          errors: validateLoanDate(state.loan_date.month, action.value, state.loan_date.year)
+        }
+      }
+    case 'NEWBORROWER_CLM':
+      return {
+        ...state,
+        loan_date: {
+          ...state.loan_date,
+          month: action.value,
+          errors: validateLoanDate(action.value, state.loan_date.date, state.loan_date.year)
+        }
+      }
+    case 'NEWBORROWER_AMCN':
+      return {
+        ...state,
+        contact_numbers: state.contact_numbers.concat({
+          value: '',
+          errors: []
+        })
+      }
+    case 'NEWBORROWER_CCN':
+      return {
+        ...state,
+        contact_numbers: state.contact_numbers.map((contact_number, index) => (
+          index == action.index? {
+            value: action.value,
+            errors: validatePhoneNumber(action.value)
+          } : contact_number
+        ))
+      }
+    case 'NEWBORROWER_CPM':
+      return {
+        ...state,
+        payment_method: {
+          value: action.value,
+          errors: validatePaymentMethod(action.value)
+        }
       }
     case '_NEWBORROWER_SUBMIT':
       return {
@@ -102,33 +183,6 @@ export default function new_borrower(state = initial_state, action) {
           processing: false,
           status: 'successful',
           message: null
-        }
-      }
-    case 'NEWBORROWER_CLY':
-      return {
-        ...state,
-        loan_date: {
-          ...state.loan_date,
-          year: action.value,
-          errors: validateLoanDate(state.loan_date.month, state.loan_date.date, action.value)
-        }
-      }
-    case 'NEWBORROWER_CLD':
-      return {
-        ...state,
-        loan_date: {
-          ...state.loan_date,
-          date: action.value,
-          errors: validateLoanDate(state.loan_date.month, action.value, state.loan_date.year)
-        }
-      }
-    case 'NEWBORROWER_CLM':
-      return {
-        ...state,
-        loan_date: {
-          ...state.loan_date,
-          month: action.value,
-          errors: validateLoanDate(action.value, state.loan_date.date, state.loan_date.year)
         }
       }
     case 'NEWBORROWER_RESET':

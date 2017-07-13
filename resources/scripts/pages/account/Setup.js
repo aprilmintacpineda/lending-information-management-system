@@ -72,7 +72,7 @@ class Setup extends Component {
             <li>
               <InputText
               value={this.props.setup.middlename.value}
-              placeholder="Your first name..."
+              placeholder="Your middle name..."
               onChange={value => this.props.changeMiddlename(ucfirst(value))}
               errors={this.props.setup.middlename.errors}
               disabled={this.props.setup.backend.processing}
@@ -81,7 +81,7 @@ class Setup extends Component {
             <li>
               <InputText
               value={this.props.setup.surname.value}
-              placeholder="Your first name..."
+              placeholder="Your surname..."
               onChange={value => this.props.changeSurname(ucfirst(value))}
               errors={this.props.setup.surname.errors}
               disabled={this.props.setup.backend.processing}

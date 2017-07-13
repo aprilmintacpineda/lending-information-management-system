@@ -10,8 +10,7 @@ module.exports = {
       },
       borrower_id: {
         type: Sequelize.INTEGER,
-        autoIncrement: false,
-        primaryKey: true
+        allowNull: false
       },
       loan_date: {
         type: Sequelize.DATE,
@@ -34,8 +33,10 @@ module.exports = {
         allowNull: false
       },
       months_to_pay: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+        type: Sequelize.INTEGER
+      },
+      payment_method: {
+        type: Sequelize.INTEGER
       },
       per_month: {
         type: Sequelize.INTEGER,
@@ -45,14 +46,14 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      terms_applied: {
+        type: Sequelize.STRING(50),
+        allowNull: false
+      },
       fully_paid: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false
-      },
-      apply_interest: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false
       },
       created_at: {
         type: Sequelize.NOW,

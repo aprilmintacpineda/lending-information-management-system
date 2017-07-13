@@ -32,13 +32,26 @@ export default {
     value: '',
     errors: []
   },
+  payment_method: {
+    value: '',
+    errors: []
+  },
   loan_date: {
     month: monthList()[current_date.getMonth()],
     date: current_date.getDate(),
     year: current_year,
     errors: []
   },
-  apply_interest: true,
+  contact_numbers: [
+    {
+      value: '',
+      errors: []
+    }
+  ],
+  apply_due_date_interest: true,
+  apply_interest_only: false,
+  apply_due_date_only: false,
+  no_due_date_no_interest: false,
   backend: {
     processing: false,
     status: null,

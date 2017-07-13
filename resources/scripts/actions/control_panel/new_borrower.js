@@ -54,13 +54,6 @@ export function submit(fields) {
   }
 }
 
-export function changeApplyInterest(value) {
-  return {
-    type: 'NEWBORROWER_CAI',
-    value
-  }
-}
-
 export function changeDateLoanYear(value) {
   return {
     type: 'NEWBORROWER_CLY',
@@ -85,5 +78,50 @@ export function changeDateLoanMonth(value) {
 export function reset() {
   return {
     type: 'NEWBORROWER_RESET'
+  }
+}
+
+export function changeToApplyDueDateInterest() {
+  return {
+    type: 'NEWBORROWER_CADDI'
+  }
+}
+
+export function changeToApplyInterestOnly() {
+  return {
+    type: 'NEWBORROWER_CAIO'
+  }
+}
+
+export function changeToApplyDueDateOnly() {
+  return {
+    type: 'NEWBORROWER_CADDO'
+  }
+}
+
+export function changeToNoDueDateNoInterest(value) {
+  return {
+    type: 'NEWBORROWER_CNDDNI'
+  }
+}
+
+export function addMoreContactNumbers() {
+  return {
+    type: 'NEWBORROWER_AMCN'
+  }
+}
+
+export function changeContactNumber(value, index) {
+  return {
+    type: 'NEWBORROWER_CCN',
+    index,
+    value
+  }
+}
+
+export function changePaymentMethod(value) {
+  return {
+    type: 'NEWBORROWER_CPM',
+    value
   }
 }

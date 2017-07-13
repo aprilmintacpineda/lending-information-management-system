@@ -3,34 +3,46 @@
     +clearFloat
     +fitWidth
     margin: 0 auto
-    ul
+    .loan-info
+      +clearFloat
+      ul
+        @media all and (max-width: $large-width)
+          float: none
+          margin-right: 0
+        float: left
+        margin-right: 20px
+        &:last-child
+          margin-right: 0
+    .information-container
       @media all and (max-width: $fluid-width)
         float: none
+        margin-right: 0
+      +fitWidth
       float: left
       margin-right: 20px
       &:last-child
         margin-right: 0
+      ul
+        .clear-floats
+          +clearFloat
+          .error-list
+            color: #ff6600
+          .date-loan
+            min-width: 0px !important
+            +fitWidth
+            float: left
+            margin-right: 15px
         li
           &:last-child
             margin-bottom: 0
-      .clear-floats
-        +clearFloat
-        .error-list
-          color: #ff6600
-        .date-loan
-          min-width: 0px !important
-          +fitWidth
-          float: left
-          margin-right: 15px
-      li
-        list-style: none
-        margin-bottom: 10px
-        label
-          cursor: pointer
-          padding-left: 2px
-          &:hover
-            text-decoration: underline
-        h1
-          letter-spacing: 5px
-          color: #33cccc
-          font-size: 18px
+          list-style: none
+          margin-bottom: 10px
+          label
+            cursor: pointer
+            padding-left: 2px
+            &:hover
+              text-decoration: underline
+          h1
+            letter-spacing: 5px
+            color: #33cccc
+            font-size: 18px

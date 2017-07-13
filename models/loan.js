@@ -37,8 +37,10 @@ let loan = DB.createModel('loan', {
     allowNull: false
   },
   months_to_pay: {
-    type: Sequelize.INTEGER,
-    allowNull: false
+    type: Sequelize.INTEGER
+  },
+  payment_method: {
+    type: Sequelize.INTEGER
   },
   per_month: {
     type: Sequelize.INTEGER,
@@ -48,14 +50,14 @@ let loan = DB.createModel('loan', {
     type: Sequelize.INTEGER,
     allowNull: false
   },
+  terms_applied: {
+    type: Sequelize.STRING(50),
+    allowNull: false
+  },
   fully_paid: {
     type: Sequelize.BOOLEAN,
     allowNull: false,
     defaultValue: false
-  },
-  apply_interest: {
-    type: Sequelize.BOOLEAN,
-    allowNull: false
   },
   created_at: {
     type: Sequelize.NOW,

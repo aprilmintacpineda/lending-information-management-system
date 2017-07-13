@@ -16,9 +16,9 @@ class DisplayTextBox extends Component {
       <div className="input-area-wrapper">
         <div className="input-type-box">
           <input
-            disabled={true}
             className="input-text-default"
-            value={this.props.value} />
+            value={this.props.value}
+            readOnly={true} />
         </div>
       </div>
     );

@@ -1,25 +1,32 @@
 import { monthMaxdays, monthList, maxYear, minYear } from './DateTime';
 
 /**
+ * 
+ */
+export function validatePhoneNumber(phone_number) {
+  let errors = [];
+
+  if(isNaN(phone_number)) {
+    errors.push('Invalid phone number.');
+  }
+
+  return errors;
+}
+
+/**
  * validates mode of payments
  * @param  value, number
  * @return array errors
  *
- * 1 = daily
- * 2 = weekly
- * 3 = monthly
- * 4 = trianually
- * 5 = quarterly
- * 6 = semianually
- * 7 = anually
+ * 1 = monthly
+ * 2 = semi-monthly
+ * 3 = daily
  */
-export function validateModeOfPayment(value) {
+export function validatePaymentMethod(value) {
   let errors = [];
 
-  if(value != 1 && value != 2
-  && value != 3 && value != 4
-  && value != 5 && value != 6) {
-    errors.push('Invalid mode of payment.');
+  if(value < 1 || value > 3) {
+    errors.push('Invalid payment method.');
   }
 
   return errors;
