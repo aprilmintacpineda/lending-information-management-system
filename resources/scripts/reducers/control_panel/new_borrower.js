@@ -139,6 +139,11 @@ export default function new_borrower(state = initial_state, action) {
           errors: []
         })
       }
+    case 'NEWBORROWER_RCN':
+      return {
+        ...state,
+        contact_numbers: state.contact_numbers.filter((contact_number, index) => index != action.index)
+      }
     case 'NEWBORROWER_CCN':
       return {
         ...state,

@@ -50,6 +50,7 @@ class NewBorrower extends Component {
       middlename: this.props.new_borrower.middlename.value,
       surname: this.props.new_borrower.surname.value,
       gender: this.props.new_borrower.gender.value,
+      contact_numbers: this.props.new_borrower.contact_numbers,
       amount_loan: this.props.new_borrower.amount_loan.value,
       payment_method: this.props.new_borrower.backend.processing || this.props.new_borrower.apply_interest_only || this.props.new_borrower.no_due_date_no_interest? null : this.props.new_borrower.payment_method.value,
       months_to_pay: this.props.new_borrower.apply_due_date_interest || this.props.new_borrower.apply_due_date_only? this.props.new_borrower.months_to_pay.value : null,
@@ -228,7 +229,7 @@ class NewBorrower extends Component {
                   <p>This information is optional.</p>
                 </li>
                 {this.props.new_borrower.contact_numbers.map((field, index) => (
-                  <li key={index}>
+                  <li key={index} className="contact-fields">
                     <InputText
                     numberOnly={true}
                     value={field.value}
@@ -237,6 +238,10 @@ class NewBorrower extends Component {
                     errors={field.errors}
                     disabled={this.props.new_borrower.backend.processing}
                     maxlength={50} />
+
+                    {index > 0?
+                      <a className="remove-contact-field" onClick={() => this.props.removeContactNumber(index)}>X</a>
+                    : null}
                   </li>
                 ))}
 
@@ -451,6 +456,7 @@ export default connect(store => ({
   changeToApplyDueDateInterest: newBorrowerActions.changeToApplyDueDateInterest,
   changeToNoDueDateNoInterest: newBorrowerActions.changeToNoDueDateNoInterest,
   addMoreContactNumbers: newBorrowerActions.addMoreContactNumbers,
+  removeContactNumber: newBorrowerActions.removeContactNumber,
   changeContactNumber: newBorrowerActions.changeContactNumber,
   changePaymentMethod: newBorrowerActions.changePaymentMethod,
   reset: newBorrowerActions.reset,

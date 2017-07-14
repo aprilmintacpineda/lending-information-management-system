@@ -14,10 +14,6 @@ export default DB.createModel('contact_number', {
     type: Sequelize.STRING('20'),
     primaryKey: true
   },
-  type: {
-    type: Sequelize.STRING('10'),
-    allowNull: false
-  },
   created_at: {
     type: Sequelize.NOW,
     allowNull: false

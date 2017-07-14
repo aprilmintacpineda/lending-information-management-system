@@ -111,6 +111,13 @@ export function addMoreContactNumbers() {
   }
 }
 
+export function removeContactNumber(index) {
+  return {
+    type: 'NEWBORROWER_RCN',
+    index
+  }
+}
+
 export function changeContactNumber(value, index) {
   return {
     type: 'NEWBORROWER_CCN',
