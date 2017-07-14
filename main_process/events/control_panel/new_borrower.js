@@ -1,14 +1,11 @@
 import { ipcMain, app } from 'electron';
 import path from 'path';
-import Database from '../../Database';
 import Borrower from '../../../models/borrower';
 import ContactNumber from '../../../models/contactNumber';
 import Loan from '../../../models/loan';
 import { uniqueId } from '../../helpers/generators';
 
 ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
-  const DB = new Database;
-
   // created_at and updated_at
   let created_at = new Date();
   let updated_at = created_at = created_at.toISOString();
@@ -60,8 +57,6 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
     id: new_borrower_id
   }))
   .catch((err) => {
-    DB.close();
-
     event.sender.send('NEWBORROWER_SUBMIT_FAILED', {
       message: err.message
     });

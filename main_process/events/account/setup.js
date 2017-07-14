@@ -4,15 +4,10 @@ import PasswordHash from 'password-hash';
 import Admin from '../../../models/admin';
 import { uniqueId } from '../../helpers/generators';
 import { ucfirst } from '../../helpers/strings';
-import Database from '../../Database';
 
 ipcMain.on('SETUP_SUBMIT', (event, arg) => {
-  const DB = new Database;
-
   Admin.findAll().then(admins => {
     if(admins.length) {
-      DB.closeConnection();
-
       event.sender.send('SETUP_SUBMIT_FAILED', {
         message: 'An account already exists.'
       });
@@ -34,11 +29,9 @@ ipcMain.on('SETUP_SUBMIT', (event, arg) => {
         updated_at
       })
       .then(() => {
-        DB.closeConnection();
         event.sender.send('SETUP_SUBMIT_SUCCESSFUL');
       })
       .catch(err => {
-        DB.closeConnection();
         event.sender.send('SETUP_SUBMIT_FAILED', {
           message: 'An unexpected error occured. `' + err.original.errno + ':' + err.original.code + '`'
         });

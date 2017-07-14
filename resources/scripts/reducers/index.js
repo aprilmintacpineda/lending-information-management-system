@@ -7,11 +7,13 @@ import login from './account/login';
 // control panel
 import new_borrower from './control_panel/new_borrower';
 import dashboard from './control_panel/dashboard';
+import borrowers_list from './control_panel/borrowers_list';
 
 export default combineReducers({
   session,
   login,
   setup,
   new_borrower,
-  dashboard
+  dashboard,
+  borrowers_list
 });

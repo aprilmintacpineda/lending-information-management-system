@@ -1,7 +1,7 @@
 import { monthMaxdays, monthList, maxYear, minYear } from './DateTime';
 
 /**
- * 
+ * validates phone number
  */
 export function validatePhoneNumber(phone_number) {
   let errors = [];

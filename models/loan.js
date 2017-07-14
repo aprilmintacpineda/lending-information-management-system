@@ -2,6 +2,7 @@ import path from 'path';
 import Sequelize from 'sequelize';
 import Database from '../main_process/Database';
 import borrower from './borrower';
+import payment from './payment';
 
 const DB = new Database;
 
@@ -72,7 +73,9 @@ let loan = DB.createModel('loan', {
   timestamps: false
 });
 
-// synchronize
-DB.sync();
+loan.hasMany(payment, {
+  foreignKey: 'loan_id',
+  localKey: 'id'
+});
 
 export default loan;

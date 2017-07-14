@@ -53,7 +53,4 @@ borrower.hasMany(loan, {
   localKey: 'id'
 });
 
-// synchronize
-DB.sync();
-
 export default borrower;
