@@ -132,3 +132,10 @@ export function changePaymentMethod(value) {
     value
   }
 }
+
+export function changeInterestType(value) {
+  return {
+    type: 'NEWBORROWER_CIT',
+    value
+  }
+}

@@ -29,6 +29,7 @@ export default {
     errors: []
   },
   interest_rate: {
+    type: 'percentage',
     value: '',
     errors: []
   },

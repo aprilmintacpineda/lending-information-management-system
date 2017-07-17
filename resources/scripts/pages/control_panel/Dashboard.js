@@ -23,7 +23,7 @@ class Dashboard extends Component {
     let app_path = remote.app.getAppPath();
 
     return (
-      <WithSidebar>
+      <WithSidebar onLink="dashboard">
         <div className="early-due-dates">
           <div className="todays">
             {this.props.dashboard.todays.backend.processing?

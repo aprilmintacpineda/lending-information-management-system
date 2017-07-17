@@ -6,6 +6,7 @@ import Sidebar from '../components/Sidebar';
 class WithSidebar extends Component {
   static propTypes = {
     className: PropTypes.string,
+    onLink: PropTypes.string,
     children: (props, propName, componentName) => {
       if(props[propName].constructor !== Array
       && props[propName].constructor !== Object) {
@@ -22,7 +23,7 @@ class WithSidebar extends Component {
           'default-content-wrapper with-sidebar ' + this.props.className
         : 'default-content-wrapper with-sidebar'
       }>
-        <Sidebar />
+        <Sidebar onLink={this.props.onLink} />
 
         <div className="side-contents">
           {this.props.children}

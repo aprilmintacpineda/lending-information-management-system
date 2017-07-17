@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { remote } from 'electron';
+import path from 'path';
+import { Link } from 'react-router';
 
 // components
 import WithSidebar from '../../components/WithSidebar';
@@ -12,12 +15,39 @@ class BorrowersList extends Component {
   }
 
   render() {
+    let app_path = remote.app.getAppPath();
 
     console.log(this.props.borrowers_list.list);
 
+    let borrowers = this.props.borrowers_list.list.map((borrower, index) => (
+      <section className="borrower-info" key={index}>
+        <h1 className="borrower-name">{borrower.firstname} {borrower.middlename} {borrower.surname}</h1>
+        <section>
+          <p>{borrower.gender? 'Male' : 'Female'}</p>
+
+          <ul>
+            {borrower.contact_numbers.map((contact_number, index) => (
+              <li key={index}>{contact_number.number}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="buttons">
+          <ul>
+            <li><Link to={'edit-borrower-profile/' + borrower.id}>Profile</Link></li>
+            <li><Link to={'edit-borrower-profile/' + borrower.id}>Edit</Link></li>
+          </ul>
+        </section>
+      </section>
+    ));
+
     return (
-      <WithSidebar>
-        <h1>BorrowersList</h1>
+      <WithSidebar onLink="borrowers-list">
+        {this.props.borrowers_list.backend.processing?
+          <img src={path.join(app_path, 'app/images/processing-blue.gif')} />
+        : <div className="borrowers-list-wrapper">
+          {borrowers}
+          </div>}
       </WithSidebar>
     );
   }

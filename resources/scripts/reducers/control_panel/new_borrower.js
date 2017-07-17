@@ -68,8 +68,17 @@ export default function new_borrower(state = initial_state, action) {
       return {
         ...state,
         interest_rate: {
+          ...state.interest_rate,
           errors: validateInterestRate(action.value),
           value: action.value
+        }
+      }
+    case 'NEWBORROWER_CIT':
+      return {
+        ...state,
+        interest_rate: {
+          ...state.interest_rate,
+          type: action.value
         }
       }
     case 'NEWBORROWER_CADDI':

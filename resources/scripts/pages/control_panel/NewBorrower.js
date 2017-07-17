@@ -75,8 +75,12 @@ class NewBorrower extends Component {
   }
 
   computeInterest() {
-    // amount loan * interest percentage
-    return Number(this.props.new_borrower.amount_loan.value) * this.computeInterestPercentage();
+    if(this.props.new_borrower.interest_rate.type == 'percentage') {
+      // amount loan * interest percentage
+      return Number(this.props.new_borrower.amount_loan.value) * this.computeInterestPercentage();
+    }
+
+    return Number(this.props.new_borrower.interest_rate.value);
   }
 
   computePerMonth() {
@@ -92,17 +96,12 @@ class NewBorrower extends Component {
   }
 
   computePerDay() {
-    if(this.props.new_borrower.apply_due_date_only) {
-      // loan amount / (30 * months to pay)
-      return Number(this.props.new_borrower.amount_loan.value) / (30 * this.props.new_borrower.months_to_pay.value);
-    }
-
-    // (loan amount + profit) / (30 * months to pay)
-    return (Number(this.props.new_borrower.amount_loan.value) + this.computeProfit()) / (30 * this.props.new_borrower.months_to_pay.value);
+    // monthly / 30
+    return this.computePerMonth() / 30;
   }
 
   computePerHalfMonth() {
-    // (loan amount + profit) / (30 * months to pay)
+    // monthly / 2
     return this.computePerMonth() / 2;
   }
 
@@ -176,7 +175,7 @@ class NewBorrower extends Component {
     }
 
     return (
-      <WithSidebar>
+      <WithSidebar onLink="new-borrower">
         <div className="new-loan-wrapper">
           <form onSubmit={this.handleSubmit} method="post" action="">
             <div className="information-container">
@@ -338,7 +337,7 @@ class NewBorrower extends Component {
                 </li>
                 <li>
                   <InputText
-                  placeholder="Interest percentage..."
+                  placeholder="Interest rate..."
                   numberOnly={true}
                   onChange={this.props.changeInterest}
                   value={this.props.new_borrower.apply_due_date_interest
@@ -348,7 +347,22 @@ class NewBorrower extends Component {
                   || this.props.new_borrower.apply_interest_only)
                   && !this.props.new_borrower.backend.processing? false : true}
                   maxlength={50} />
-                  <p>{currency(this.props.new_borrower.interest_rate.value)}%</p>
+                  <p>{currency(this.props.new_borrower.interest_rate.value)} {this.props.new_borrower.interest_rate.type == 'percentage'? 'Percent' : 'Pesos'}</p>
+                </li>
+                <li>
+                  <input
+                  id="interest-type-percentage"
+                  type="radio"
+                  checked={this.props.new_borrower.interest_rate.type == 'percentage'}
+                  onChange={() => this.props.changeInterestType('percentage')} />
+                  <label htmlFor="interest-type-percentage">Percentage</label>
+                  <br/>
+                  <input
+                  id="interest-type-fixed"
+                  type="radio"
+                  checked={this.props.new_borrower.interest_rate.type == 'fixed'}
+                  onChange={() => this.props.changeInterestType('fixed')} />
+                  <label htmlFor="interest-type-fixed">Fixed value</label>
                 </li>
                 <li>
                   Payment Method...
@@ -389,23 +403,27 @@ class NewBorrower extends Component {
                 </li>
                 <li>
                   <p>Tubo kada buwan</p>
-                  <DisplayTextBox value={'PHP ' + currency(interest)} />
+                  <DisplayTextBox value={currency(interest) + ' Pesos'} />
                 </li>
                 <li>
                   <p>Tubo</p>
-                  <DisplayTextBox value={'PHP ' + currency(profit)} />
+                  <DisplayTextBox value={currency(profit) + ' Pesos'} />
+                </li>
+                <li>
+                  <p>Total payable amount</p>
+                  <DisplayTextBox value={currency(profit + Number(this.props.new_borrower.amount_loan.value)) + ' Pesos'} />
                 </li>
                 <li>
                   <p>Per month</p>
-                  <DisplayTextBox value={'PHP ' + currency(per_month)} />
+                  <DisplayTextBox value={currency(per_month) + ' Pesos'} />
                 </li>
                 <li>
                   <p>Half a month</p>
-                  <DisplayTextBox value={'PHP ' + currency(per_half_month)} />
+                  <DisplayTextBox value={currency(per_half_month) + ' Pesos'} />
                 </li>
                 <li>
                   <p>Per day</p>
-                  <DisplayTextBox value={'PHP ' + currency(per_day)} />
+                  <DisplayTextBox value={currency(per_day) + ' Pesos'} />
                 </li>
                 <li>
                   <InputButton
@@ -447,6 +465,7 @@ export default connect(store => ({
   changeGender: newBorrowerActions.changeGender,
   changeAmountLoan: newBorrowerActions.changeAmountLoan,
   changeInterest: newBorrowerActions.changeInterest,
+  changeInterestType: newBorrowerActions.changeInterestType,
   changeMonthsToPay: newBorrowerActions.changeMonthsToPay,
   changeDateLoanMonth: newBorrowerActions.changeDateLoanMonth,
   changeDateLoanDate: newBorrowerActions.changeDateLoanDate,

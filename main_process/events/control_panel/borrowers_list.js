@@ -31,7 +31,18 @@ ipcMain.on('BORROWERS_LIST_FETCH', (event, arg) => {
     ]
   })
   .then(borrowers => event.sender.send('BORROWERS_LIST_FETCH_SUCCESSFUL', {
-    list: borrowers
+    list: borrowers.map(borrower => ({
+      ...borrower.dataValues,
+      contact_numbers: borrower.contact_numbers.map(contact_number => ({
+        ...contact_number.dataValues
+      })),
+      loans: borrower.loans.map(loan => ({
+        ...loan.dataValues,
+        payments: loan.payments.map(payment => ({
+          ...payment.dataValues
+        }))
+      }))
+    }))
   }))
   .catch(err => event.sender.send('BORROWERS_LIST_FETCH_FAILED', { message: err.message }));
 });
