@@ -25,11 +25,9 @@ class BorrowersList extends Component {
         <section>
           <p>{borrower.gender? 'Male' : 'Female'}</p>
 
-          <ul>
-            {borrower.contact_numbers.map((contact_number, index) => (
-              <li key={index}>{contact_number.number}</li>
-            ))}
-          </ul>
+          <p>
+            {borrower.contact_numbers.map((contact_number, index) => contact_number.number + (index + 1 < borrower.contact_numbers.length? ', ': ''))}
+          </p>
         </section>
 
         <section className="buttons">

@@ -14,8 +14,7 @@ let loan = DB.createModel('loan', {
   },
   borrower_id: {
     type: Sequelize.INTEGER,
-    autoIncrement: false,
-    primaryKey: true
+    allowNull: false
   },
   loan_date: {
     type: Sequelize.DATE,
@@ -25,15 +24,23 @@ let loan = DB.createModel('loan', {
     type: Sequelize.BIGINT,
     allowNull: false
   },
-  interest_rate: {
-    type: Sequelize.INTEGER,
-    allowNull: false
-  },
   interest: {
     type: Sequelize.INTEGER,
     allowNull: false
   },
+  interest_type: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  profit_per_month: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
   profit: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  interest_rate: {
     type: Sequelize.INTEGER,
     allowNull: false
   },
@@ -51,7 +58,7 @@ let loan = DB.createModel('loan', {
     type: Sequelize.INTEGER,
     allowNull: false
   },
-  terms_applied: {
+  condition_applied: {
     type: Sequelize.STRING(50),
     allowNull: false
   },

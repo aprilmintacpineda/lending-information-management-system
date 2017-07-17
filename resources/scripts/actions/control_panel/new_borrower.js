@@ -81,27 +81,10 @@ export function reset() {
   }
 }
 
-export function changeToApplyDueDateInterest() {
+export function changeLoanCondition(value) {
   return {
-    type: 'NEWBORROWER_CADDI'
-  }
-}
-
-export function changeToApplyInterestOnly() {
-  return {
-    type: 'NEWBORROWER_CAIO'
-  }
-}
-
-export function changeToApplyDueDateOnly() {
-  return {
-    type: 'NEWBORROWER_CADDO'
-  }
-}
-
-export function changeToNoDueDateNoInterest(value) {
-  return {
-    type: 'NEWBORROWER_CNDDNI'
+    type: 'NEWBORROWER_CLC',
+    value
   }
 }
 

@@ -24,6 +24,14 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      interest_type: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      profit_per_month: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       profit: {
         type: Sequelize.INTEGER,
         allowNull: false
@@ -46,7 +54,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      terms_applied: {
+      condition_applied: {
         type: Sequelize.STRING(50),
         allowNull: false
       },

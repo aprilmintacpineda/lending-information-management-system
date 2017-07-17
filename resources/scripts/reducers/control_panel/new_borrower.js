@@ -51,6 +51,7 @@ export default function new_borrower(state = initial_state, action) {
       return {
         ...state,
         amount_loan: {
+          ...state.amount_loan,
           errors: validateAmountLoan(action.value),
           value: action.value
         }
@@ -81,37 +82,13 @@ export default function new_borrower(state = initial_state, action) {
           type: action.value
         }
       }
-    case 'NEWBORROWER_CADDI':
+    case 'NEWBORROWER_CLC':
       return {
         ...state,
-        apply_due_date_interest: true,
-        apply_due_date_only: false,
-        apply_interest_only: false,
-        no_due_date_no_interest: false
-      }
-    case 'NEWBORROWER_CADDO':
-      return {
-        ...state,
-        apply_due_date_interest: false,
-        apply_due_date_only: true,
-        apply_interest_only: false,
-        no_due_date_no_interest: false
-      }
-    case 'NEWBORROWER_CAIO':
-      return {
-        ...state,
-        apply_due_date_interest: false,
-        apply_due_date_only: false,
-        apply_interest_only: true,
-        no_due_date_no_interest: false
-      }
-    case 'NEWBORROWER_CNDDNI':
-      return {
-        ...state,
-        apply_due_date_interest: false,
-        apply_due_date_only: false,
-        apply_interest_only: false,
-        no_due_date_no_interest: true
+        amount_loan: {
+          ...state.amount_loan,
+          condition: action.value
+        }
       }
     case 'NEWBORROWER_CLY':
       return {

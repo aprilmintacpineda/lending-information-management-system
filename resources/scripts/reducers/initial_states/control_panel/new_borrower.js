@@ -21,6 +21,7 @@ export default {
     errors: []
   },
   amount_loan: {
+    condition: 'due-date-and-interest',
     value: '',
     errors: []
   },
@@ -49,10 +50,6 @@ export default {
       errors: []
     }
   ],
-  apply_due_date_interest: true,
-  apply_interest_only: false,
-  apply_due_date_only: false,
-  no_due_date_no_interest: false,
   backend: {
     processing: false,
     status: null,

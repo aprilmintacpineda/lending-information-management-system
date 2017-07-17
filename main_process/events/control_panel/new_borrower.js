@@ -29,13 +29,15 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
     loan_date,
     amount: Number(arg.amount_loan),
     interest: arg.interest,
+    profit_per_month: Number(arg.profit_per_month),
     profit: arg.profit,
     interest_rate: Number(arg.interest_rate),
+    interest_type: arg.interest_type,
     months_to_pay: arg.apply_due_date? Number(arg.months_to_pay) : null,
     payment_method: arg.payment_method,
     per_month: arg.per_month,
     per_day: arg.per_day,
-    terms_applied: arg.terms_applied,
+    condition_applied: arg.condition_applied,
     created_at,
     updated_at
   }))

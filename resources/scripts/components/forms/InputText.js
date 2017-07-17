@@ -9,6 +9,7 @@ class InputText extends Component {
         ' `' + componentName);
       }
     },
+    className: PropTypes.string,
     placeholder: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
     errors: PropTypes.array.isRequired,
@@ -50,7 +51,7 @@ class InputText extends Component {
         <div className="input-type-box">
           <input
             disabled={this.props.disabled}
-            className="input-text-default"
+            className={this.props.className && this.props.className.length? 'input-text-default ' + this.props.className : 'input-text-default'}
             maxLength={this.props.maxlength? this.props.maxlength : false}
             ref="input"
             type={this.props.password? 'password' : 'text'}
