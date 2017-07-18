@@ -1,6 +1,7 @@
-export function fetch() {
+export function fetch(id) {
   return {
-    type: '_BORROWERS_LIST_FETCH'
+    type: '_BORROWERS_LIST_FETCH',
+    id
   }
 }
 

@@ -1,10 +1,10 @@
 import initial_state from '../initial_states/control_panel/borrower_profile';
 
-export default function borrower_profile(state = initial_states, action) {
+export default function borrower_profile(state = initial_state, action) {
   switch(action.type) {
     case '_BORROWER_PROFILE_FETCH':
       return {
-        ...state
+        ...state,
         backend: {
           processing: true,
           status: null,
@@ -20,7 +20,7 @@ export default function borrower_profile(state = initial_states, action) {
           message: null
         }
       }
-    case 'BORROWER_PROFILE_FETCH_FAILED'
+    case 'BORROWER_PROFILE_FETCH_FAILED':
       return {
         ...state,
         backend: {

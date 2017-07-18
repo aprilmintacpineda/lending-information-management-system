@@ -31,7 +31,7 @@ render(
 
       <Route path="/new-borrower" component={NewBorrower} />
       <Route path="/borrowers" component={BorrowersList} />
-      <Route path="/borrowers/:id" component={BorrowerProfile} />
+      <Route path="/borrowers/:id/view" component={BorrowerProfile} />
 
       <Route path="/login" component={Login} />
       <Route path="*" component={Landing} />

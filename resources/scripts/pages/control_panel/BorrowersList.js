@@ -32,8 +32,8 @@ class BorrowersList extends Component {
 
         <section className="buttons">
           <ul>
-            <li><Link to={'edit-borrower-profile/' + borrower.id}>Profile</Link></li>
-            <li><Link to={'edit-borrower-profile/' + borrower.id}>Edit</Link></li>
+            <li><Link to={'borrowers/' + borrower.id + '/view'}>Profile</Link></li>
+            <li><Link to={'borrowers/' + borrower.id + '/edit'}>Edit</Link></li>
           </ul>
         </section>
       </section>

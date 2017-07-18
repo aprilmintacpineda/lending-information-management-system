@@ -7,6 +7,10 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
       id: args.id
     }
   })
-  .then(borrower => events.sender.send('BORROWER_PROFILE_FETCH_SUCCESSFUL', borrower))
-  .catch(err => events.sender.send('BORROWER_PROFILE_FETCH_FAILED', err.message));
+  .then(borrower => event.sender.send('BORROWER_PROFILE_FETCH_SUCCESSFUL', {
+    data: {...borrower.dataValues}
+  }))
+  .catch(err => event.sender.send('BORROWER_PROFILE_FETCH_FAILED', {
+    message: err.message
+  }));
 });
