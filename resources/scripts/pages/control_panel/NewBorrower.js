@@ -29,7 +29,7 @@ class NewBorrower extends Component {
   }
 
   componentWillMount() {
-    document.title = 'Add new borrower - Lending Information System';
+    document.title = 'Add new borrower - LIMS';
   }
 
   componentWillUnmount() {
@@ -38,7 +38,7 @@ class NewBorrower extends Component {
 
   componentWillUpdate(nextProps) {
     if(nextProps.new_borrower.backend.status == 'successful') {
-      nextProps.router.push('/borrowers/' + nextProps.new_borrower.id);
+      nextProps.router.push('/borrowers/' + nextProps.new_borrower.id + '/view');
     }
   }
 
@@ -56,7 +56,6 @@ class NewBorrower extends Component {
       months_to_pay: this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'due-date-only'? this.props.new_borrower.months_to_pay.value : null,
       condition_applied: this.props.new_borrower.amount_loan.condition,
       interest: this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'interest-only'? this.computeInterest() : 0,
-      profit_per_month: this.computeInterest(),
       profit: this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'interest-only'? this.computeProfit() : 0,
       interest_rate: this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'interest-only'? this.props.new_borrower.interest_rate.value : 0,
       interest_type: this.props.new_borrower.interest_rate.type,
@@ -176,6 +175,8 @@ class NewBorrower extends Component {
       per_half_month = this.computePerHalfMonth();
     }
 
+    console.log(this.props.new_borrower.backend.allow_submit);
+
     return (
       <WithSidebar onLink="new-borrower">
         <div className="new-loan-wrapper">
@@ -265,29 +266,41 @@ class NewBorrower extends Component {
                   <input
                   id="apply-due-date-interest"
                   type="radio"
+                  disabled={this.props.new_borrower.backend.processing}
                   checked={this.props.new_borrower.amount_loan.condition == 'due-date-and-interest'}
-                  onChange={() => this.props.changeLoanCondition('due-date-and-interest')} />
+                  onChange={changeEvent => {
+                    if(changeEvent.target.checked) this.props.changeLoanCondition('due-date-and-interest');
+                  }} />
                   <label htmlFor="apply-due-date-interest">Apply due date and interest</label>
                   <br/>
                   <input
                   id="apply-interest-only"
                   type="radio"
+                  disabled={this.props.new_borrower.backend.processing}
                   checked={this.props.new_borrower.amount_loan.condition == 'interest-only'}
-                  onChange={() => this.props.changeLoanCondition('interest-only')} />
+                  onChange={changeEvent => {
+                    if(changeEvent.target.checked) this.props.changeLoanCondition('interest-only');
+                  }} />
                   <label htmlFor="apply-interest-only">Apply interest only</label>
                   <br/>
                   <input
                   id="apply-due-date-only"
                   type="radio"
+                  disabled={this.props.new_borrower.backend.processing}
                   checked={this.props.new_borrower.amount_loan.condition == 'due-date-only'}
-                  onChange={() => this.props.changeLoanCondition('due-date-only')} />
+                  onChange={changeEvent => {
+                    if (changeEvent.target.checked) this.props.changeLoanCondition('due-date-only');
+                  }} />
                   <label htmlFor="apply-due-date-only">Apply due date only</label>
                   <br/>
                   <input
                   id="no-due-date-no-interest"
                   type="radio"
+                  disabled={this.props.new_borrower.backend.processing}
                   checked={this.props.new_borrower.amount_loan.condition == 'no-due-date-and-interest'}
-                  onChange={() => this.props.changeLoanCondition('no-due-date-and-interest')} />
+                  onChange={changeEvent => {
+                    if(changeEvent.target.checked) this.props.changeLoanCondition('no-due-date-and-interest');
+                  }} />
                   <label htmlFor="no-due-date-no-interest">Don't apply due date and interest</label>
                 </li>
                 <li className="clear-floats">
@@ -345,14 +358,17 @@ class NewBorrower extends Component {
                   onChange={this.props.changeInterest}
                   value={this.props.new_borrower.amount_loan.condition == 'interest-only' || this.props.new_borrower.amount_loan.condition == 'due-date-and-interest'? this.props.new_borrower.interest_rate.value : 'N/A'}
                   errors={this.props.new_borrower.interest_rate.errors}
-                  disabled={(this.props.new_borrower.amount_loan.condition == 'interest-only' || this.props.new_borrower.amount_loan.condition) && !this.props.new_borrower.backend.processing? false : true}
+                  disabled={(this.props.new_borrower.amount_loan.condition == 'interest-only' || this.props.new_borrower.amount_loan.condition == 'due-date-and-interest') && !this.props.new_borrower.backend.processing? false : true}
                   maxlength={50} />
-                  <p>{currency(this.props.new_borrower.interest_rate.value)} {this.props.new_borrower.interest_rate.type == 'percentage'? 'Percent' : 'Pesos'}</p>
+                  {this.props.new_borrower.amount_loan.condition == 'interest-only' || this.props.new_borrower.amount_loan.condition == 'due-date-and-interest'?
+                    <p>{currency(this.props.new_borrower.interest_rate.value)} {this.props.new_borrower.interest_rate.type == 'percentage'? 'Percent' : 'Pesos'}</p>
+                  : null}
                 </li>
                 <li>
                   <input
                   id="interest-type-percentage"
                   type="radio"
+                  disabled={this.props.new_borrower.backend.processing || this.props.new_borrower.amount_loan.condition == 'due-date-only' || this.props.new_borrower.amount_loan.condition == 'no-due-date-and-interest'}
                   checked={this.props.new_borrower.interest_rate.type == 'percentage'}
                   onChange={() => this.props.changeInterestType('percentage')} />
                   <label htmlFor="interest-type-percentage">Percentage</label>
@@ -360,6 +376,7 @@ class NewBorrower extends Component {
                   <input
                   id="interest-type-fixed"
                   type="radio"
+                  disabled={this.props.new_borrower.backend.processing || this.props.new_borrower.amount_loan.condition == 'due-date-only' || this.props.new_borrower.amount_loan.condition == 'no-due-date-and-interest'}
                   checked={this.props.new_borrower.interest_rate.type == 'fixed'}
                   onChange={() => this.props.changeInterestType('fixed')} />
                   <label htmlFor="interest-type-fixed">Fixed value</label>
@@ -423,21 +440,7 @@ class NewBorrower extends Component {
                   value="Next"
                   onClick={this.handleSubmit}
                   sending={this.props.new_borrower.backend.processing}
-                  disabled={this.props.new_borrower.backend.processing
-                  || !this.props.new_borrower.firstname.value.length
-                  || this.props.new_borrower.firstname.errors.length
-                  || !this.props.new_borrower.middlename.value.length
-                  || this.props.new_borrower.middlename.errors.length
-                  || !this.props.new_borrower.surname.value.length
-                  || this.props.new_borrower.surname.errors.length
-                  || !this.props.new_borrower.amount_loan.value.length
-                  || this.props.new_borrower.amount_loan.errors.length
-                  || !this.props.new_borrower.interest_rate.value.length
-                  || this.props.new_borrower.interest_rate.errors.length
-                  || !this.props.new_borrower.months_to_pay.value.length
-                  || this.props.new_borrower.months_to_pay.errors.length
-                  || this.props.new_borrower.gender.errors.length
-                  || this.props.new_borrower.loan_date.errors.length? true: false}
+                  disabled={this.props.new_borrower.backend.allow_submit && !this.props.new_borrower.backend.processing? false: true}
                   errors={[this.props.new_borrower.backend.message]} />
                 </li>
               </ul>

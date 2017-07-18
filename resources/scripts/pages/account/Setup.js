@@ -19,7 +19,7 @@ class Setup extends Component {
   }
 
   componentWillMount() {
-    document.title = 'Set up account information - Lending Information System';
+    document.title = 'Set up account information - LIMS';
   }
 
   handleSubmit(event) {

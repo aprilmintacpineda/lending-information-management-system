@@ -11,6 +11,7 @@ import * as borrowersListActions from '../../actions/control_panel/borrowers_lis
 
 class BorrowersList extends Component {
   componentWillMount() {
+    document.title = 'List of borrowers - LIMS';
     this.props.fetch();
   }
 

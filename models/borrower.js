@@ -6,7 +6,7 @@ import Database from '../main_process/Database';
 
 const DB = new Database;
 
-let borrower = DB.createModel('borrower', {
+let borrower = DB.createModel('borrowers', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: false,

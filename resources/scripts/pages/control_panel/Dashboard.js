@@ -10,10 +10,8 @@ import * as dashboardActions from '../../actions/control_panel/dashboard';
 
 class Dashboard extends Component {
   componentWillMount() {
-    document.title = 'Dashboard - Lending Information System';
-  }
-
-  componentWillMount() {
+    document.title = 'Dashboard - LIMS';
+    
     this.props.getTodays();
     this.props.getTomorrows();
     this.props.getYesterdays();

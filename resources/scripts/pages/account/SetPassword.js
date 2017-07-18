@@ -17,7 +17,7 @@ export class SetPassword extends Component {
   }
 
   componentWillMount() {
-    document.title = 'Set password - Lending Information System';
+    document.title = 'Set password - LIMS';
   }
 
   handleSubmit(event) {

@@ -28,10 +28,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      profit_per_month: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
       profit: {
         type: Sequelize.INTEGER,
         allowNull: false

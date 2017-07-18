@@ -13,7 +13,7 @@ class Logout extends Component {
   }
 
   componentWillMount() {
-    document.title = 'Logged out - Lending Information System';
+    document.title = 'Logged out - LIMS';
     this.props.logout();
   }
 

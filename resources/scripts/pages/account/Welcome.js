@@ -10,7 +10,7 @@ class Welcome extends Component {
   }
 
   componentWillMount() {
-    document.title = 'Welcome '+ this.props.session.user_data.firstname +'! - Lending Information System';
+    document.title = 'Welcome '+ this.props.session.user_data.firstname +'! - LIMS';
   }
 
   render() {

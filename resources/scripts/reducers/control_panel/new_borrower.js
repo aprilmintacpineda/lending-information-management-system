@@ -13,42 +13,136 @@ import {
   validatePhoneNumber
 } from '../../helpers/Validator';
 
+function allowSubmit(new_state) {
+  if(new_state.amount_loan.condition == 'due-date-only') {
+    return new_state.backend.processing
+      || !new_state.firstname.value.length
+      || new_state.firstname.errors.length
+      || !new_state.middlename.value.length
+      || new_state.middlename.errors.length
+      || !new_state.surname.value.length
+      || new_state.surname.errors.length
+      || !new_state.amount_loan.value.length
+      || new_state.amount_loan.errors.length
+      || new_state.gender.errors.length
+      || new_state.loan_date.errors.length
+      || !new_state.months_to_pay.value.length
+      || new_state.months_to_pay.errors.length? false : true;
+  } else if(new_state.amount_loan.condition == 'interest-only') {
+    return new_state.backend.processing
+      || !new_state.firstname.value.length
+      || new_state.firstname.errors.length
+      || !new_state.middlename.value.length
+      || new_state.middlename.errors.length
+      || !new_state.surname.value.length
+      || new_state.surname.errors.length
+      || !new_state.amount_loan.value.length
+      || new_state.amount_loan.errors.length
+      || new_state.gender.errors.length
+      || new_state.loan_date.errors.length
+      || !new_state.interest_rate.value.length
+      || new_state.interest_rate.errors.length? false : true;
+  } else if(new_state.amount_loan.condition == 'no-due-date-and-interest') {
+    return new_state.backend.processing
+      || !new_state.firstname.value.length
+      || new_state.firstname.errors.length
+      || !new_state.middlename.value.length
+      || new_state.middlename.errors.length
+      || !new_state.surname.value.length
+      || new_state.surname.errors.length
+      || !new_state.amount_loan.value.length
+      || new_state.amount_loan.errors.length
+      || new_state.gender.errors.length
+      || new_state.loan_date.errors.length? false : true;
+  }
+
+  return new_state.backend.processing
+    || !new_state.firstname.value.length
+    || new_state.firstname.errors.length
+    || !new_state.middlename.value.length
+    || new_state.middlename.errors.length
+    || !new_state.surname.value.length
+    || new_state.surname.errors.length
+    || !new_state.amount_loan.value.length
+    || new_state.amount_loan.errors.length
+    || new_state.gender.errors.length
+    || new_state.loan_date.errors.length
+    || !new_state.interest_rate.value.length
+    || new_state.interest_rate.errors.length
+    || !new_state.months_to_pay.value.length
+    || new_state.months_to_pay.errors.length? false : true;
+}
+
 export default function new_borrower(state = initial_state, action) {
+  let new_state;
+
   switch(action.type) {
     case 'NEWBORROWER_CFN':
-      return {
+      new_state = {
         ...state,
         firstname: {
           errors: validateName('First name', action.value),
           value: action.value
         }
       }
-    case 'NEWBORROWER_CMN':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_CMN':
+      new_state = {
         ...state,
         middlename: {
           errors: validateName('Middle name', action.value),
           value: action.value
         }
       }
-    case 'NEWBORROWER_CSN':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_CSN':
+      new_state = {
         ...state,
         surname: {
           errors: validateName('Surname', action.value),
           value: action.value
         }
       }
-    case 'NEWBORROWER_CGD':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_CGD':
+      new_state = {
         ...state,
         gender: {
           errors: validateGender(action.value),
           value: action.value
         }
       }
-    case 'NEWBORROWER_CAL':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_CAL':
+      new_state = {
         ...state,
         amount_loan: {
           ...state.amount_loan,
@@ -56,8 +150,16 @@ export default function new_borrower(state = initial_state, action) {
           value: action.value
         }
       }
-    case 'NEWBORROWER_CMP':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_CMP':
+      new_state = {
         ...state,
         months_to_pay: {
           ...state.months_to_pay,
@@ -65,8 +167,16 @@ export default function new_borrower(state = initial_state, action) {
           value: action.value
         }
       }
-    case 'NEWBORROWER_CIR':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_CIR':
+      new_state = {
         ...state,
         interest_rate: {
           ...state.interest_rate,
@@ -74,24 +184,48 @@ export default function new_borrower(state = initial_state, action) {
           value: action.value
         }
       }
-    case 'NEWBORROWER_CIT':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_CIT':
+      new_state = {
         ...state,
         interest_rate: {
           ...state.interest_rate,
           type: action.value
         }
       }
-    case 'NEWBORROWER_CLC':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_CLC':
+      new_state = {
         ...state,
         amount_loan: {
           ...state.amount_loan,
           condition: action.value
         }
       }
-    case 'NEWBORROWER_CLY':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_CLY':
+      new_state = {
         ...state,
         loan_date: {
           ...state.loan_date,
@@ -99,8 +233,16 @@ export default function new_borrower(state = initial_state, action) {
           errors: validateLoanDate(state.loan_date.month, state.loan_date.date, action.value)
         }
       }
-    case 'NEWBORROWER_CLD':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_CLD':
+      new_state = {
         ...state,
         loan_date: {
           ...state.loan_date,
@@ -108,8 +250,16 @@ export default function new_borrower(state = initial_state, action) {
           errors: validateLoanDate(state.loan_date.month, action.value, state.loan_date.year)
         }
       }
-    case 'NEWBORROWER_CLM':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_CLM':
+      new_state = {
         ...state,
         loan_date: {
           ...state.loan_date,
@@ -117,21 +267,45 @@ export default function new_borrower(state = initial_state, action) {
           errors: validateLoanDate(action.value, state.loan_date.date, state.loan_date.year)
         }
       }
-    case 'NEWBORROWER_AMCN':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_AMCN':
+      new_state = {
         ...state,
         contact_numbers: state.contact_numbers.concat({
           value: '',
           errors: []
         })
       }
-    case 'NEWBORROWER_RCN':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_RCN':
+      new_state = {
         ...state,
         contact_numbers: state.contact_numbers.filter((contact_number, index) => index != action.index)
       }
-    case 'NEWBORROWER_CCN':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_CCN':
+      new_state = {
         ...state,
         contact_numbers: state.contact_numbers.map((contact_number, index) => (
           index == action.index? {
@@ -140,18 +314,35 @@ export default function new_borrower(state = initial_state, action) {
           } : contact_number
         ))
       }
-    case 'NEWBORROWER_CPM':
+
       return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
+    case 'NEWBORROWER_CPM':
+      new_state = {
         ...state,
         payment_method: {
           value: action.value,
           errors: validatePaymentMethod(action.value)
         }
       }
+
+      return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
     case '_NEWBORROWER_SUBMIT':
       return {
         ...state,
         backend: {
+          allow_submit: state.backend.allow_submit,
           processing: true,
           status: null,
           message: null
@@ -161,6 +352,7 @@ export default function new_borrower(state = initial_state, action) {
       return {
         ...state,
         backend: {
+          allow_submit: state.backend.allow_submit,
           processing: false,
           status: 'failed',
           message: 'Failed to create new borrower: ' + action.message
@@ -171,6 +363,7 @@ export default function new_borrower(state = initial_state, action) {
         ...state,
         id: action.id,
         backend: {
+          allow_submit: state.backend.allow_submit,
           processing: false,
           status: 'successful',
           message: null

@@ -3,6 +3,7 @@ import Borrower from '../../../models/borrower';
 import ContactNumbers from '../../../models/contactNumber';
 import Payment from '../../../models/payment';
 import Loan from '../../../models/loan';
+import Sequelize from 'sequelize';
 
 ipcMain.on('BORROWERS_LIST_FETCH', (event, arg) => {
   Borrower.findAll({
@@ -12,22 +13,12 @@ ipcMain.on('BORROWERS_LIST_FETCH', (event, arg) => {
         model: Loan,
         include: [ Payment ],
         order: [
-          [
-            Payment,
-            'created_at'
-          ]
+          [ Payment, 'created_at' ]
         ]
       }
     ],
     order: [
-      [
-        ContactNumbers,
-        'created_at'
-      ],
-      [
-        Loan,
-        'loan_date'
-      ]
+      [ Loan, 'loan_date', 'desc' ]
     ]
   })
   .then(borrowers => event.sender.send('BORROWERS_LIST_FETCH_SUCCESSFUL', {

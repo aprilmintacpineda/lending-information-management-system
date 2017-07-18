@@ -29,7 +29,6 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
     loan_date,
     amount: Number(arg.amount_loan),
     interest: arg.interest,
-    profit_per_month: Number(arg.profit_per_month),
     profit: arg.profit,
     interest_rate: Number(arg.interest_rate),
     interest_type: arg.interest_type,

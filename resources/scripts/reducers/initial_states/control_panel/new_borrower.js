@@ -51,6 +51,7 @@ export default {
     }
   ],
   backend: {
+    allow_submit: false,
     processing: false,
     status: null,
     message: null

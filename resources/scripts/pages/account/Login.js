@@ -18,7 +18,7 @@ class Login extends Component {
   }
 
   componentWillMount() {
-    document.title = 'Login - Lending Information System';
+    document.title = 'Login - LIMS';
     this.props.getUserData();
   }
 
