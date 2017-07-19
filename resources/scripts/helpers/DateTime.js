@@ -45,6 +45,16 @@ export function toFormalDateTime(timestamp) {
     ' ' + ((hours_raw + 11) % 12 + 1) + ':' + minutes + ' ' + notation;
 }
 
+export function toFormalDate(timestamp) {
+  let date = new Date(timestamp);
+  return months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
+}
+
+export function getFormalDueDate(timestamp) {
+  let date = new Date(timestamp);
+  return months[date.getMonth() + 1] + ' ' + date.getDate() + ', ' + date.getFullYear();
+}
+
 export function toUnixTimestamp(timestamp) {
   let date = new Date(timestamp);
   return Math.floor(date.getTime() / 1000);

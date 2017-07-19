@@ -33,8 +33,8 @@ class BorrowersList extends Component {
 
         <section className="buttons">
           <ul>
-            <li><Link to={'borrowers/' + borrower.id + '/view'}>Profile</Link></li>
-            <li><Link to={'borrowers/' + borrower.id + '/edit'}>Edit</Link></li>
+            <li><Link className="default-btn-blue" to={'borrowers/' + borrower.id + '/view'}>Profile</Link></li>
+            <li><Link className="default-btn-blue" to={'borrowers/' + borrower.id + '/edit'}>Edit</Link></li>
           </ul>
         </section>
       </section>
@@ -45,7 +45,7 @@ class BorrowersList extends Component {
         {this.props.borrowers_list.backend.processing?
           <img src={path.join(app_path, 'app/images/processing-blue.gif')} />
         : <div className="borrowers-list-wrapper">
-          {borrowers}
+          {borrowers.length? borrowers : <p>There are no borrowers yet. To add a new borrower, click on the <strong>New Borrower</strong> on the side bar.</p>}
           </div>}
       </WithSidebar>
     );

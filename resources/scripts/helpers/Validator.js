@@ -1,6 +1,32 @@
 import { monthMaxdays, monthList, maxYear, minYear } from './DateTime';
 
 /**
+ * validates the amount paid
+ */
+export function validateAmountPaid(value, payment_type) {
+  let errors = [];
+
+  if(!isNaN(value) && Number(value) < 0) {
+    errors.push('Invalid amount paid.');
+  }
+
+  return errors;
+}
+
+/**
+ * 
+ */
+export function validatePaymentType(payment_type) {
+  let errors = [];
+
+  if(payment_type != 'period-only' && payment_type != 'partial-only' && payment_type != 'paid-in-full') {
+    errors.push('Invalid payment type.');
+  }
+
+  return errors;
+}
+
+/**
  * validates phone number
  */
 export function validatePhoneNumber(phone_number) {

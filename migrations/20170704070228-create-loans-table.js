@@ -46,6 +46,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      per_semi_month: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       per_day: {
         type: Sequelize.INTEGER,
         allowNull: false

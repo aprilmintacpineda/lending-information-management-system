@@ -15,9 +15,12 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
       // loans
       {
         model: Loan,
-        include: [ Payment ],
+        include: {
+          model: Payment,
+          order: [ 'created_at', 'desc' ]
+        },
         order: [
-          [ Payment, 'created_at' ]
+          [ 'loan_date', 'desc' ]
         ]
       }
     ],

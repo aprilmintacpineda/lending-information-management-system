@@ -16,3 +16,8 @@ Array.prototype.removeFirst = function() {
   this.shift();
   return this;
 }
+
+Array.prototype.addFirst = function(field) {
+  this.unshift(field);
+  return this;
+}

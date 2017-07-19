@@ -18,6 +18,10 @@ export default DB.createModel('payment', {
     type: Sequelize.INTEGER,
     allowNull: false
   },
+  period_paid: {
+    type: Sequelize.DATE,
+    allowNull: false
+  },
   created_at: {
     type: Sequelize.DATE,
     allowNull: false

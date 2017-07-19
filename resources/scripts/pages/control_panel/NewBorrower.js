@@ -60,6 +60,7 @@ class NewBorrower extends Component {
       interest_rate: this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'interest-only'? this.props.new_borrower.interest_rate.value : 0,
       interest_type: this.props.new_borrower.interest_rate.type,
       per_month: this.computePerMonth(),
+      per_semi_month: this.computePerHalfMonth(),
       per_day: this.computePerDay(),
       loan_date: this.props.new_borrower.loan_date.month + ' ' + this.props.new_borrower.loan_date.date + ', ' + this.props.new_borrower.loan_date.year
     });
@@ -128,7 +129,7 @@ class NewBorrower extends Component {
     }
 
     for(let a = max_year; a >= min_year; a--) {
-      years .push(<option key={a}>{a}</option>);
+      years.push(<option key={a}>{a}</option>);
     }
 
     if(this.props.new_borrower.amount_loan.condition == 'interest-only'
@@ -175,8 +176,6 @@ class NewBorrower extends Component {
       per_half_month = this.computePerHalfMonth();
     }
 
-    console.log(this.props.new_borrower.backend.allow_submit);
-
     return (
       <WithSidebar onLink="new-borrower">
         <div className="new-loan-wrapper">
@@ -192,8 +191,7 @@ class NewBorrower extends Component {
                   placeholder="Borrower's first name..."
                   onChange={value => this.props.changeFirstname(ucwords(value))}
                   errors={this.props.new_borrower.firstname.errors}
-                  disabled={this.props.new_borrower.backend.processing}
-                  maxlength={50} />
+                  disabled={this.props.new_borrower.backend.processing} />
                 </li>
                 <li>
                   <InputText
@@ -201,8 +199,7 @@ class NewBorrower extends Component {
                   placeholder="Borrower's middle name..."
                   onChange={value => this.props.changeMiddlename(ucwords(value))}
                   errors={this.props.new_borrower.middlename.errors}
-                  disabled={this.props.new_borrower.backend.processing}
-                  maxlength={50} />
+                  disabled={this.props.new_borrower.backend.processing} />
                 </li>
                 <li>
                   <InputText
@@ -210,8 +207,7 @@ class NewBorrower extends Component {
                   placeholder="Borrower's surname..."
                   onChange={value => this.props.changeSurname(ucwords(value))}
                   errors={this.props.new_borrower.surname.errors}
-                  disabled={this.props.new_borrower.backend.processing}
-                  maxlength={50} />
+                  disabled={this.props.new_borrower.backend.processing} />
                 </li>
                 <li>
                   The borrower is a...
@@ -239,8 +235,7 @@ class NewBorrower extends Component {
                     placeholder="Borrower's contact number..."
                     onChange={value => this.props.changeContactNumber(value, index)}
                     errors={field.errors}
-                    disabled={this.props.new_borrower.backend.processing}
-                    maxlength={50} />
+                    disabled={this.props.new_borrower.backend.processing} />
 
                     {index > 0?
                       <a className="remove-contact-field" onClick={() => this.props.removeContactNumber(index)}>X</a>
@@ -248,12 +243,10 @@ class NewBorrower extends Component {
                   </li>
                 ))}
 
-                <InputButton
-                value="Add more fields"
-                onClick={this.props.addMoreContactNumbers}
-                sending={this.props.new_borrower.backend.processing}
-                disabled={this.props.new_borrower.backend.processing}
-                errors={[]} />
+                <a className={this.props.new_borrower.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
+                onClick={() => this.props.new_borrower.backend.processing? false : this.props.addMoreContactNumbers()}>
+                  Add more fields
+                </a>
               </ul>
             </div>
 

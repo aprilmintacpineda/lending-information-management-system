@@ -1,4 +1,10 @@
 .borrower-profile
+  .loading-contents
+    img
+      position: absolute
+      +fitWidth
+      +fitHeight
+      +pCenter
   section
     padding-top: 26px
     section
@@ -7,16 +13,53 @@
       background: #fff
       border-radius: 0 4px 4px 4px
       position: relative
-      border: 1px solid #eeeeee
-      .loan-container > div
-        margin-bottom: 10px
-        &:last-child
-          margin-bottom: 0
-        div
-          margin-bottom: 5px
-      h1
+      border: 1px solid #cccccc
+      > ul
+        margin-left: 20px
+      .loan-container
+        .left-right-columned
+          h1
+            letter-spacing: 5px
+            color: #cccccc
+            font-size: 18px
+            margin-bottom: 10px
+          +clearFloat
+          .left
+            float: left
+            width: 50%
+          .right
+            .payment-form
+              margin-bottom: 10px
+              li
+                list-style: none
+                display: block
+                margin-bottom: 10px
+                width: 100%
+                +clearFloat
+                &:last-child
+                  margin-bottom: 0
+                .buttons
+                  float: left
+                  margin-right: 10px
+                .payment-period
+                  float: left
+                  min-width: 0px !important
+                  margin-right: 10px
+            .actions
+              +clearFloat
+              margin-bottom: 10px
+              li
+                list-style: none
+                float: left
+            float: left
+            width: 50%
+        .row
+          margin-bottom: 10px
+          &:last-child
+            margin-bottom: 0
+      > h1
         position: absolute
-        border: 1px solid #eeeeee
+        border: 1px solid #cccccc
         top: -33px
         padding: 5px
         left: -1px
@@ -25,4 +68,3 @@
         letter-spacing: 5px
         color: #33cccc
         font-size: 18px
-        margin-bottom: 10px

@@ -32,10 +32,11 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
     profit: arg.profit,
     interest_rate: Number(arg.interest_rate),
     interest_type: arg.interest_type,
-    months_to_pay: arg.apply_due_date? Number(arg.months_to_pay) : null,
+    months_to_pay: Number(arg.months_to_pay),
     payment_method: arg.payment_method,
     per_month: arg.per_month,
     per_day: arg.per_day,
+    per_semi_month: arg.per_semi_month,
     condition_applied: arg.condition_applied,
     created_at,
     updated_at
@@ -57,7 +58,7 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
   .then(() => event.sender.send('NEWBORROWER_SUBMIT_SUCCESSFUL', {
     id: new_borrower_id
   }))
-  .catch((err) => {
+  .catch(err => {
     event.sender.send('NEWBORROWER_SUBMIT_FAILED', {
       message: err.message
     });
