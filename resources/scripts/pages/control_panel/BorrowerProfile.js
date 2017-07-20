@@ -51,8 +51,6 @@ class BorrowerProfile extends Component {
       years.push(<option key={a}>{a}</option>);
     }
 
-    console.log(this.props.borrower_profile);
-
     return (
       <WithSidebar>
         <div className="borrower-profile">
@@ -184,12 +182,14 @@ class BorrowerProfile extends Component {
 
                     <div className="right">
                       <ul className="actions">
-                        <li>
-                          <a className={loan.payment_fields.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
-                          onClick={() => loan.payment_fields.backend.processing? false : this.props.togglePaymentForm(true, index)}>
-                            New Payment
-                          </a>
-                        </li>
+                        {!loan.payment_fields.shown?
+                          <li>
+                            <a className={loan.payment_fields.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
+                            onClick={() => loan.payment_fields.backend.processing? false : this.props.togglePaymentForm(true, index)}>
+                              New Payment
+                            </a>
+                          </li>
+                        : null }
                       </ul>
 
                       {loan.payment_fields.shown?
