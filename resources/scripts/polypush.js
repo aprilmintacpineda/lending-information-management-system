@@ -1,3 +1,6 @@
+/**
+ * Array prototype functions
+ */
 Array.prototype.stringify = function(inject = null) {
   let string = '';
 
@@ -34,4 +37,30 @@ Array.prototype.sum = function(field = null) {
   });
 
   return sum;
+}
+
+Array.prototype.sumIf = function(callback, field = null) {
+  let sum = 0;
+
+  this.forEach(value => {
+    if(callback(value)) {
+      if(value.constructor == Object) {
+        sum += value[field];
+      } else {
+        sum += value;
+      }
+    }
+  });
+
+  return sum;
+}
+
+Array.prototype.countIf = function(callback) {
+  let count = 0;
+
+  this.forEach(value => {
+    if(callback(value)) count++;
+  });
+
+  return count;
 }

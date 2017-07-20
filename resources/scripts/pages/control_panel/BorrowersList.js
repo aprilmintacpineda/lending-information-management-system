@@ -6,8 +6,11 @@ import { Link } from 'react-router';
 
 // components
 import WithSidebar from '../../components/WithSidebar';
+import WithLabel from '../../components/WithLabel';
 // actions
 import * as borrowersListActions from '../../actions/control_panel/borrowers_list';
+// helpers
+import { currency } from '../../helpers/Numbers';
 
 class BorrowersList extends Component {
   componentWillMount() {
@@ -18,17 +21,49 @@ class BorrowersList extends Component {
   render() {
     let app_path = remote.app.getAppPath();
 
-    console.log(this.props.borrowers_list.list);
-
     let borrowers = this.props.borrowers_list.list.map((borrower, index) => (
       <section className="borrower-info" key={index}>
         <h1 className="borrower-name">{borrower.firstname} {borrower.middlename} {borrower.surname}</h1>
         <section>
-          <p>{borrower.gender? 'Male' : 'Female'}</p>
+          <div className="row">
+            <WithLabel label="Gender">
+              <p>{borrower.gender? 'Male' : 'Female'}</p>
+            </WithLabel>
+          </div>
 
-          <p>
-            {borrower.contact_numbers.map((contact_number, index) => contact_number.number + (index + 1 < borrower.contact_numbers.length? ', ': ''))}
-          </p>
+          <div className="row">
+            <WithLabel label="Contact numbers">
+              <p>
+                {borrower.contact_numbers.length > 0?
+                  borrower.contact_numbers.map((contact_number, index) => contact_number.number + (index + 1 < borrower.contact_numbers.length? ', ': ''))
+                : 'No contact numbers to show.'}
+              </p>
+            </WithLabel>
+          </div>
+
+          <div className="row">
+            <WithLabel label="Total unpaid loan balance">
+              <p>{currency(borrower.summary.total_unpaid_balance)} Pesos</p>
+            </WithLabel>
+          </div>
+
+          <div className="row">
+            <WithLabel label="Total loans">
+              <div>
+                {borrower.summary.total_loans > 1?
+                  <p>{borrower.summary.total_loans} total loans</p>
+                : <p>{borrower.summary.total_loans} total loan</p>}
+
+                {borrower.summary.total_unpaid_loans > 1?
+                  <p>{borrower.summary.total_unpaid_loans} total unpaid loans.</p>
+                : <p>{borrower.summary.total_unpaid_loans} total unpaid loan.</p>}
+
+                {borrower.summary.total_paid_loans > 1?
+                  <p>{borrower.summary.total_paid_loans} total paid loans.</p>
+                : <p>{borrower.summary.total_paid_loans} total paid loan.</p>}
+              </div>
+            </WithLabel>
+          </div>
         </section>
 
         <section className="buttons">

@@ -1,4 +1,15 @@
-import initial_state from '../initial_states/control_panel/borrower_list';
+import initial_state from '../initial_states/control_panel/borrowers_list';
+
+function getSummary(loans) {
+  let total_unpaid_loans = loans.countIf(loan => !loan.fully_paid);
+
+  return {
+    total_loans: loans.length,
+    total_unpaid_loans,
+    total_paid_loans: loans.length - total_unpaid_loans,
+    total_unpaid_balance: loans.sumIf(loan => !loan.fully_paid, 'amount')
+  }
+}
 
 export default function borrower_list(state = initial_state, action) {
   switch(action.type) {
@@ -13,7 +24,10 @@ export default function borrower_list(state = initial_state, action) {
       }
     case 'BORROWERS_LIST_FETCH_SUCCESSFUL':
       return {
-        list: action.list,
+        list: action.list.map(borrower => ({
+          ...borrower,
+          summary: getSummary(borrower.loans)
+        })),
         backend: {
           processing: false,
           status: 'successful',
