@@ -13,6 +13,8 @@ ipcMain.on('BORROWER_PROFILE_SEND_PAYMENT', (event, arg) => {
     id: uniqueId(),
     loan_id: arg.loan_id,
     amount: arg.amount,
+    quarter: arg.quarter,
+    payment_coverage: arg.payment_coverage,
     period_paid,
     created_at,
     updated_at

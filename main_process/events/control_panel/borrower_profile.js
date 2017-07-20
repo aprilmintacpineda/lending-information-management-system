@@ -1,4 +1,5 @@
 import { ipcMain } from 'electron';
+import Sequelize from 'sequelize';
 import Borrower from '../../../models/borrower';
 import ContactNumber from '../../../models/ContactNumber';
 import Loan from '../../../models/loan';

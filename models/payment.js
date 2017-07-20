@@ -22,6 +22,14 @@ export default DB.createModel('payment', {
     type: Sequelize.DATE,
     allowNull: false
   },
+  payment_coverage: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  quarter: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
   created_at: {
     type: Sequelize.DATE,
     allowNull: false

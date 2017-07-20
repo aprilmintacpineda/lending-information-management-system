@@ -51,6 +51,8 @@ class BorrowerProfile extends Component {
       years.push(<option key={a}>{a}</option>);
     }
 
+    console.log(this.props.borrower_profile);
+
     return (
       <WithSidebar>
         <div className="borrower-profile">
@@ -181,8 +183,6 @@ class BorrowerProfile extends Component {
                     </div>
 
                     <div className="right">
-                      <h1>Payments information</h1>
-
                       <ul className="actions">
                         <li>
                           <a className={loan.payment_fields.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
@@ -211,7 +211,7 @@ class BorrowerProfile extends Component {
                             onChange={value => this.props.changePeriodMonth(value, index)}
                             value={loan.payment_fields.period.month}
                             disabled={loan.payment_fields.backend.processing}
-                            errors={[]} >
+                            errors={[]}>
                               {monthList().map((month, index) =>
                                 <option key={index}>{month}</option>
                               )}
@@ -223,6 +223,20 @@ class BorrowerProfile extends Component {
                             disabled={loan.payment_fields.backend.processing}
                             errors={[]} >
                               {years}
+                            </InputSelect>
+                          </li>
+                          <li>
+                            Quarter...
+                            <InputSelect
+                            onChange={value => this.props.changePeriodQuarter(value, index)}
+                            value={loan.payment_method != 2? '' : loan.payment_fields.period.quarter}
+                            disabled={loan.payment_fields.backend.processing || loan.payment_method != 2}
+                            errors={[]}>
+                              {loan.payment_method != 2?
+                                <option>N/A</option>
+                              : null}
+                              <option value="q1">1st Quarter</option>
+                              <option value="q2">2nd Quarter</option>
                             </InputSelect>
                           </li>
                           <li>
@@ -242,6 +256,8 @@ class BorrowerProfile extends Component {
                               value="Next"
                               onClick={() => this.props.makePayment({
                                 loan_id: loan.id,
+                                payment_coverage: loan.payment_fields.amount.type,
+                                quarter: loan.payment_fields.period.quarter,
                                 amount: loan.payment_fields.amount.value,
                                 period_paid: loan.payment_fields.period.month + new Date(loan.loan_date).getDate().toString() + ', ' + loan.payment_fields.period.year
                               }, index)}
@@ -256,14 +272,74 @@ class BorrowerProfile extends Component {
                                 Cancel
                               </a>
                             </div>
+
+                            {loan.payment_fields.backend.status == 'failed'?
+                              <p className="errors">{loan.payment_fields.backend.message}</p>
+                            : null}
                           </li>
                         </ul>
                       : null}
 
-                      <div className="row">
-                        {loan.payments.length? <p>view payments</p>
-                        : <p>No payments has been made since <strong>{toFormalDate(loan.loan_date)}</strong></p>}
+                      <h1>Payments summary</h1>
+
+                      <div className="payment-container">
+                        <div className="row">
+                          <WithLabel label="Total amount paid">
+                            <p>{currency(loan.summary.total_amount_paid)} Pesos</p>
+                          </WithLabel>
+                        </div>
+
+                        <div className="row">
+                          <WithLabel label="Payable balance">
+                            <p>{currency(loan.summary.payable_balance)} Pesos</p>
+                          </WithLabel>
+                        </div>
+
+                        <div className="row">
+                          <WithLabel label="Payable months">
+                            {loan.summary.months_left == 0?
+                              <p>None</p>
+                            : loan.summary.months_left > 1?
+                              <p>{loan.summary.months_left} Months</p>
+                            : <p>{loan.summary.months_left} Month</p>}
+                          </WithLabel>
+                        </div>
                       </div>
+
+                      <h1>Payments details</h1>
+
+                      {loan.payments.length? loan.payments.map((payment, index) =>
+                        <div className="payment-container" key={index}>
+                          <div className="row">
+                            <WithLabel label="Payment period">
+                              {loan.payment_method == 1?
+                                <p>Month of {toFormalDate(payment.period_paid)}</p>
+                              : loan.payment_method == 2?
+                                <p><strong>{payment.quarter == 'q1'? '1st' : '2nd'} quarter</strong> of <strong>{monthList()[new Date(payment.period_paid).getMonth()]}</strong></p>
+                              : <p>blank day of the period</p>}
+                            </WithLabel>
+                          </div>
+
+                          <div className="row">
+                            <WithLabel label="Amount">
+                              {payment.payment_coverage == 'period-only'?
+                                <p>Payment of <strong>{currency(payment.amount)} Pesos for the period only</strong>.</p>
+                              : payment.payment_coverage == 'partial-only'?
+                                <p><strong>Partial payment</strong> of <strong>{currency(payment.amount)} Pesos</strong> for the period only.</p>
+                              : <p><strong>Full payment</strong> of <strong>{currency(payment.amount)} Pesos</strong> for this loan.</p>}
+                            </WithLabel>
+                          </div>
+
+                          <div className="row">
+                            <WithLabel label="Date paid">
+                              <p>{toFormalDate(payment.created_at)}</p>
+                            </WithLabel>
+                          </div>
+                        </div>
+                      ) :
+                        <div className="row">
+                          <p>No payments has been made since <strong>{toFormalDate(loan.loan_date)}</strong></p>
+                        </div>}
                     </div>
                   </div>
                 </div>
@@ -283,6 +359,7 @@ export default connect(store => ({
   togglePaymentForm: borrowerProfileActions.togglePaymentForm,
   changePeriodMonth: borrowerProfileActions.changePeriodMonth,
   changePeriodYear: borrowerProfileActions.changePeriodYear,
+  changePeriodQuarter: borrowerProfileActions.changePeriodQuarter,
   changeAmountPaid: borrowerProfileActions.changeAmountPaid,
   changePaymentType: borrowerProfileActions.changePaymentType,
   makePayment: borrowerProfileActions.makePayment

@@ -43,6 +43,14 @@ export function changePeriodYear(year, index) {
   }
 }
 
+export function changePeriodQuarter(quarter, index) {
+  return {
+    type: 'BORROWER_PROFILE_CPQ',
+    quarter,
+    index
+  }
+}
+
 export function changeAmountPaid(value, index) {
   return {
     type: 'BORROWER_PROFILE_CAP',

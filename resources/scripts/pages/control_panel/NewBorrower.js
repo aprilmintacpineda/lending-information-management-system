@@ -52,7 +52,7 @@ class NewBorrower extends Component {
       gender: this.props.new_borrower.gender.value,
       contact_numbers: this.props.new_borrower.contact_numbers,
       amount_loan: this.props.new_borrower.amount_loan.value,
-      payment_method: this.props.new_borrower.backend.processing || this.props.new_borrower.apply_interest_only || this.props.new_borrower.no_due_date_no_interest? null : this.props.new_borrower.payment_method.value,
+      payment_method: this.props.new_borrower.apply_interest_only || this.props.new_borrower.no_due_date_no_interest? null : this.props.new_borrower.payment_method.value,
       months_to_pay: this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'due-date-only'? this.props.new_borrower.months_to_pay.value : null,
       condition_applied: this.props.new_borrower.amount_loan.condition,
       interest: this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'interest-only'? this.computeInterest() : 0,
