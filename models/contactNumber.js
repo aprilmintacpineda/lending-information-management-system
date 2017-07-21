@@ -5,14 +5,18 @@ import Database from '../main_process/Database';
 const DB = new Database;
 
 export default DB.createModel('contact_number', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: false,
+    primaryKey: true
+  },
   borrower_id: {
     type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: false
+    allowNull: false
   },
   number: {
     type: Sequelize.STRING('20'),
-    primaryKey: true
+    allowNull: false
   },
   created_at: {
     type: Sequelize.NOW,

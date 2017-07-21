@@ -3,8 +3,6 @@ import initial_state from '../initial_states/control_panel/new_borrower';
 import {
   validateName,
   validateGender,
-  validatePasswords,
-  validatePasswordAgain,
   validateAmountLoan,
   validateMonthsToPay,
   validateInterestRate,
@@ -292,6 +290,16 @@ export default function new_borrower(state = initial_state, action) {
         },
       }
     case 'NEWBORROWER_RCN':
+      if(state.contact_numbers.length == 1) {
+        return {
+          ...state,
+          contact_numbers: [{
+            value: '',
+            errors: []
+          }]
+        }
+      }
+
       new_state = {
         ...state,
         contact_numbers: state.contact_numbers.filter((contact_number, index) => index != action.index)

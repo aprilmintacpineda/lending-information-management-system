@@ -1,5 +1,4 @@
 import { ipcMain } from 'electron';
-import Sequelize from 'sequelize';
 import Borrower from '../../../models/borrower';
 import ContactNumber from '../../../models/ContactNumber';
 import Loan from '../../../models/loan';
@@ -12,7 +11,10 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
     },
     include: [
       // contact numbers
-      ContactNumber,
+      {
+        model: ContactNumber,
+        order: [ 'created_at', 'desc' ]
+      },
       // loans
       {
         model: Loan,
@@ -26,8 +28,7 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
       }
     ],
     order: [
-      [ ContactNumber, 'created_at' ],
-      [ Loan, 'loan_date' ]
+      [ Loan, 'loan_date', 'desc' ]
     ]
   })
   .then(borrower => event.sender.send('BORROWER_PROFILE_FETCH_SUCCESSFUL', {

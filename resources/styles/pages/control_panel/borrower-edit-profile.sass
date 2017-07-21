@@ -1,0 +1,42 @@
+.edit-borrower-profile
+  .edit-form
+    +fitWidth
+    margin: 0 auto
+    +clearFloat
+    .left
+      margin-right: 15px
+    ul
+      +fitWidth
+      float: left
+      .closable-field
+        position: relative
+        .closable-input
+          padding-right: 40px
+        .remove-contact-field
+          position: absolute
+          right: 20px
+          +vCenter
+          color: #ff3300
+          border-radius: 4px
+          font-weight: bold
+          display: block
+          cursor: pointer
+          opacity: 0.7
+          &:hover
+            opacity: 1
+      li
+        list-style: none
+        margin-bottom: 10px
+        &:last-child
+          margin-bottom: 0
+        h1
+          letter-spacing: 5px
+          color: #33cccc
+          font-size: 18px
+          margin-bottom: 10px
+  .loading-component
+    img
+      position: absolute
+      +fitWidth
+      +fitHeight
+      +pCenter

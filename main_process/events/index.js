@@ -6,3 +6,4 @@ import './control_panel/new_borrower';
 import './control_panel/borrowers_list';
 import './control_panel/borrower_profile';
 import './control_panel/new_payment';
+import './control_panel/borrower_edit_profile';

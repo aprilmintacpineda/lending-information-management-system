@@ -229,7 +229,7 @@ class NewBorrower extends Component {
                 {this.props.new_borrower.contact_numbers.map((field, index) => (
                   <li key={index} className="contact-fields">
                     <InputText
-                    className={index > 0? 'closable-input' : ''}
+                    className={field.value.length || index > 0? 'closable-input' : ''}
                     numberOnly={true}
                     value={field.value}
                     placeholder="Borrower's contact number..."
@@ -237,8 +237,8 @@ class NewBorrower extends Component {
                     errors={field.errors}
                     disabled={this.props.new_borrower.backend.processing} />
 
-                    {index > 0?
-                      <a className="remove-contact-field" onClick={() => this.props.removeContactNumber(index)}>X</a>
+                    {field.value.length || index > 0?
+                      <a className="remove-contact-field" onClick={() => this.props.new_borrower.backend.processing? false : this.props.removeContactNumber(index)}>X</a>
                     : null}
                   </li>
                 ))}

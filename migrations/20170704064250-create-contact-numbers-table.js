@@ -3,14 +3,18 @@
 module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.createTable('contact_numbers', {
+      id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: false,
+        primaryKey: true
+      },
       borrower_id: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: false
+        allowNull: false
       },
       number: {
         type: Sequelize.STRING('20'),
-        primaryKey: true
+        allowNull: false
       },
       created_at: {
         type: Sequelize.NOW,

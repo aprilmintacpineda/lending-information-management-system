@@ -42,8 +42,9 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
     updated_at
   }))
   .then(() => {
-    if(arg.contact_numbers[0].value.length) {
-      return ContactNumber.bulkCreate(arg.contact_numbers.map(contact_number => ({
+    if(arg.contact_numbers.filter(contact_number => contact_number.value.length).length > 0) {
+      return ContactNumber.bulkCreate(arg.contact_numbers.filter(contact_number => contact_number.value.length).map(contact_number => ({
+        id: uniqueId(),
         borrower_id: new_borrower_id,
         number: contact_number.value,
         created_at,
