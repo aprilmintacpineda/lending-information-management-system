@@ -204,7 +204,7 @@ class BorrowerProfile extends Component {
                             disabled={loan.payment_fields.backend.processing} />
                             <p><strong>{currency(loan.payment_fields.amount.value)}</strong> Pesos</p>
                           </li>
-                          <li>
+                          <li className="select-collection">
                             <p>For the month of...</p>
                             <InputSelect
                             className="payment-period"
@@ -253,7 +253,7 @@ class BorrowerProfile extends Component {
                           <li>
                             <div className="buttons">
                               <InputButton
-                              value="Next"
+                              value="Encode payment"
                               onClick={() => this.props.makePayment({
                                 loan_id: loan.id,
                                 payment_coverage: loan.payment_fields.amount.type,
@@ -267,7 +267,8 @@ class BorrowerProfile extends Component {
                             </div>
 
                             <div className="buttons">
-                              <a className={loan.payment_fields.backend.processing? 'default-btn-red disabled' : 'default-btn-red'}
+                              <a
+                              className={loan.payment_fields.backend.processing? 'default-btn-red disabled' : 'default-btn-red'}
                               onClick={() => loan.payment_fields.backend.processing? false : this.props.togglePaymentForm(false, index)}>
                                 Cancel
                               </a>

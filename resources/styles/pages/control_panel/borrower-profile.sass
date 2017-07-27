@@ -28,6 +28,15 @@
             float: left
             width: 50%
           .right
+            @media all and (max-width: $large-width)
+              .input-text-default, .input-select-default
+                min-width: 0 !important
+                width: 100%
+              .select-collection .input-select-default
+                +fitWidth
+            .select-collection .input-select-default
+              min-width: 0 !important
+              +fitWidth
             .errors
               color: #ff6600
             .payment-container

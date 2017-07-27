@@ -34,6 +34,36 @@ class BorrowerEditProfile extends Component {
             <div className="edit-form">
               <ul className="left">
                 <li>
+                  <h1>Contact numbers</h1>
+                </li>
+                <li>
+                  <p>This information is optional.</p>
+                </li>
+                {this.props.edit_borrower_profile.edit.contact_numbers.map((contact_number, index) =>
+                  <li className="closable-field" key={index}>
+                    <InputText
+                    className={contact_number.value.length || index > 0? 'closable-input' : ''}
+                    numberOnly={true}
+                    placeholder="Borrower's contact number..."
+                    onChange={value => this.props.editContactNumber(value, index)}
+                    disabled={this.props.edit_borrower_profile.edit.backend.processing}
+                    errors={contact_number.errors}
+                    value={contact_number.value}>
+                    </InputText>
+                    {contact_number.value.length || index > 0?
+                      <span onClick={() => this.props.edit_borrower_profile.edit.backend.processing? false : this.props.removeContactNumber(index )} className="remove-contact-field">X</span>
+                    : null}
+                  </li>
+                )}
+                <li>
+                  <a className={this.props.edit_borrower_profile.edit.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
+                  onClick={() => this.props.edit_borrower_profile.edit.backend.processing? false : this.props.addMoreContactNumbers()}>
+                    Add more fields
+                  </a>
+                </li>
+              </ul>
+              <ul className="right">
+                <li>
                   <h1>Personal information</h1>
                 </li>
                 <li>
@@ -87,36 +117,6 @@ class BorrowerEditProfile extends Component {
                     id: this.props.params.id
                   })}
                   errors={[this.props.edit_borrower_profile.edit.backend.message]} />
-                </li>
-              </ul>
-              <ul className="right">
-                <li>
-                  <h1>Contact numbers</h1>
-                </li>
-                <li>
-                  <p>This information is optional.</p>
-                </li>
-                {this.props.edit_borrower_profile.edit.contact_numbers.map((contact_number, index) =>
-                  <li className="closable-field" key={index}>
-                    <InputText
-                    className={contact_number.value.length || index > 0? 'closable-input' : ''}
-                    numberOnly={true}
-                    placeholder="Borrower's contact number..."
-                    onChange={value => this.props.editContactNumber(value, index)}
-                    disabled={this.props.edit_borrower_profile.edit.backend.processing}
-                    errors={contact_number.errors}
-                    value={contact_number.value}>
-                    </InputText>
-                    {contact_number.value.length || index > 0?
-                      <span onClick={() => this.props.edit_borrower_profile.edit.backend.processing? false : this.props.removeContactNumber(index )} className="remove-contact-field">X</span>
-                    : null}
-                  </li>
-                )}
-                <li>
-                  <a className={this.props.edit_borrower_profile.edit.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
-                  onClick={() => this.props.edit_borrower_profile.edit.backend.processing? false : this.props.addMoreContactNumbers()}>
-                    Add more fields
-                  </a>
                 </li>
               </ul>
             </div> :

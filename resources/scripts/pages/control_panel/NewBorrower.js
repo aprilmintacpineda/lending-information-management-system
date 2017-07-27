@@ -430,7 +430,7 @@ class NewBorrower extends Component {
                 </li>
                 <li>
                   <InputButton
-                  value="Next"
+                  value="Create borrower"
                   onClick={this.handleSubmit}
                   sending={this.props.new_borrower.backend.processing}
                   disabled={this.props.new_borrower.backend.allow_submit && !this.props.new_borrower.backend.processing? false: true}

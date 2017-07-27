@@ -4,8 +4,13 @@
     margin: 0 auto
     +clearFloat
     .left
+      @media all and (max-width: $fluid-width)
+        margin-right: 0
+        margin-bottom: 15px
       margin-right: 15px
     ul
+      @media all and (max-width: $fluid-width)
+        float: none
       +fitWidth
       float: left
       .closable-field
