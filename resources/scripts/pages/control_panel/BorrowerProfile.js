@@ -128,6 +128,12 @@ class BorrowerProfile extends Component {
                       </div>
 
                       <div className="row">
+                        <WithLabel label="Loan date">
+                          <p>{toFormalDate(loan.loan_date)}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
                         <WithLabel label="Months to pay">
                           <p>{loan.months_to_pay + (loan.months_to_pay > 1? ' Months' : ' Month')}</p>
                         </WithLabel>
@@ -158,6 +164,12 @@ class BorrowerProfile extends Component {
                       <div className="row">
                         <WithLabel label="Profit">
                           <p>{currency(loan.profit)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total amount to pay">
+                          <p>{currency(Number(loan.profit) + Number(loan.amount))} Pesos</p>
                         </WithLabel>
                       </div>
 
@@ -286,13 +298,13 @@ class BorrowerProfile extends Component {
                       <div className="payment-container">
                         <div className="row">
                           <WithLabel label="Total amount paid">
-                            <p>{currency(loan.summary.total_amount_paid)} Pesos</p>
+                            <p><strong>{currency(loan.summary.total_amount_paid)}</strong> Pesos</p>
                           </WithLabel>
                         </div>
 
                         <div className="row">
                           <WithLabel label="Payable balance">
-                            <p>{currency(loan.summary.payable_balance)} Pesos</p>
+                            <p><strong>{currency(loan.summary.payable_balance)}</strong> Pesos</p>
                           </WithLabel>
                         </div>
 
@@ -301,8 +313,8 @@ class BorrowerProfile extends Component {
                             {loan.summary.months_left == 0?
                               <p>None</p>
                             : loan.summary.months_left > 1?
-                              <p>{loan.summary.months_left} Months</p>
-                            : <p>{loan.summary.months_left} Month</p>}
+                              <p>{Math.ceil(loan.summary.months_left)} Months</p>
+                            : <p>{Math.ceil(loan.summary.months_left)} Month</p>}
                           </WithLabel>
                         </div>
                       </div>
@@ -324,7 +336,7 @@ class BorrowerProfile extends Component {
                           <div className="row">
                             <WithLabel label="Amount">
                               {payment.payment_coverage == 'period-only'?
-                                <p>Payment of <strong>{currency(payment.amount)} Pesos for the period only</strong>.</p>
+                                <p>Payment of <strong>{currency(payment.amount)}</strong> Pesos <strong>for the period only</strong>.</p>
                               : payment.payment_coverage == 'partial-only'?
                                 <p><strong>Partial payment</strong> of <strong>{currency(payment.amount)} Pesos</strong> for the period only.</p>
                               : <p><strong>Full payment</strong> of <strong>{currency(payment.amount)} Pesos</strong> for this loan.</p>}

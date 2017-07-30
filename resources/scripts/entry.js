@@ -17,12 +17,15 @@ import NewBorrower from './pages/control_panel/NewBorrower';
 import BorrowerProfile from './pages/control_panel/BorrowerProfile';
 import BorrowersList from './pages/control_panel/BorrowersList';
 import BorrowerEditProfile from './pages/control_panel/BorrowerEditProfile';
+import About from './pages/About';
 
 import store from './createStore';
 
 render(
   <Provider store={store}>
     <Router history={browserHistory}>
+      <Route path="/about" component={About} />
+
       <Route path="/setup" component={Setup} />
       <Route path="/setup-password" component={SetPassword} />
       <Route path="/welcome" component={Welcome} />

@@ -68,8 +68,8 @@ class BorrowersList extends Component {
 
         <section className="buttons">
           <ul>
-            <li><Link className="default-btn-blue" to={'borrowers/' + borrower.id + '/view'}>Profile</Link></li>
-            <li><Link className="default-btn-blue" to={'borrowers/' + borrower.id + '/edit'}>Edit</Link></li>
+            <li><Link className="default-btn-blue" to={'borrowers/' + borrower.id + '/view'}>View borrower profile</Link></li>
+            <li><Link className="default-btn-blue" to={'borrowers/' + borrower.id + '/edit'}>Edit borrower information</Link></li>
           </ul>
         </section>
       </section>

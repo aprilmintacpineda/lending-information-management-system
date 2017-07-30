@@ -34,9 +34,9 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
     interest_type: arg.interest_type,
     months_to_pay: Number(arg.months_to_pay),
     payment_method: arg.payment_method,
-    per_month: arg.per_month,
-    per_day: arg.per_day,
-    per_semi_month: arg.per_semi_month,
+    per_month: Math.ceil(arg.per_month),
+    per_day: Math.ceil(arg.per_day),
+    per_semi_month: Math.ceil(arg.per_semi_month),
     condition_applied: arg.condition_applied,
     created_at,
     updated_at
