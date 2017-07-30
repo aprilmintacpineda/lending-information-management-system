@@ -3,8 +3,10 @@
     +fitWidth
     margin: 0 auto
     +clearFloat
-    .error-list
+    .error-list, .errors
       color: #ff6600
+    .okay
+      color: #33cc33
     .left
       @media all and (max-width: $fluid-width)
         margin-right: 0
@@ -32,6 +34,7 @@
           &:hover
             opacity: 1
       li
+        max-width: 300px
         list-style: none
         margin-bottom: 10px
         &:last-child

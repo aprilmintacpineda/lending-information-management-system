@@ -136,6 +136,33 @@ export function editPaymentInformationPaymentType(value, payment_index, loan_ind
   }
 }
 
+export function editPaymentInformationPaymentYear(value, payment_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EPIPDY',
+    value,
+    payment_index,
+    loan_index
+  }
+}
+
+export function editPaymentInformationPaymentDate(value, payment_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EPIPDD',
+    value,
+    payment_index,
+    loan_index
+  }
+}
+
+export function editPaymentInformationPaymentMonth(value, payment_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EPIPDM',
+    value,
+    payment_index,
+    loan_index
+  }
+}
+
 export function editPaymentInformationSend(fields, payment_index, loan_index) {
   return {
     type: '_BORROWER_PROFILE_EPI_SEND',

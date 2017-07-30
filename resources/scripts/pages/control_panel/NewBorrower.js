@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { remote } from 'electron';
+import path from 'path';
 
 // components
 import WithSidebar from '../../components/WithSidebar';
+import WithIcon from '../../components/WithIcon';
 // helpers
 import { monthList, monthMaxdays } from '../../helpers/DateTime';
 import { ucwords } from '../../helpers/Strings';
@@ -108,6 +111,8 @@ class NewBorrower extends Component {
   }
 
   render() {
+    let app_path = remote.app.getAppPath();
+
     let per_month = 0;
     let per_day = 0;
     let per_half_month = 0;
@@ -435,11 +440,20 @@ class NewBorrower extends Component {
                   sending={this.props.new_borrower.backend.processing}
                   disabled={this.props.new_borrower.backend.allow_submit && !this.props.new_borrower.backend.processing? false: true}
                   errors={[]} />
-
-                  {this.props.new_borrower.backend.status == 'failed'?
-                    <p className="error-list">Failed to create new borrower: <u>{this.props.new_borrower.backend.message}</u></p>
-                  : null}
                 </li>
+                {this.props.new_borrower.backend.status == 'failed'?
+                  <li>
+                    <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                      <p className="error-list">Failed to create new borrower: <u>{this.props.new_borrower.backend.message}</u></p>
+                    </WithIcon>
+                  </li>
+                : this.props.new_borrower.backend.status == 'successful'?
+                  <li>
+                    <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                      <p className="okay">Failed to create new borrower: <u>{this.props.new_borrower.backend.message}</u></p>
+                    </WithIcon>
+                  </li>
+                : null}
               </ul>
             </div>
           </form>

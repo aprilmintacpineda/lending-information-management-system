@@ -413,7 +413,7 @@ class BorrowerProfile extends Component {
                                 <p>Date paid...</p>
                                 <InputSelect
                                 className="payment-date"
-                                onChange={value => console.log(value, payment_index, loan_index)}
+                                onChange={value => this.props.editPaymentInformationPaymentMonth(value, payment_index, loan_index)}
                                 value={payment.edit.date_paid.month}
                                 disabled={payment.edit.backend.processing}
                                 errors={[]}>
@@ -423,7 +423,7 @@ class BorrowerProfile extends Component {
                                 </InputSelect>
                                 <InputSelect
                                 className="payment-date"
-                                onChange={value => console.log(value, payment_index, loan_index)}
+                                onChange={value => this.props.editPaymentInformationPaymentDate(value, payment_index, loan_index)}
                                 value={payment.edit.date_paid.date}
                                 disabled={payment.edit.backend.processing}
                                 errors={[]}>
@@ -440,7 +440,7 @@ class BorrowerProfile extends Component {
                                 </InputSelect>
                                 <InputSelect
                                 className="payment-date"
-                                onChange={value => console.log(value, payment_index, loan_index)}
+                                onChange={value => this.props.editPaymentInformationPaymentYear(value, payment_index, loan_index)}
                                 value={payment.edit.date_paid.year}
                                 disabled={payment.edit.backend.processing}
                                 errors={[]} >
@@ -463,11 +463,12 @@ class BorrowerProfile extends Component {
                                   <InputButton
                                   value="Save changes"
                                   onClick={() => this.props.editPaymentInformationSend({
-                                    loan_id: loan.id,
+                                    payment_id: payment.id,
                                     payment_coverage: payment.edit.amount.type,
                                     quarter: payment.edit.period.quarter,
                                     amount: payment.edit.amount.value,
-                                    period_paid: payment.edit.period.month + new Date(loan.loan_date).getDate().toString() + ', ' + payment.edit.period.year
+                                    period_paid: new Date(payment.edit.period.month + ' ' + new Date(loan.loan_date).getDate().toString() + ', ' + payment.edit.period.year).toISOString(),
+                                    date_paid: new Date(payment.edit.date_paid.month + ' ' + payment.edit.date_paid.date + ', ' + payment.edit.date_paid.year).toISOString()
                                   }, payment_index, loan_index)}
                                   sending={payment.edit.backend.processing}
                                   disabled={payment.edit.allow_submit && !payment.edit.backend.processing? false : true}
@@ -482,6 +483,19 @@ class BorrowerProfile extends Component {
                                   </a>
                                 </div>
                               </li>
+                              {payment.edit.backend.status == 'failed'?
+                                <li>
+                                  <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                                    <p className="errors">Failed to save changes <u>{payment.edit.backend.message}</u></p>
+                                  </WithIcon>
+                                </li>
+                              : payment.edit.backend.status == 'successful'?
+                                <li>
+                                  <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                                    <p className="okay">Changes saved successfully.</p>
+                                  </WithIcon>
+                                </li>
+                              : null}
                             </ul>
                           </div>: 
                           <div className="payment-container" key={payment_index}>
@@ -553,5 +567,8 @@ export default connect(store => ({
   editPaymentInformationPaymentType: borrowerProfileActions.editPaymentInformationPaymentType,
   editPaymentInformationPeriodMonth: borrowerProfileActions.editPaymentInformationPeriodMonth,
   editPaymentInformationPeriodYear: borrowerProfileActions.editPaymentInformationPeriodYear,
+  editPaymentInformationPaymentYear: borrowerProfileActions.editPaymentInformationPaymentYear,
+  editPaymentInformationPaymentMonth: borrowerProfileActions.editPaymentInformationPaymentMonth,
+  editPaymentInformationPaymentDate: borrowerProfileActions.editPaymentInformationPaymentDate,
   editPaymentInformationSend: borrowerProfileActions.editPaymentInformationSend
 })(BorrowerProfile);

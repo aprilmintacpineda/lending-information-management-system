@@ -5,6 +5,8 @@
     margin: 0 auto
     .error-list
       color: #ff6600
+    .okay
+      color: #33cc33
     .loan-info
       +clearFloat
       ul
@@ -49,10 +51,11 @@
             &:hover
               opacity: 1
         li
-          &:last-child
-            margin-bottom: 0
           list-style: none
           margin-bottom: 10px
+          max-width: 300px
+          &:last-child
+            margin-bottom: 0
           label
             cursor: pointer
             padding-left: 2px

@@ -134,12 +134,28 @@ function alterPaymentEditFields(payments, target_index, fields) {
           ...fields.amount
         }
       }
+    : fields.date_paid?
+      {
+        ...payment.edit,
+        date_paid: {
+          ...payment.edit.date_paid,
+          ...fields.date_paid
+        }
+      }
     : fields.period?
       {
         ...payment.edit,
         period: {
           ...payment.edit.period,
           ...fields.period
+        }
+      }
+    : fields.backend?
+      {
+        ...payment.edit,
+        backend: {
+          ...payment.edit.backend,
+          ...fields.backend
         }
       }
     : {
@@ -588,8 +604,152 @@ export default function borrower_profile(state = initial_state, action) {
           }): ({...loan}))
         }
       }
+    case 'BORROWER_PROFILE_EPIPDY':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+              date_paid: {
+                year: action.value
+              }
+            })
+          }): ({...loan}))
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+              allow_submit: allowPaymentsEditFieldsSubmit(loan.payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
+            })
+          }): ({...loan}))
+        }
+      }
+    case 'BORROWER_PROFILE_EPIPDD':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+              date_paid: {
+                date: action.value
+              }
+            })
+          }): ({...loan}))
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+              allow_submit: allowPaymentsEditFieldsSubmit(loan.payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
+            })
+          }): ({...loan}))
+        }
+      }
+    case 'BORROWER_PROFILE_EPIPDM':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+              date_paid: {
+                month: action.value
+              }
+            })
+          }): ({...loan}))
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+              allow_submit: allowPaymentsEditFieldsSubmit(loan.payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
+            })
+          }): ({...loan}))
+        }
+      }
     case '_BORROWER_PROFILE_EPI_SEND':
-      console.log(action);
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+              backend: {
+                processing: true,
+                message: null,
+                status: null
+              }
+            })
+          }): ({...loan}))
+        }
+      }
+    case 'BORROWER_PROFILE_EPI_SEND_SUCCESSFUL':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            payments: alterPaymentEditFields(loan.payments.map((payment, payment_index) => payment_index == action.payment_index? getInitialPaymentEditFields(action.data) : ({...payment})), action.payment_index, {
+              backend: {
+                status: 'successful'
+              }
+            })
+          }): ({...loan}))
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+              shown: true
+            })
+          }): ({...loan}))
+        }
+      }
+    case 'BORROWER_PROFILE_EPI_SEND_FAILED':
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+              backend: {
+                processing: false,
+                status: 'failed',
+                message: action.message
+              }
+            })
+          }): ({...loan}))
+        }
+      }
     case 'BORROWER_PROFILE_RESET':
       return {
         ...initial_state

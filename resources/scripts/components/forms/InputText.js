@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
+import { remote } from 'electron';
 import PropTypes from 'prop-types';
+import path from 'path';
+
+// components
+import WithIcon from '../WithIcon';
 
 class InputText extends Component {
   static propTypes = {
@@ -44,7 +49,12 @@ class InputText extends Component {
   }
 
   render() {
-    let errors = this.props.errors.map((error, index) => <p className="errors" key={index}>{error}</p>);
+    let app_path = remote.app.getAppPath();
+
+    let errors = this.props.errors.map((error, index) =>
+      <WithIcon icon={path.join(app_path, 'app/images/cross.png')} key={index}>
+        <p className="errors">{error}</p>
+      </WithIcon> );
 
     return (
       <div className="input-area-wrapper">

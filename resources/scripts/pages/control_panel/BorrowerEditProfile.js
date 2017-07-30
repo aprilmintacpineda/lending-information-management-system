@@ -5,6 +5,7 @@ import path from 'path';
 
 // components
 import WithSidebar from '../../components/WithSidebar';
+import WithIcon from '../../components/WithIcon';
 import InputText from '../../components/forms/InputText';
 import InputSelect from '../../components/forms/InputSelect';
 import InputButton from '../../components/forms/InputButton';
@@ -117,11 +118,20 @@ class BorrowerEditProfile extends Component {
                     id: this.props.params.id
                   })}
                   errors={[]} />
-
-                  {this.props.edit_borrower_profile.edit.backend.status == 'failed'?
-                    <p className="error-list">Failed to save changes <u>{this.props.edit_borrower_profile.edit.backend.message}</u></p>
-                  : null}
                 </li>
+                {this.props.edit_borrower_profile.edit.backend.status == 'failed'?
+                  <li>
+                    <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                      <p className="errors">Failed to save changes <u>{this.props.edit_borrower_profile.edit.backend.message}</u></p>
+                    </WithIcon>
+                  </li>
+                : this.props.edit_borrower_profile.edit.backend.status == 'successful'?
+                  <li>
+                    <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                      <p className="okay">Changes saved successfully.</p>
+                    </WithIcon>
+                  </li>
+                : null}
               </ul>
             </div> :
             <div>

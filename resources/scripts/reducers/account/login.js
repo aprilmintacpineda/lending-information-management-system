@@ -40,7 +40,7 @@ export default function login(state = initial_state, action) {
         },
         backend: {
           processing: false,
-          status: null
+          status: 'failed'
         }
       }
     case 'LOGIN_CLEAR':
