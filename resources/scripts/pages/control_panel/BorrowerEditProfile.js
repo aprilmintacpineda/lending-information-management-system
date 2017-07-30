@@ -116,7 +116,11 @@ class BorrowerEditProfile extends Component {
                     contact_numbers: this.props.edit_borrower_profile.edit.contact_numbers,
                     id: this.props.params.id
                   })}
-                  errors={[this.props.edit_borrower_profile.edit.backend.message]} />
+                  errors={[]} />
+
+                  {this.props.edit_borrower_profile.edit.backend.status == 'failed'?
+                    <p className="error-list">Failed to save changes <u>{this.props.edit_borrower_profile.edit.backend.message}</u></p>
+                  : null}
                 </li>
               </ul>
             </div> :

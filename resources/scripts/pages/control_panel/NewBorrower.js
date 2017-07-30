@@ -434,7 +434,11 @@ class NewBorrower extends Component {
                   onClick={this.handleSubmit}
                   sending={this.props.new_borrower.backend.processing}
                   disabled={this.props.new_borrower.backend.allow_submit && !this.props.new_borrower.backend.processing? false: true}
-                  errors={[this.props.new_borrower.backend.message]} />
+                  errors={[]} />
+
+                  {this.props.new_borrower.backend.status == 'failed'?
+                    <p className="error-list">Failed to create new borrower: <u>{this.props.new_borrower.backend.message}</u></p>
+                  : null}
                 </li>
               </ul>
             </div>

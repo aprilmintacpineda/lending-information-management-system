@@ -363,7 +363,7 @@ export default function new_borrower(state = initial_state, action) {
           allow_submit: state.backend.allow_submit,
           processing: false,
           status: 'failed',
-          message: 'Failed to create new borrower: ' + action.message
+          message: action.message
         }
       }
     case 'NEWBORROWER_SUBMIT_SUCCESSFUL':

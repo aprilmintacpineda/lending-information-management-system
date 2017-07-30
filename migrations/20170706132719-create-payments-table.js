@@ -26,6 +26,10 @@ module.exports = {
       },
       quarter: {
         type: Sequelize.STRING,
+        defaultValue: null
+      },
+      date_paid: {
+        type: Sequelize.DATE,
         allowNull: false
       },
       created_at: {

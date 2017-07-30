@@ -205,7 +205,6 @@ export default function edit_borrower_profile(state = initial_state, action) {
         }
       }
     case 'EDITBORRWOERPROFILE_SEND_FAILED':
-      console.log('failed', action);
       return {
         ...state,
         edit: {

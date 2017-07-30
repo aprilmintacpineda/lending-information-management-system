@@ -6,16 +6,14 @@ ipcMain.on('BORROWER_PROFILE_SEND_PAYMENT', (event, arg) => {
   let created_at = new Date();
   let updated_at = created_at = created_at.toISOString();
 
-  let period_paid = new Date(arg.period_paid);
-  period_paid = period_paid.toISOString();
-
   Payment.create({
     id: uniqueId(),
     loan_id: arg.loan_id,
     amount: arg.amount,
     quarter: arg.quarter,
     payment_coverage: arg.payment_coverage,
-    period_paid,
+    period_paid: arg.period_paid,
+    date_paid: arg.date_paid,
     created_at,
     updated_at
   })
