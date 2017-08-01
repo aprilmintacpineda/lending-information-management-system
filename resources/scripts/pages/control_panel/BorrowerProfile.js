@@ -51,6 +51,8 @@ class BorrowerProfile extends Component {
       years.push(<option key={a}>{a}</option>);
     }
 
+    console.log(this.props);
+
     return (
       <WithSidebar>
         <div className="borrower-profile">
@@ -82,115 +84,241 @@ class BorrowerProfile extends Component {
 
                 <div className="loan-container">
                   <div className="left-right-columned">
-                    <div className="left">
-                      <h1>Loan information</h1>
+                    {loan.edit.shown?
+                      <div className="left">
+                        <ul>
+                          <li>
+                            Amount loan
+                            <InputText
+                            value={loan.edit.amount_loan.value}
+                            numberOnly={true}
+                            placeholder="Amount loan..."
+                            onChange={value => console.log(value)}
+                            errors={loan.edit.amount_loan.errors}
+                            disabled={loan.edit.backend.processing} />
+                            <p><strong>{currency(loan.edit.amount_loan.value)}</strong> Pesos</p>
+                          </li>
+                          <li>
+                            Interest rate
+                            <InputText
+                            value={loan.edit.interest_rate.value}
+                            numberOnly={true}
+                            placeholder="Interest rate..."
+                            onChange={value => console.log(value)}
+                            errors={loan.edit.interest_rate.errors}
+                            disabled={loan.edit.backend.processing} />
+                            {loan.edit.amount_loan.condition == 'interest-only' || loan.edit.amount_loan.condition == 'due-date-and-interest'?
+                              <p>{currency(loan.edit.interest_rate.value)} {loan.edit.interest_rate.type == 'percentage'? 'Percent' : 'Pesos'}</p>
+                            : null}
+                          </li>
+                          <li>
+                            Months to pay
+                            <InputText
+                            value={loan.edit.months_to_pay.value}
+                            numberOnly={true}
+                            placeholder="Months to pay..."
+                            onChange={value => console.log(value)}
+                            errors={loan.edit.months_to_pay.errors}
+                            disabled={loan.edit.backend.processing} />
+                          </li>
+                          <li className="clear-floats">
+                            Date loan
+                            <InputSelect
+                            className="date-loan"
+                            onChange={value => console.log(value)}
+                            value={loan.edit.loan_date.month}
+                            disabled={loan.edit.backend.processing}
+                            errors={[]}>
+                              {monthList().map((month, month_index) => <option key={month_index}>{month}</option>)}
+                            </InputSelect>
 
-                      <div className="row">
-                        <WithIcon icon={loan.fully_paid? path.join(app_path, 'app/images/check.png') : path.join(app_path, 'app/images/cross.png')}>
-                          <p>Fully paid</p>
-                        </WithIcon>
-                      </div>
+                            <InputSelect
+                            className="date-loan"
+                            onChange={value => console.log(value)}
+                            value={loan.edit.loan_date.date}
+                            disabled={loan.edit.backend.processing}
+                            errors={[]}>
+                              {(() => {
+                                let max_days_in_month = monthMaxdays(loan.edit.loan_date.month, loan.edit.loan_date.year);
+                                let dates = [];
 
-                      {!loan.fully_paid?
+                                for(let a = 1; a <= max_days_in_month; a++) {
+                                  dates.push(<option key={a}>{a}</option>);
+                                }
+
+                                return dates;
+                              })()}
+                            </InputSelect>
+
+                            <InputSelect
+                            className="date-loan"
+                            onChange={value => console.log(value)}
+                            value={loan.edit.loan_date.year}
+                            disabled={loan.edit.backend.processing}
+                            errors={[]}>
+                              {years}
+                            </InputSelect>
+
+                            {loan.edit.loan_date.errors.length?
+                              <div className="error-list">
+                                {loan.edit.loan_date.errors.map((error, error_index) => (
+                                  <p key={error_index}>{error}</p>
+                                ))}
+                              </div>
+                            : null}
+                          </li>
+                          <li>
+                            Payment Method
+                            <InputSelect
+                            className="payment-method"
+                            onChange={value => console.log(value)}
+                            value={loan.edit.backend.processing || loan.edit.amount_loan.condition == 'interest-only' || loan.edit.amount_loan.condition == 'no-due-date-and-interest'? '0' : loan.edit.payment_method.value}
+                            disabled={loan.edit.backend.processing || loan.edit.amount_loan.condition == 'interest-only' || loan.edit.amount_loan.condition == 'no-due-date-and-interest'}
+                            errors={loan.edit.payment_method.errors}>
+                              {loan.edit.amount_loan.condition == 'interest-only' || loan.edit.amount_loan.condition == 'no-due-date-and-interest'? <option value="0">N/A</option> : null}
+                              <option value="1">Monthly</option>
+                              <option value="2">Semi-monthly</option>
+                              <option value="3">Daily</option>
+                            </InputSelect>
+                          </li>
+                        </ul>
+
                         <div className="row">
-                          <WithLabel label="Next due date">
-                            <p><strong>{loan.payments.length? getFormalDueDate(loan.payments[0].period_paid) : getFormalDueDate(loan.loan_date)}</strong></p>
+                          <div className="buttons">
+                            <InputButton
+                            value="Save changes"
+                            onClick={() => console.log('save changes')}
+                            sending={loan.edit.backend.processing}
+                            disabled={loan.edit.backend.allow_submit && !loan.edit.backend.processing? false : true}
+                            errors={[]} />
+                          </div>
+
+                          <div className="buttons">
+                            <a
+                            className={loan.edit.backend.processing? 'default-btn-red disabled' : 'default-btn-red'}
+                            onClick={() => loan.edit.backend.processing? false : this.props.toggleEditLoanInformation(!loan.edit.shown, loan_index)}>
+                              Cancel
+                            </a>
+                          </div>
+                        </div>
+                      </div> :
+                      <div className="left">
+                        <h1>Loan information</h1>
+
+                        <div className="row">
+                          <a
+                          className={loan.edit.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
+                          onClick={() => loan.edit.backend.processing? false : this.props.toggleEditLoanInformation(!loan.edit.shown, loan_index)}>
+                            Edit loan information
+                          </a>
+                        </div>
+
+                        <div className="row">
+                          <WithIcon icon={loan.fully_paid? path.join(app_path, 'app/images/check.png') : path.join(app_path, 'app/images/cross.png')}>
+                            <p>Fully paid</p>
+                          </WithIcon>
+                        </div>
+
+                        {!loan.fully_paid?
+                          <div className="row">
+                            <WithLabel label="Next due date">
+                              <p><strong>{loan.payments.length? getFormalDueDate(loan.payments[0].period_paid) : getFormalDueDate(loan.loan_date)}</strong></p>
+                            </WithLabel>
+                          </div>
+                        : null}
+
+                        <div className="row">
+                          <WithLabel label="Amount">
+                            <p>{currency(loan.amount) + ' Pesos'}</p>
                           </WithLabel>
                         </div>
-                      : null}
 
-                      <div className="row">
-                        <WithLabel label="Amount">
-                          <p>{currency(loan.amount) + ' Pesos'}</p>
-                        </WithLabel>
-                      </div>
-
-                      <div className="row">
-                        <WithLabel label="Conditions applied">
-                          <div>
-                            {loan.condition_applied == 'due-date-and-interest' || loan.condition_applied == 'interest-only'?
-                            <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
-                              <p>Interest</p>
-                            </WithIcon> : 
-                            <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
-                              <p>Interest</p>
-                            </WithIcon>}
-
-                            {loan.condition_applied == 'due-date-and-interest' || loan.condition_applied == 'due-date-only'?
+                        <div className="row">
+                          <WithLabel label="Conditions applied">
+                            <div>
+                              {loan.condition_applied == 'due-date-and-interest' || loan.condition_applied == 'interest-only'?
                               <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
-                                <p>Due date</p>
+                                <p>Interest</p>
                               </WithIcon> : 
                               <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
-                                <p>Due date</p>
+                                <p>Interest</p>
                               </WithIcon>}
-                          </div>
-                        </WithLabel>
-                      </div>
 
-                      <div className="row">
-                        <WithLabel label="Loan date">
-                          <p>{toFormalDate(loan.loan_date)}</p>
-                        </WithLabel>
-                      </div>
+                              {loan.condition_applied == 'due-date-and-interest' || loan.condition_applied == 'due-date-only'?
+                                <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                                  <p>Due date</p>
+                                </WithIcon> : 
+                                <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                                  <p>Due date</p>
+                                </WithIcon>}
+                            </div>
+                          </WithLabel>
+                        </div>
 
-                      <div className="row">
-                        <WithLabel label="Months to pay">
-                          <p>{loan.months_to_pay + (loan.months_to_pay > 1? ' Months' : ' Month')}</p>
-                        </WithLabel>
-                      </div>
+                        <div className="row">
+                          <WithLabel label="Loan date">
+                            <p>{toFormalDate(loan.loan_date)}</p>
+                          </WithLabel>
+                        </div>
 
-                      <div className="row">
-                        <WithLabel label="Payment method">
-                          {loan.payment_method == 1? <p>Monthly</p>
-                          : loan.payment_method == 2? <p>Semi-monthly</p>
-                          : <p>Daily</p>}
-                        </WithLabel>
-                      </div>
+                        <div className="row">
+                          <WithLabel label="Months to pay">
+                            <p>{loan.months_to_pay + (loan.months_to_pay > 1? ' Months' : ' Month')}</p>
+                          </WithLabel>
+                        </div>
 
-                      <div className="row">
-                        <WithLabel label="Interest rate">
-                          {loan.condition_applied == 'interest-only' || loan.condition_applied == 'due-date-and-interest'?
-                            <p>{loan.interest_rate} {loan.interest_type == 'percentage'? 'Percent' : 'Pesos'}</p>
-                          : <p>N/A</p>}
-                        </WithLabel>
-                      </div>
+                        <div className="row">
+                          <WithLabel label="Payment method">
+                            {loan.payment_method == 1? <p>Monthly</p>
+                            : loan.payment_method == 2? <p>Semi-monthly</p>
+                            : <p>Daily</p>}
+                          </WithLabel>
+                        </div>
 
-                      <div className="row">
-                        <WithLabel label="Interest">
-                          <p>{currency(loan.interest)} Pesos</p>
-                        </WithLabel>
-                      </div>
+                        <div className="row">
+                          <WithLabel label="Interest rate">
+                            {loan.condition_applied == 'interest-only' || loan.condition_applied == 'due-date-and-interest'?
+                              <p>{loan.interest_rate} {loan.interest_type == 'percentage'? 'Percent' : 'Pesos'}</p>
+                            : <p>N/A</p>}
+                          </WithLabel>
+                        </div>
 
-                      <div className="row">
-                        <WithLabel label="Profit">
-                          <p>{currency(loan.profit)} Pesos</p>
-                        </WithLabel>
-                      </div>
+                        <div className="row">
+                          <WithLabel label="Interest">
+                            <p>{currency(loan.interest)} Pesos</p>
+                          </WithLabel>
+                        </div>
 
-                      <div className="row">
-                        <WithLabel label="Total amount to pay">
-                          <p>{currency(Number(loan.profit) + Number(loan.amount))} Pesos</p>
-                        </WithLabel>
-                      </div>
+                        <div className="row">
+                          <WithLabel label="Profit">
+                            <p>{currency(loan.profit)} Pesos</p>
+                          </WithLabel>
+                        </div>
 
-                      <div className="row">
-                        <WithLabel label="Daily payment">
-                          <p>{currency(loan.per_day)} Pesos</p>
-                        </WithLabel>
-                      </div>
+                        <div className="row">
+                          <WithLabel label="Total amount to pay">
+                            <p>{currency(Number(loan.profit) + Number(loan.amount))} Pesos</p>
+                          </WithLabel>
+                        </div>
 
-                      <div className="row">
-                        <WithLabel label="Semi-monthly payment">
-                          <p>{currency(loan.per_semi_month)} Pesos</p>
-                        </WithLabel>
-                      </div>
+                        <div className="row">
+                          <WithLabel label="Daily payment">
+                            <p>{currency(loan.per_day)} Pesos</p>
+                          </WithLabel>
+                        </div>
 
-                      <div className="row">
-                        <WithLabel label="Monthly payment">
-                          <p>{currency(loan.per_month)} Pesos</p>
-                        </WithLabel>
-                      </div>
-                    </div>
+                        <div className="row">
+                          <WithLabel label="Semi-monthly payment">
+                            <p>{currency(loan.per_semi_month)} Pesos</p>
+                          </WithLabel>
+                        </div>
+
+                        <div className="row">
+                          <WithLabel label="Monthly payment">
+                            <p>{currency(loan.per_month)} Pesos</p>
+                          </WithLabel>
+                        </div>
+                      </div>}
 
                     <div className="right">
                       <ul className="actions">
@@ -570,5 +698,6 @@ export default connect(store => ({
   editPaymentInformationPaymentYear: borrowerProfileActions.editPaymentInformationPaymentYear,
   editPaymentInformationPaymentMonth: borrowerProfileActions.editPaymentInformationPaymentMonth,
   editPaymentInformationPaymentDate: borrowerProfileActions.editPaymentInformationPaymentDate,
-  editPaymentInformationSend: borrowerProfileActions.editPaymentInformationSend
+  editPaymentInformationSend: borrowerProfileActions.editPaymentInformationSend,
+  toggleEditLoanInformation: borrowerProfileActions.toggleEditLoanInformation
 })(BorrowerProfile);

@@ -188,9 +188,10 @@ class NewBorrower extends Component {
             <div className="information-container">
               <ul>
                 <li>
-                  <h1>Personal information</h1>
+                  <h1>Borrower's information</h1>
                 </li>
                 <li>
+                  First name
                   <InputText
                   value={this.props.new_borrower.firstname.value}
                   placeholder="Borrower's first name..."
@@ -199,6 +200,7 @@ class NewBorrower extends Component {
                   disabled={this.props.new_borrower.backend.processing} />
                 </li>
                 <li>
+                  Middle name
                   <InputText
                   value={this.props.new_borrower.middlename.value}
                   placeholder="Borrower's middle name..."
@@ -207,6 +209,7 @@ class NewBorrower extends Component {
                   disabled={this.props.new_borrower.backend.processing} />
                 </li>
                 <li>
+                  Surname
                   <InputText
                   value={this.props.new_borrower.surname.value}
                   placeholder="Borrower's surname..."
@@ -215,7 +218,7 @@ class NewBorrower extends Component {
                   disabled={this.props.new_borrower.backend.processing} />
                 </li>
                 <li>
-                  The borrower is a...
+                  Gender
                   <InputSelect
                   onChange={this.props.changeGender}
                   value={this.props.new_borrower.gender.value}
@@ -261,6 +264,7 @@ class NewBorrower extends Component {
                   <h1>Loan information</h1>
                 </li>
                 <li>
+                  Loan condition<br/>
                   <input
                   id="apply-due-date-interest"
                   type="radio"
@@ -302,7 +306,7 @@ class NewBorrower extends Component {
                   <label htmlFor="no-due-date-no-interest">Don't apply due date and interest</label>
                 </li>
                 <li className="clear-floats">
-                  Date loan...
+                  Date loan
                   <InputSelect
                   className="date-loan"
                   onChange={this.props.changeDateLoanMonth}
@@ -339,6 +343,7 @@ class NewBorrower extends Component {
                   : null}
                 </li>
                 <li>
+                  Amount loan
                   <InputText
                   value={this.props.new_borrower.amount_loan.value}
                   placeholder="amount loan..."
@@ -350,6 +355,7 @@ class NewBorrower extends Component {
                   <p><strong>{currency(this.props.new_borrower.amount_loan.value)}</strong> Pesos</p>
                 </li>
                 <li>
+                  Interest rate
                   <InputText
                   placeholder="Interest rate..."
                   numberOnly={true}
@@ -394,6 +400,7 @@ class NewBorrower extends Component {
                   </InputSelect>
                 </li>
                 <li>
+                  Months to pay
                   <InputText
                   placeholder={'Months to pay...'}
                   numberOnly={true}

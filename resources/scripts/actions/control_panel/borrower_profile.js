@@ -171,3 +171,11 @@ export function editPaymentInformationSend(fields, payment_index, loan_index) {
     loan_index
   }
 }
+
+export function toggleEditLoanInformation(visibility, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_ELIT',
+    visibility,
+    loan_index
+  }
+}

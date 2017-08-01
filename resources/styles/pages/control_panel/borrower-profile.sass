@@ -27,6 +27,24 @@
           .left
             float: left
             width: 50%
+            .row
+              +clearFloat
+              .buttons
+                float: left
+                margin-right: 10px
+                &:last-child
+                  margin-right: 0
+            ul
+              .clear-floats
+                +clearFloat
+                .date-loan
+                  min-width: 0px !important
+                  +fitWidth
+                  float: left
+                  margin-right: 15px
+              li
+                list-style: none
+                margin-bottom: 10px
           .right
             @media all and (max-width: $large-width)
               .input-text-default, .input-select-default

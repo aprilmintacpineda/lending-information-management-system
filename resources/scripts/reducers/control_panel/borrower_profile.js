@@ -165,6 +165,117 @@ function alterPaymentEditFields(payments, target_index, fields) {
   }): ({...payment}));
 }
 
+function getInitialLoanEditFields(loan) {
+  let loan_date = new Date(loan.loan_date);
+
+  return {
+    shown: false,
+    amount_loan: {
+      condition: loan.condition_applied,
+      value: loan.amount,
+      errors: []
+    },
+    months_to_pay: {
+      value: loan.months_to_pay,
+      errors: []
+    },
+    interest_rate: {
+      type: loan.interest_type,
+      value: loan.interest_rate,
+      errors: []
+    },
+    payment_method: {
+      value: loan.payment_method,
+      errors: []
+    },
+    loan_date: {
+      month: monthList()[loan_date.getMonth()],
+      date: loan_date.getDate(),
+      year: loan_date.getFullYear(),
+      errors: []
+    },
+    backend: {
+      allow_submit: true,
+      processing: false,
+      status: null,
+      message: null
+    }
+  }
+}
+
+function alterLoanEditFields(loans, target_index, fields) {
+  return loans.map((loan, loan_index) => loan_index == target_index ? {
+    ...loan,
+    edit: fields.shown? {
+      ...loan.edit,
+      shown: fields.shown
+    } : {
+      ...loan.edit,
+      ...fields
+    }
+  } : {...loan})
+}
+
+function allowLoanEditSubmit(new_state) {
+  if(new_state.amount_loan.condition == 'due-date-only') {
+    return new_state.backend.processing
+      || !new_state.firstname.value.length
+      || new_state.firstname.errors.length
+      || !new_state.middlename.value.length
+      || new_state.middlename.errors.length
+      || !new_state.surname.value.length
+      || new_state.surname.errors.length
+      || !new_state.amount_loan.value.length
+      || new_state.amount_loan.errors.length
+      || new_state.gender.errors.length
+      || new_state.loan_date.errors.length
+      || !new_state.months_to_pay.value.length
+      || new_state.months_to_pay.errors.length? false : true;
+  } else if(new_state.amount_loan.condition == 'interest-only') {
+    return new_state.backend.processing
+      || !new_state.firstname.value.length
+      || new_state.firstname.errors.length
+      || !new_state.middlename.value.length
+      || new_state.middlename.errors.length
+      || !new_state.surname.value.length
+      || new_state.surname.errors.length
+      || !new_state.amount_loan.value.length
+      || new_state.amount_loan.errors.length
+      || new_state.gender.errors.length
+      || new_state.loan_date.errors.length
+      || !new_state.interest_rate.value.length
+      || new_state.interest_rate.errors.length? false : true;
+  } else if(new_state.amount_loan.condition == 'no-due-date-and-interest') {
+    return new_state.backend.processing
+      || !new_state.firstname.value.length
+      || new_state.firstname.errors.length
+      || !new_state.middlename.value.length
+      || new_state.middlename.errors.length
+      || !new_state.surname.value.length
+      || new_state.surname.errors.length
+      || !new_state.amount_loan.value.length
+      || new_state.amount_loan.errors.length
+      || new_state.gender.errors.length
+      || new_state.loan_date.errors.length? false : true;
+  }
+
+  return new_state.backend.processing
+    || !new_state.firstname.value.length
+    || new_state.firstname.errors.length
+    || !new_state.middlename.value.length
+    || new_state.middlename.errors.length
+    || !new_state.surname.value.length
+    || new_state.surname.errors.length
+    || !new_state.amount_loan.value.length
+    || new_state.amount_loan.errors.length
+    || new_state.gender.errors.length
+    || new_state.loan_date.errors.length
+    || !new_state.interest_rate.value.length
+    || new_state.interest_rate.errors.length
+    || !new_state.months_to_pay.value.length
+    || new_state.months_to_pay.errors.length? false : true;
+}
+
 export default function borrower_profile(state = initial_state, action) {
   let new_state;
 
@@ -185,6 +296,7 @@ export default function borrower_profile(state = initial_state, action) {
           ...action.data,
           loans: action.data.loans.map(loan => ({
             ...loan,
+            edit: getInitialLoanEditFields(loan),
             payment_fields: getInitialPaymentFields(loan),
             summary: getLoanSummary(loan),
             payments: loan.payments.map(payment => getInitialPaymentEditFields(payment))
@@ -748,6 +860,29 @@ export default function borrower_profile(state = initial_state, action) {
               }
             })
           }): ({...loan}))
+        }
+      }
+    case 'BORROWER_PROFILE_ELIT':
+      if(!action.visibility) {
+        return {
+          ...state,
+          data: {
+            ...state.data,
+            loans: state.data.loans.map(loan => ({
+              ...loan,
+              edit: getInitialLoanEditFields(loan)
+            }))
+          }
+        }
+      }
+
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            shown: action.visibility
+          })
         }
       }
     case 'BORROWER_PROFILE_RESET':
