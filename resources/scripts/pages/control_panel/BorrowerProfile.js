@@ -335,6 +335,7 @@ class BorrowerProfile extends Component {
                       {loan.payment_fields.shown?
                         <ul className="payment-form">
                           <li>
+                            Amount Paid
                             <InputText
                             numberOnly={true}
                             value={loan.payment_fields.amount.value}
@@ -345,7 +346,7 @@ class BorrowerProfile extends Component {
                             <p><strong>{currency(loan.payment_fields.amount.value)}</strong> Pesos</p>
                           </li>
                           <li className="select-collection">
-                            <p>For the month of...</p>
+                            <p>For the month of</p>
                             <InputSelect
                             className="payment-period"
                             onChange={value => this.props.changePeriodMonth(value, loan_index)}
@@ -366,7 +367,7 @@ class BorrowerProfile extends Component {
                             </InputSelect>
                           </li>
                           <li>
-                            Quarter...
+                            For the quarter of
                             <InputSelect
                             onChange={value => this.props.changePeriodQuarter(value, loan_index)}
                             value={loan.payment_method != 2? '' : loan.payment_fields.period.quarter}
@@ -380,7 +381,7 @@ class BorrowerProfile extends Component {
                             </InputSelect>
                           </li>
                           <li className="select-collection">
-                            <p>Date paid...</p>
+                            <p>Date paid</p>
                             <InputSelect
                             className="payment-date"
                             onChange={value => this.props.changePaymentMonth(value, loan_index)}
@@ -418,6 +419,7 @@ class BorrowerProfile extends Component {
                             </InputSelect>
                           </li>
                           <li>
+                            Payment coverage
                             <InputSelect
                             onChange={value => this.props.changePaymentType(value, loan_index)}
                             value={loan.payment_fields.amount.type}
@@ -493,6 +495,7 @@ class BorrowerProfile extends Component {
                           <div className="payment-container" key={payment_index}>
                             <ul className="payment-edit-fields">
                               <li>
+                                Amount paid
                                 <InputText
                                 numberOnly={true}
                                 value={payment.edit.amount.value}
@@ -503,7 +506,7 @@ class BorrowerProfile extends Component {
                                 <p><strong>{currency(payment.edit.amount.value)}</strong> Pesos</p>
                               </li>
                               <li className="select-collection">
-                                <p>For the month of...</p>
+                                <p>For the month of</p>
                                 <InputSelect
                                 className="payment-period"
                                 onChange={value => this.props.editPaymentInformationPeriodMonth(value, payment_index, loan_index)}
@@ -524,7 +527,7 @@ class BorrowerProfile extends Component {
                                 </InputSelect>
                               </li>
                               <li>
-                                Quarter...
+                                For the quarter of
                                 <InputSelect
                                 onChange={value => this.props.changePeriodQuarter(value, payment_index)}
                                 value={loan.payment_method != 2? '' : payment.edit.period.quarter}
@@ -538,7 +541,7 @@ class BorrowerProfile extends Component {
                                 </InputSelect>
                               </li>
                               <li className="select-collection">
-                                <p>Date paid...</p>
+                                <p>Date paid</p>
                                 <InputSelect
                                 className="payment-date"
                                 onChange={value => this.props.editPaymentInformationPaymentMonth(value, payment_index, loan_index)}
@@ -576,6 +579,7 @@ class BorrowerProfile extends Component {
                                 </InputSelect>
                               </li>
                               <li>
+                                Payment coverage
                                 <InputSelect
                                 onChange={value => this.props.editPaymentInformationPaymentType(value, payment_index, loan_index)}
                                 value={payment.edit.amount.type}

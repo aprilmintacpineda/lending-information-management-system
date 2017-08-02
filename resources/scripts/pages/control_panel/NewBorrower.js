@@ -386,7 +386,7 @@ class NewBorrower extends Component {
                   <label htmlFor="interest-type-fixed">Fixed value</label>
                 </li>
                 <li>
-                  Payment Method...
+                  Payment Method
                   <InputSelect
                   className="notification-method"
                   onChange={this.props.changePaymentMethod}
