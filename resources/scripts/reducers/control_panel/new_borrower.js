@@ -262,6 +262,7 @@ export default function new_borrower(state = initial_state, action) {
         loan_date: {
           ...state.loan_date,
           month: action.value,
+          date: 1,
           errors: validateLoanDate(action.value, state.loan_date.date, state.loan_date.year)
         }
       }

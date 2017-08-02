@@ -179,3 +179,83 @@ export function toggleEditLoanInformation(visibility, loan_index) {
     loan_index
   }
 }
+
+export function editLoanInformationAmount(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_ELIA',
+    value,
+    loan_index
+  }
+}
+
+export function editLoanInformationCondition(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_ELIC',
+    value,
+    loan_index
+  }
+}
+
+export function editLoanInformationInterestRate(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_ELIIR',
+    value,
+    loan_index
+  }
+}
+
+export function editLoanInformationInterestType(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_ELIIT',
+    value,
+    loan_index
+  }
+}
+
+export function editLoanInformationMonthsToPay(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_ELIMTP',
+    value,
+    loan_index
+  }
+}
+
+export function editLoanInformationDateLoanMonth(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_ELIDLM',
+    value,
+    loan_index
+  }
+}
+
+export function editLoanInformationDateLoanDate(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_ELIDLD',
+    value,
+    loan_index
+  }
+}
+
+export function editLoanInformationDateLoanYear(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_ELIDY',
+    value,
+    loan_index
+  }
+}
+
+export function editLoanInformatioPaymentMethod(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_ELIPM',
+    value,
+    loan_index
+  }
+}
+
+export function editLoanInformatioSend(fields, loan_index) {
+  return {
+    type: '_BORROWER_PROFILE_ELI_SEND',
+    ...fields,
+    loan_index
+  }
+}

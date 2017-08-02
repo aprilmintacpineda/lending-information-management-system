@@ -51,8 +51,6 @@ class BorrowerProfile extends Component {
       years.push(<option key={a}>{a}</option>);
     }
 
-    console.log(this.props);
-
     return (
       <WithSidebar>
         <div className="borrower-profile">
@@ -87,56 +85,28 @@ class BorrowerProfile extends Component {
                     {loan.edit.shown?
                       <div className="left">
                         <ul>
-                          <li>
-                            Amount loan
-                            <InputText
-                            value={loan.edit.amount_loan.value}
-                            numberOnly={true}
-                            placeholder="Amount loan..."
-                            onChange={value => console.log(value)}
-                            errors={loan.edit.amount_loan.errors}
-                            disabled={loan.edit.backend.processing} />
-                            <p><strong>{currency(loan.edit.amount_loan.value)}</strong> Pesos</p>
-                          </li>
-                          <li>
-                            Interest rate
-                            <InputText
-                            value={loan.edit.interest_rate.value}
-                            numberOnly={true}
-                            placeholder="Interest rate..."
-                            onChange={value => console.log(value)}
-                            errors={loan.edit.interest_rate.errors}
-                            disabled={loan.edit.backend.processing} />
-                            {loan.edit.amount_loan.condition == 'interest-only' || loan.edit.amount_loan.condition == 'due-date-and-interest'?
-                              <p>{currency(loan.edit.interest_rate.value)} {loan.edit.interest_rate.type == 'percentage'? 'Percent' : 'Pesos'}</p>
-                            : null}
-                          </li>
-                          <li>
-                            Months to pay
-                            <InputText
-                            value={loan.edit.months_to_pay.value}
-                            numberOnly={true}
-                            placeholder="Months to pay..."
-                            onChange={value => console.log(value)}
-                            errors={loan.edit.months_to_pay.errors}
-                            disabled={loan.edit.backend.processing} />
+                          <li className="warning">
+                            <WithIcon icon={path.join(app_path, 'app/images/exclamation.png')}>
+                              <p className="title">NOTICE</p>
+                            </WithIcon>
+                            <p className="message">You can only change loan information before the first payment. If the first payment has been made, you can no longer change these information.</p>
                           </li>
                           <li className="clear-floats">
                             Date loan
                             <InputSelect
                             className="date-loan"
-                            onChange={value => console.log(value)}
+                            onChange={value => this.props.editLoanInformationDateLoanMonth(value, loan_index)}
                             value={loan.edit.loan_date.month}
-                            disabled={loan.edit.backend.processing}
+                            disabled={loan.payments.length || loan.edit.backend.processing? true : false}
                             errors={[]}>
                               {monthList().map((month, month_index) => <option key={month_index}>{month}</option>)}
                             </InputSelect>
 
                             <InputSelect
                             className="date-loan"
-                            onChange={value => console.log(value)}
+                            onChange={value => this.props.editLoanInformationDateLoanDate(value, loan_index)}
                             value={loan.edit.loan_date.date}
-                            disabled={loan.edit.backend.processing}
+                            disabled={loan.payments.length || loan.edit.backend.processing? true : false}
                             errors={[]}>
                               {(() => {
                                 let max_days_in_month = monthMaxdays(loan.edit.loan_date.month, loan.edit.loan_date.year);
@@ -152,9 +122,9 @@ class BorrowerProfile extends Component {
 
                             <InputSelect
                             className="date-loan"
-                            onChange={value => console.log(value)}
+                            onChange={value => this.props.editLoanInformationDateLoanYear(value, loan_index)}
                             value={loan.edit.loan_date.year}
-                            disabled={loan.edit.backend.processing}
+                            disabled={loan.payments.length || loan.edit.backend.processing? true : false}
                             errors={[]}>
                               {years}
                             </InputSelect>
@@ -168,12 +138,105 @@ class BorrowerProfile extends Component {
                             : null}
                           </li>
                           <li>
+                            Amount loan
+                            <InputText
+                            value={loan.edit.amount_loan.value}
+                            numberOnly={true}
+                            placeholder="Amount loan..."
+                            onChange={value => this.props.editLoanInformationAmount(value, loan_index)}
+                            errors={loan.edit.amount_loan.errors}
+                            disabled={loan.payments.length || loan.edit.backend.processing? true : false} />
+                            <p><strong>{currency(loan.edit.amount_loan.value)}</strong> Pesos</p>
+                          </li>
+                          <li>
+                            Loan condition<br/>
+                            <input
+                            id="apply-due-date-interest"
+                            type="radio"
+                            disabled={loan.payments.length || loan.edit.backend.processing? true : false}
+                            checked={loan.edit.amount_loan.condition == 'due-date-and-interest'}
+                            onChange={changeEvent => {
+                              if(changeEvent.target.checked) this.props.editLoanInformationCondition('due-date-and-interest', loan_index);
+                            }} />
+                            <label htmlFor="apply-due-date-interest">Apply due date and interest</label>
+                            <br/>
+                            <input
+                            id="apply-interest-only"
+                            type="radio"
+                            disabled={loan.payments.length || loan.edit.backend.processing? true : false}
+                            checked={loan.edit.amount_loan.condition == 'interest-only'}
+                            onChange={changeEvent => {
+                              if(changeEvent.target.checked) this.props.editLoanInformationCondition('interest-only', loan_index);
+                            }} />
+                            <label htmlFor="apply-interest-only">Apply interest only</label>
+                            <br/>
+                            <input
+                            id="apply-due-date-only"
+                            type="radio"
+                            disabled={loan.payments.length || loan.edit.backend.processing? true : false}
+                            checked={loan.edit.amount_loan.condition == 'due-date-only'}
+                            onChange={changeEvent => {
+                              if (changeEvent.target.checked) this.props.editLoanInformationCondition('due-date-only', loan_index);
+                            }} />
+                            <label htmlFor="apply-due-date-only">Apply due date only</label>
+                            <br/>
+                            <input
+                            id="no-due-date-no-interest"
+                            type="radio"
+                            disabled={loan.payments.length || loan.edit.backend.processing? true : false}
+                            checked={loan.edit.amount_loan.condition == 'no-due-date-and-interest'}
+                            onChange={changeEvent => {
+                              if(changeEvent.target.checked) this.props.editLoanInformationCondition('no-due-date-and-interest', loan_index);
+                            }} />
+                            <label htmlFor="no-due-date-no-interest">Don't apply due date and interest</label>
+                          </li>
+                          <li>
+                            Interest rate
+                            <InputText
+                            value={loan.edit.amount_loan.condition == 'interest-only' || loan.edit.amount_loan.condition == 'due-date-and-interest'? loan.edit.interest_rate.value : 'N/A'}
+                            numberOnly={true}
+                            placeholder="Interest rate..."
+                            onChange={value => this.props.editLoanInformationInterestRate(value, loan_index)}
+                            errors={loan.edit.interest_rate.errors}
+                            disabled={loan.payments.length || loan.edit.backend.processing? true : (loan.edit.amount_loan.condition == 'interest-only' || loan.edit.amount_loan.condition == 'due-date-and-interest') && !loan.edit.backend.processing? false : true} />
+                            {loan.edit.amount_loan.condition == 'interest-only' || loan.edit.amount_loan.condition == 'due-date-and-interest'?
+                              <p>{currency(loan.edit.interest_rate.value)} {loan.edit.interest_rate.type == 'percentage'? 'Percent' : 'Pesos'}</p>
+                            : null}
+                          </li>
+                          <li>
+                            <input
+                            id="interest-type-percentage"
+                            type="radio"
+                            disabled={loan.payments.length || loan.edit.backend.processing? true : loan.edit.backend.processing || loan.edit.amount_loan.condition == 'due-date-only' || loan.edit.amount_loan.condition == 'no-due-date-and-interest'}
+                            checked={loan.edit.interest_rate.type == 'percentage'}
+                            onChange={() => this.props.editLoanInformationInterestType('percentage', loan_index)} />
+                            <label htmlFor="interest-type-percentage">Percentage</label>
+                            <br/>
+                            <input
+                            id="interest-type-fixed"
+                            type="radio"
+                            disabled={loan.payments.length || loan.edit.backend.processing? true : loan.edit.amount_loan.condition == 'due-date-only' || loan.edit.amount_loan.condition == 'no-due-date-and-interest'}
+                            checked={loan.edit.interest_rate.type == 'fixed'}
+                            onChange={() => this.props.editLoanInformationInterestType('fixed', loan_index)} />
+                            <label htmlFor="interest-type-fixed">Fixed value</label>
+                          </li>
+                          <li>
+                            Months to pay
+                            <InputText
+                            value={loan.edit.amount_loan.condition == 'due-date-only' || loan.edit.amount_loan.condition == 'due-date-and-interest'? loan.edit.months_to_pay.value : 'N/A'}
+                            numberOnly={true}
+                            placeholder="Months to pay..."
+                            onChange={value => this.props.editLoanInformationMonthsToPay(value, loan_index)}
+                            errors={loan.edit.months_to_pay.errors}
+                            disabled={loan.payments.length || loan.edit.backend.processing? true : (loan.edit.amount_loan.condition == 'due-date-only' || loan.edit.amount_loan.condition == 'due-date-and-interest') && !loan.edit.backend.processing? false : true} />
+                          </li>
+                          <li>
                             Payment Method
                             <InputSelect
                             className="payment-method"
-                            onChange={value => console.log(value)}
+                            onChange={value => this.props.editLoanInformatioPaymentMethod(value, loan_index)}
                             value={loan.edit.backend.processing || loan.edit.amount_loan.condition == 'interest-only' || loan.edit.amount_loan.condition == 'no-due-date-and-interest'? '0' : loan.edit.payment_method.value}
-                            disabled={loan.edit.backend.processing || loan.edit.amount_loan.condition == 'interest-only' || loan.edit.amount_loan.condition == 'no-due-date-and-interest'}
+                            disabled={loan.payments.length || loan.edit.backend.processing? true : loan.edit.amount_loan.condition == 'interest-only' || loan.edit.amount_loan.condition == 'no-due-date-and-interest'}
                             errors={loan.edit.payment_method.errors}>
                               {loan.edit.amount_loan.condition == 'interest-only' || loan.edit.amount_loan.condition == 'no-due-date-and-interest'? <option value="0">N/A</option> : null}
                               <option value="1">Monthly</option>
@@ -187,9 +250,17 @@ class BorrowerProfile extends Component {
                           <div className="buttons">
                             <InputButton
                             value="Save changes"
-                            onClick={() => console.log('save changes')}
+                            onClick={() => this.props.editLoanInformatioSend({
+                              amount: loan.edit.amount_loan.value,
+                              condition_applied: loan.edit.amount_loan.condition,
+                              interest_rate: loan.edit.interest_rate.value,
+                              interest_type: loan.edit.interest_rate.type,
+                              months_to_pay: loan.edit.months_to_pay.value,
+                              date_loan: new Date(monthList().indexOf(loan.edit.loan_date.month) + 1 + ' ' + loan.edit.loan_date.date + ', ' + loan.edit.loan_date.year).toISOString(),
+                              payment_method: loan.edit.payment_method.value
+                            }, loan_index)}
                             sending={loan.edit.backend.processing}
-                            disabled={loan.edit.backend.allow_submit && !loan.edit.backend.processing? false : true}
+                            disabled={!loan.payments.length && loan.edit.backend.allow_submit && !loan.edit.backend.processing? false : true}
                             errors={[]} />
                           </div>
 
@@ -703,5 +774,15 @@ export default connect(store => ({
   editPaymentInformationPaymentMonth: borrowerProfileActions.editPaymentInformationPaymentMonth,
   editPaymentInformationPaymentDate: borrowerProfileActions.editPaymentInformationPaymentDate,
   editPaymentInformationSend: borrowerProfileActions.editPaymentInformationSend,
-  toggleEditLoanInformation: borrowerProfileActions.toggleEditLoanInformation
+  toggleEditLoanInformation: borrowerProfileActions.toggleEditLoanInformation,
+  editLoanInformationAmount: borrowerProfileActions.editLoanInformationAmount,
+  editLoanInformationCondition: borrowerProfileActions.editLoanInformationCondition,
+  editLoanInformationInterestRate: borrowerProfileActions.editLoanInformationInterestRate,
+  editLoanInformationInterestType: borrowerProfileActions.editLoanInformationInterestType,
+  editLoanInformationMonthsToPay: borrowerProfileActions.editLoanInformationMonthsToPay,
+  editLoanInformationDateLoanMonth: borrowerProfileActions.editLoanInformationDateLoanMonth,
+  editLoanInformationDateLoanDate: borrowerProfileActions.editLoanInformationDateLoanDate,
+  editLoanInformationDateLoanYear: borrowerProfileActions.editLoanInformationDateLoanYear,
+  editLoanInformatioPaymentMethod: borrowerProfileActions.editLoanInformatioPaymentMethod,
+  editLoanInformatioSend: borrowerProfileActions.editLoanInformatioSend
 })(BorrowerProfile);

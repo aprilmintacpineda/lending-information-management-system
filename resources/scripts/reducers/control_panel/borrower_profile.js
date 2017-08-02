@@ -3,8 +3,14 @@ import initial_state from '../initial_states/control_panel/borrower_profile';
 import { monthList } from '../../helpers/DateTime';
 
 import {
+  validateAmountLoan,
+  validateMonthsToPay,
+  validateInterestRate,
+  validateLoanDate,
+  validatePaymentMethod,
   validateAmountPaid,
-  validatePaymentType
+  validatePaymentType,
+  validatePhoneNumber
 } from '../../helpers/Validator';
 
 function allowLoanPaymentFieldsSubmit(fields) {
@@ -209,66 +215,74 @@ function alterLoanEditFields(loans, target_index, fields) {
     edit: fields.shown? {
       ...loan.edit,
       shown: fields.shown
+    } : fields.amount_loan? {
+      ...loan.edit,
+      amount_loan: {
+        ...loan.edit.amount_loan,
+        ...fields.amount_loan
+      }
+    } : fields.months_to_pay? {
+      ...loan.edit,
+      months_to_pay: {
+        ...loan.edit.months_to_pay,
+        ...fields.months_to_pay
+      }
+    } : fields.interest_rate? {
+      ...loan.edit,
+      interest_rate: {
+        ...loan.edit.interest_rate,
+        ...fields.interest_rate
+      }
+    } : fields.payment_method? {
+      ...loan.edit,
+      payment_method: {
+        ...loan.edit.payment_method,
+        ...fields.payment_method
+      }
+    } : fields.loan_date? {
+      ...loan.edit,
+      loan_date: {
+        ...loan.edit.loan_date,
+        ...fields.loan_date
+      }
+    } : fields.backend? {
+      ...loan.edit,
+      backend: {
+        ...loan.edit.backend,
+        ...fields.backend
+      }
     } : {
       ...loan.edit,
       ...fields
     }
-  } : {...loan})
+  } : {...loan});
 }
 
 function allowLoanEditSubmit(new_state) {
   if(new_state.amount_loan.condition == 'due-date-only') {
     return new_state.backend.processing
-      || !new_state.firstname.value.length
-      || new_state.firstname.errors.length
-      || !new_state.middlename.value.length
-      || new_state.middlename.errors.length
-      || !new_state.surname.value.length
-      || new_state.surname.errors.length
       || !new_state.amount_loan.value.length
       || new_state.amount_loan.errors.length
-      || new_state.gender.errors.length
       || new_state.loan_date.errors.length
       || !new_state.months_to_pay.value.length
       || new_state.months_to_pay.errors.length? false : true;
   } else if(new_state.amount_loan.condition == 'interest-only') {
     return new_state.backend.processing
-      || !new_state.firstname.value.length
-      || new_state.firstname.errors.length
-      || !new_state.middlename.value.length
-      || new_state.middlename.errors.length
-      || !new_state.surname.value.length
-      || new_state.surname.errors.length
       || !new_state.amount_loan.value.length
       || new_state.amount_loan.errors.length
-      || new_state.gender.errors.length
       || new_state.loan_date.errors.length
       || !new_state.interest_rate.value.length
       || new_state.interest_rate.errors.length? false : true;
   } else if(new_state.amount_loan.condition == 'no-due-date-and-interest') {
     return new_state.backend.processing
-      || !new_state.firstname.value.length
-      || new_state.firstname.errors.length
-      || !new_state.middlename.value.length
-      || new_state.middlename.errors.length
-      || !new_state.surname.value.length
-      || new_state.surname.errors.length
       || !new_state.amount_loan.value.length
       || new_state.amount_loan.errors.length
-      || new_state.gender.errors.length
       || new_state.loan_date.errors.length? false : true;
   }
 
   return new_state.backend.processing
-    || !new_state.firstname.value.length
-    || new_state.firstname.errors.length
-    || !new_state.middlename.value.length
-    || new_state.middlename.errors.length
-    || !new_state.surname.value.length
-    || new_state.surname.errors.length
     || !new_state.amount_loan.value.length
     || new_state.amount_loan.errors.length
-    || new_state.gender.errors.length
     || new_state.loan_date.errors.length
     || !new_state.interest_rate.value.length
     || new_state.interest_rate.errors.length
@@ -469,7 +483,8 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: alterPaymentFields(state.data.loans, action.index, {
             date_paid: {
-              month: action.value
+              month: action.value,
+              date: 1
             }
           })
         }
@@ -669,7 +684,8 @@ export default function borrower_profile(state = initial_state, action) {
             ...loan,
             payments: alterPaymentEditFields(loan.payments, action.payment_index, {
               period: {
-                month: action.value
+                month: action.value,
+                date: 1
               }
             })
           }): ({...loan}))
@@ -882,6 +898,226 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: alterLoanEditFields(state.data.loans, action.loan_index, {
             shown: action.visibility
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_ELIA':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            amount_loan: {
+              value: action.value,
+              errors: validateAmountLoan(action.value)
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterLoanEditFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowLoanEditSubmit(new_state.data.loans[action.loan_index].edit)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_ELIC':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            amount_loan: {
+              condition: action.value
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterLoanEditFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowLoanEditSubmit(new_state.data.loans[action.loan_index].edit)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_ELIIR':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            interest_rate: {
+              value: action.value,
+              errors: validateInterestRate(action.value)
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterLoanEditFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowLoanEditSubmit(new_state.data.loans[action.loan_index].edit)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_ELIIT':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            interest_rate: {
+              type: action.value
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterLoanEditFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowLoanEditSubmit(new_state.data.loans[action.loan_index].edit)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_ELIMTP':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            months_to_pay: {
+              value: action.value,
+              errors: validateMonthsToPay(action.value)
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterLoanEditFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowLoanEditSubmit(new_state.data.loans[action.loan_index].edit)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_ELIDLM':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            loan_date: {
+              month: action.value,
+              date: 1,
+              errors: validateLoanDate(action.value, state.data.loans[action.loan_index].edit.loan_date.date, state.data.loans[action.loan_index].edit.loan_date.year)
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterLoanEditFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowLoanEditSubmit(new_state.data.loans[action.loan_index].edit)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_ELIDLD':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            loan_date: {
+              date: action.value,
+              errors: validateLoanDate(state.data.loans[action.loan_index].edit.loan_date.month, action.value, state.data.loans[action.loan_index].edit.loan_date.year)
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterLoanEditFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowLoanEditSubmit(new_state.data.loans[action.loan_index].edit)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_ELIDY':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            loan_date: {
+              year: action.value,
+              errors: validateLoanDate(state.data.loans[action.loan_index].edit.loan_date.month, state.data.loans[action.loan_index].edit.loan_date.date, action.value)
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterLoanEditFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowLoanEditSubmit(new_state.data.loans[action.loan_index].edit)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_ELIPM':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            payment_method: {
+              value: action.value,
+              errors: validatePaymentMethod(action.value)
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterLoanEditFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowLoanEditSubmit(new_state.data.loans[action.loan_index].edit)
+          })
+        }
+      }
+    case '_BORROWER_PROFILE_ELI_SEND':
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            backend: {
+              processing: true,
+              message: null,
+              status: null
+            }
           })
         }
       }

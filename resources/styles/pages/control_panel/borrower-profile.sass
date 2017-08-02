@@ -27,6 +27,11 @@
           .left
             float: left
             width: 50%
+            label
+              cursor: pointer
+              padding-left: 2px
+              &:hover
+                text-decoration: underline
             .row
               +clearFloat
               .buttons
@@ -42,6 +47,12 @@
                   +fitWidth
                   float: left
                   margin-right: 15px
+              .warning
+                max-width: 300px
+                .title
+                  color: #ffcc00
+                .message
+                  margin-top: 5px
               li
                 list-style: none
                 margin-bottom: 10px

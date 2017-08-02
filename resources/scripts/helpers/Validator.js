@@ -6,7 +6,7 @@ import { monthMaxdays, monthList, maxYear, minYear } from './DateTime';
 export function validateAmountPaid(value, payment_type) {
   let errors = [];
 
-  if(!isNaN(value) && Number(value) < 0) {
+  if(isNaN(value) || Number(value) <= 0) {
     errors.push('Invalid amount paid.');
   }
 
@@ -66,7 +66,7 @@ export function validatePaymentMethod(value) {
 export function validateInterestRate(value) {
   let errors = [];
 
-  if(!isNaN(value) && Number(value) < 0) {
+  if(isNaN(value) || Number(value) <= 0) {
     errors.push('Invalid interest rate.');
   }
 
@@ -81,7 +81,7 @@ export function validateInterestRate(value) {
 export function validateMonthsToPay(value) {
   let errors = [];
 
-  if(!isNaN(value) && Number(value) < 0) {
+  if(isNaN(value) || Number(value) <= 0) {
     errors.push('Invalid times to pay.');
   }
 
@@ -96,7 +96,7 @@ export function validateMonthsToPay(value) {
 export function validateAmountLoan(value) {
   let errors = [];
 
-  if(!isNaN(value) && Number(value) < 0) {
+  if(isNaN(value) || Number(value) <= 0) {
     errors.push('Invalid loan amount.');
   }
 
