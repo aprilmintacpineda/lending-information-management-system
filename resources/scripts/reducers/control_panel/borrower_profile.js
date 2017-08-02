@@ -372,7 +372,9 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: alterPaymentFields(state.data.loans, action.index, {
             period: {
-              month: action.month
+              month: action.month,
+              date: 1,
+              errors: validateAmountPaid(action.value, 1, state.data.loans[action.index].payment_fields.period.year)
             }
           })
         }
@@ -394,7 +396,8 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: alterPaymentFields(state.data.loans, action.index, {
             period: {
-              year: action.year
+              year: action.year,
+              errors: validateAmountPaid(state.data.loans[action.index].payment_fields.period.year, 1, action.value)
             }
           })
         }
@@ -438,7 +441,8 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: alterPaymentFields(state.data.loans, action.index, {
             amount: {
-              value: action.value
+              value: action.value,
+              errors: validateAmountPaid(action.value)
             }
           })
         }
@@ -628,7 +632,8 @@ export default function borrower_profile(state = initial_state, action) {
             ...loan,
             payments: alterPaymentEditFields(loan.payments, action.payment_index, {
               amount: {
-                value: action.value
+                value: action.value,
+                errors: validateAmountPaid(action.value)
               }
             })
           }): ({...loan}))
