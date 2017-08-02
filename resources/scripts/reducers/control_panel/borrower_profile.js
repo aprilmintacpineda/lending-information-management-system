@@ -1126,6 +1126,47 @@ export default function borrower_profile(state = initial_state, action) {
           })
         }
       }
+    case 'BORROWER_PROFILE_ELI_SEND_SUCCESSFUL':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            ...action.data,
+            summary: getLoanSummary({...action.data}),
+            edit: getInitialLoanEditFields(action.data)
+          }) : {...loans})
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterLoanEditFields(new_state.data.loans, action.loan_index, {
+            backend: {
+              processing: false,
+              message: null,
+              status: 'successful'
+            }
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_ELI_SEND_FAILED':
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            backend: {
+              processing: false,
+              message: action.message,
+              status: 'failed'
+            }
+          })
+        }
+      }
     case 'BORROWER_PROFILE_RESET':
       return {
         ...initial_state

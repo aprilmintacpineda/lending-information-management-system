@@ -257,7 +257,8 @@ class BorrowerProfile extends Component {
                               interest_type: loan.edit.interest_rate.type,
                               months_to_pay: loan.edit.months_to_pay.value,
                               date_loan: new Date(monthList().indexOf(loan.edit.loan_date.month) + 1 + ' ' + loan.edit.loan_date.date + ', ' + loan.edit.loan_date.year).toISOString(),
-                              payment_method: loan.edit.payment_method.value
+                              payment_method: loan.edit.payment_method.value,
+                              id: loan.id
                             }, loan_index)}
                             sending={loan.edit.backend.processing}
                             disabled={!loan.payments.length && loan.edit.backend.allow_submit && !loan.edit.backend.processing? false : true}
@@ -272,6 +273,14 @@ class BorrowerProfile extends Component {
                             </a>
                           </div>
                         </div>
+
+                        <div className="row">
+                          {!loan.edit.backend.processing && loan.edit.backend.status == 'failed'?
+                            <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                              <p className="errors">Failed to save changes <u>{loan.edit.backend.message}</u></p>
+                            </WithIcon>
+                          : null}
+                        </div>
                       </div> :
                       <div className="left">
                         <h1>Loan information</h1>
@@ -283,6 +292,14 @@ class BorrowerProfile extends Component {
                             Edit loan information
                           </a>
                         </div>
+
+                        {!loan.edit.backend.processing && loan.edit.backend.status == 'successful'?
+                          <div className="row">
+                            <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                              <p className="okay">Changes saved successfully.</p>
+                            </WithIcon>
+                          </div>
+                        : null}
 
                         <div className="row">
                           <WithIcon icon={loan.fully_paid? path.join(app_path, 'app/images/check.png') : path.join(app_path, 'app/images/cross.png')}>
