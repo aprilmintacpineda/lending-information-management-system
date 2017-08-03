@@ -49,8 +49,7 @@ class BorrowerEditProfile extends Component {
                     onChange={value => this.props.editContactNumber(value, index)}
                     disabled={this.props.edit_borrower_profile.edit.backend.processing}
                     errors={contact_number.errors}
-                    value={contact_number.value}>
-                    </InputText>
+                    value={contact_number.value} />
                     {contact_number.value.length || index > 0?
                       <span onClick={() => this.props.edit_borrower_profile.edit.backend.processing? false : this.props.removeContactNumber(index )} className="remove-contact-field">X</span>
                     : null}

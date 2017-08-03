@@ -1,0 +1,29 @@
+.borrower-new-loan-wrapper
+  +clearFloat
+  .columns
+    float: left
+    width: 50%
+    box-sizing: border-box
+    .error-list
+      color: #ff6600
+  ul
+    +fitWidth
+    margin: 0 auto
+    li
+      list-style: none
+      margin-bottom: 10px
+      .clear-floats
+        +clearFloat
+      .date-loan
+        float: left
+        margin-right: 15px
+        min-width: 0 !important
+      label
+        cursor: pointer
+        padding-left: 2px
+        &:hover
+          text-decoration: underline
+      h1
+        letter-spacing: 5px
+        color: #33cccc
+        font-size: 18px

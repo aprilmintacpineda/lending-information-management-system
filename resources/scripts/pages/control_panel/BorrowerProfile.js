@@ -76,6 +76,10 @@ class BorrowerProfile extends Component {
                 </ul>}
             </section>
 
+            <section>
+              <Link className="default-btn-blue" to={'borrowers/' + this.props.borrower_profile.data.id + '/new-loan'}>Add new loan</Link>
+            </section>
+
             {this.props.borrower_profile.data.loans.map((loan, loan_index) => 
               <section key={loan_index}>
                 <h1>{toFormalDate(loan.loan_date)}</h1>

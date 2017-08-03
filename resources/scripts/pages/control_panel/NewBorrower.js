@@ -402,7 +402,7 @@ class NewBorrower extends Component {
                 <li>
                   Months to pay
                   <InputText
-                  placeholder={'Months to pay...'}
+                  placeholder='Months to pay...'
                   numberOnly={true}
                   onChange={this.props.changeMonthsToPay}
                   value={this.props.new_borrower.amount_loan.condition == 'due-date-only' || this.props.new_borrower.amount_loan.condition == 'due-date-and-interest'? this.props.new_borrower.months_to_pay.value : 'N/A'}

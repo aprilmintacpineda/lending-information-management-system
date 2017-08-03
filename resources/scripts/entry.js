@@ -17,6 +17,7 @@ import NewBorrower from './pages/control_panel/NewBorrower';
 import BorrowerProfile from './pages/control_panel/BorrowerProfile';
 import BorrowersList from './pages/control_panel/BorrowersList';
 import BorrowerEditProfile from './pages/control_panel/BorrowerEditProfile';
+import BorrowerNewLoan from './pages/control_panel/BorrowerNewLoan';
 import About from './pages/About';
 
 import store from './createStore';
@@ -37,6 +38,7 @@ render(
       <Route path="/borrowers" component={BorrowersList} />
       <Route path="/borrowers/:id/view" component={BorrowerProfile} />
       <Route path="/borrowers/:id/edit" component={BorrowerEditProfile} />
+      <Route path="/borrowers/:id/new-loan" component={BorrowerNewLoan} />
 
       <Route path="/login" component={Login} />
       <Route path="*" component={Landing} />
