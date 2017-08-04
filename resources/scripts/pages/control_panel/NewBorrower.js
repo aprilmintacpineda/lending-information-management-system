@@ -417,6 +417,10 @@ class NewBorrower extends Component {
                   <h1>Computed values</h1>
                 </li>
                 <li>
+                  <p>Interest rate</p>
+                  <DisplayTextBox value={currency(this.props.new_borrower.interest_rate.value) + (this.props.new_borrower.interest_rate.type == 'percentage'? ' Percent' : ' Pesos')} />
+                </li>
+                <li>
                   <p>Profit per month</p>
                   <DisplayTextBox value={currency(interest) + ' Pesos'} />
                 </li>

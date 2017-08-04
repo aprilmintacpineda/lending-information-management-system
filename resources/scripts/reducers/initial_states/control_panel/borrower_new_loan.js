@@ -28,6 +28,13 @@ export default {
     errors: []
   },
   allow_submit: false,
+  calculated_values: {
+    computed_interest: 0,
+    computed_profit: 0,
+    monthly: 0,
+    semi_monthly: 0,
+    daily: 0
+  },
   backend: {
     processing: false,
     status: null,

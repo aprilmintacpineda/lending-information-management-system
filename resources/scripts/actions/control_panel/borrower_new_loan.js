@@ -62,8 +62,16 @@ export function changeDateLoanYear(value) {
 }
 
 export function submit(fields) {
+  console.log(fields);
+
   return {
-    type: 'BORROWERNEWLOAN_SUBMIT',
+    type: '_BORROWERNEWLOAN_SUBMIT',
     ...fields
+  }
+}
+
+export function reset() {
+  return {
+    type: 'BORROWERNEWLOAN_RESET'
   }
 }
