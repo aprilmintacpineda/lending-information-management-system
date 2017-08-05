@@ -23,12 +23,6 @@ class NewBorrower extends Component {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.computeInterestPercentage = this.computeInterestPercentage.bind(this);
-    this.computeInterest = this.computeInterest.bind(this);
-    this.computeProfit = this.computeProfit.bind(this);
-    this.computePerMonth = this.computePerMonth.bind(this);
-    this.computePerDay = this.computePerDay.bind(this);
-    this.computePerHalfMonth = this.computePerHalfMonth.bind(this);
   }
 
   componentWillMount() {
@@ -58,128 +52,15 @@ class NewBorrower extends Component {
       payment_method: this.props.new_borrower.apply_interest_only || this.props.new_borrower.no_due_date_no_interest? null : this.props.new_borrower.payment_method.value,
       months_to_pay: this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'due-date-only'? this.props.new_borrower.months_to_pay.value : null,
       condition_applied: this.props.new_borrower.amount_loan.condition,
-      interest: this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'interest-only'? this.computeInterest() : 0,
-      profit: this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'interest-only'? this.computeProfit() : 0,
-      interest_rate: this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'interest-only'? this.props.new_borrower.interest_rate.value : 0,
+      loan_date: this.props.new_borrower.loan_date.month + ' ' + this.props.new_borrower.loan_date.date + ', ' + this.props.new_borrower.loan_date.year,
       interest_type: this.props.new_borrower.interest_rate.type,
-      per_month: this.computePerMonth(),
-      per_semi_month: this.computePerHalfMonth(),
-      per_day: this.computePerDay(),
-      loan_date: this.props.new_borrower.loan_date.month + ' ' + this.props.new_borrower.loan_date.date + ', ' + this.props.new_borrower.loan_date.year
+      interest_rate: this.props.new_borrower.interest_rate.value,
+      ...this.props.new_borrower.calculated_values
     });
-  }
-
-  computeInterestPercentage() {
-    // interest rate / 100
-    return Number(this.props.new_borrower.interest_rate.value) / 100;
-  }
-
-  computeProfit() {
-    // interest * months to pay
-    return this.computeInterest() * Number(this.props.new_borrower.months_to_pay.value);
-  }
-
-  computeInterest() {
-    if(this.props.new_borrower.interest_rate.type == 'percentage') {
-      // amount loan * interest percentage
-      return Number(this.props.new_borrower.amount_loan.value) * this.computeInterestPercentage();
-    }
-
-    return Number(this.props.new_borrower.interest_rate.value);
-  }
-
-  computePerMonth() {
-    if(this.props.new_borrower.amount_loan.condition == 'interest-only'
-    || this.props.new_borrower.amount_loan.condition == 'due-date-and-interest') {
-      // per payment = (profit + loan amount) / months to pay
-      return (this.computeProfit() + Number(this.props.new_borrower.amount_loan.value)) /
-        Number(this.props.new_borrower.months_to_pay.value);
-    }
-
-    return Number(this.props.new_borrower.amount_loan.value) /
-      Number(this.props.new_borrower.months_to_pay.value);
-  }
-
-  computePerDay() {
-    // monthly / 30
-    return this.computePerMonth() / 30;
-  }
-
-  computePerHalfMonth() {
-    // monthly / 2
-    return this.computePerMonth() / 2;
   }
 
   render() {
     let app_path = remote.app.getAppPath();
-
-    let per_month = 0;
-    let per_day = 0;
-    let per_half_month = 0;
-    let profit = 0;
-    let interest_percentage = 0;
-    let interest = 0;
-
-    let date = new Date;
-    let month_list = monthList();
-    let months = month_list.map((month, index) => <option key={index}>{month}</option>);
-    let max_days_in_month = monthMaxdays(this.props.new_borrower.loan_date.month, this.props.new_borrower.loan_date.year);
-    let max_year = date.getFullYear();
-    let min_year = max_year - 10;
-    let dates = [];
-    let years = [];
-
-    for(let a = 1; a <= max_days_in_month; a++) {
-      dates.push(<option key={a}>{a}</option>);
-    }
-
-    for(let a = max_year; a >= min_year; a--) {
-      years.push(<option key={a}>{a}</option>);
-    }
-
-    if(this.props.new_borrower.amount_loan.condition == 'interest-only'
-    && this.props.new_borrower.amount_loan.value.length
-    && !this.props.new_borrower.amount_loan.errors.length) {
-      /**
-        * applying of interest only
-        * will compute and add the interest
-        * but will not compute for a monthly payment
-       */
-      interest_percentage = this.computeInterestPercentage();
-      interest = this.computeInterest();
-      profit = this.computeProfit();
-    } else if(this.props.new_borrower.amount_loan.condition == 'due-date-only'
-    && this.props.new_borrower.amount_loan.value.length
-    && this.props.new_borrower.months_to_pay.value.length
-    && !this.props.new_borrower.amount_loan.errors.length
-    && !this.props.new_borrower.months_to_pay.errors.length) {
-      /**
-       * applying of due date only
-       * will compute the monthly, half monthly and daily payment
-       * but will not compute for the interest
-       */
-      per_month = this.computePerMonth();
-      per_day = this.computePerDay();
-      per_half_month = this.computePerHalfMonth();
-    } else if(this.props.new_borrower.amount_loan.condition == 'due-date-and-interest'
-    && this.props.new_borrower.amount_loan.value.length
-    && !this.props.new_borrower.amount_loan.errors.length
-    && this.props.new_borrower.months_to_pay.value.length
-    && !this.props.new_borrower.months_to_pay.errors.length
-    && this.props.new_borrower.interest_rate.value.length
-    && !this.props.new_borrower.interest_rate.errors.length) {
-      /**
-       * apply due date and interest
-       * will compute for the monthly, half monthly and daily payments
-       * will compute for the interest
-       */
-      interest_percentage = this.computeInterestPercentage();
-      interest = this.computeInterest();
-      profit = this.computeProfit();
-      per_month = this.computePerMonth();
-      per_day = this.computePerDay();
-      per_half_month = this.computePerHalfMonth();
-    }
 
     return (
       <WithSidebar onLink="new-borrower">
@@ -313,7 +194,7 @@ class NewBorrower extends Component {
                   value={this.props.new_borrower.loan_date.month}
                   disabled={this.props.new_borrower.backend.processing}
                   errors={[]}>
-                    {months}
+                    {(() => monthList().map((month, index) => <option key={index}>{month}</option>))()}
                   </InputSelect>
 
                   <InputSelect
@@ -322,7 +203,17 @@ class NewBorrower extends Component {
                   value={this.props.new_borrower.loan_date.date}
                   disabled={this.props.new_borrower.backend.processing}
                   errors={[]}>
-                    {dates}
+                    {(() => {
+                      let date = new Date;
+                      let max_days_in_month = monthMaxdays(this.props.new_borrower.loan_date.month, this.props.new_borrower.loan_date.year);
+                      let dates = [];
+
+                      for(let a = 1; a <= max_days_in_month; a++) {
+                        dates.push(<option key={a}>{a}</option>);
+                      }
+
+                      return dates;
+                    })()}
                   </InputSelect>
 
                   <InputSelect
@@ -331,7 +222,17 @@ class NewBorrower extends Component {
                   value={this.props.new_borrower.loan_date.year}
                   disabled={this.props.new_borrower.backend.processing}
                   errors={[]}>
-                    {years}
+                    {(() => {
+                      let max_year = new Date().getFullYear();
+                      let min_year = max_year - 10;
+                      let years = [];
+
+                      for(let a = max_year; a >= min_year; a--) {
+                        years.push(<option key={a}>{a}</option>);
+                      }
+
+                      return years;
+                    })()}
                   </InputSelect>
 
                   {this.props.new_borrower.loan_date.errors.length?
@@ -422,27 +323,27 @@ class NewBorrower extends Component {
                 </li>
                 <li>
                   <p>Profit per month</p>
-                  <DisplayTextBox value={currency(interest) + ' Pesos'} />
+                  <DisplayTextBox value={currency(this.props.new_borrower.calculated_values.computed_interest) + ' Pesos'} />
                 </li>
                 <li>
                   <p>Total profit</p>
-                  <DisplayTextBox value={currency(profit) + ' Pesos'} />
+                  <DisplayTextBox value={currency(this.props.new_borrower.calculated_values.computed_profit) + ' Pesos'} />
                 </li>
                 <li>
                   <p>Total amount to pay</p>
-                  <DisplayTextBox value={currency(profit + Number(this.props.new_borrower.amount_loan.value)) + ' Pesos'} />
+                  <DisplayTextBox value={currency(Number(this.props.new_borrower.calculated_values.computed_profit) + Number(this.props.new_borrower.amount_loan.value)) + ' Pesos'} />
                 </li>
                 <li>
                   <p>Monthly payment</p>
-                  <DisplayTextBox value={currency(per_month) + ' Pesos'} />
+                  <DisplayTextBox value={currency(this.props.new_borrower.calculated_values.monthly) + ' Pesos'} />
                 </li>
                 <li>
                   <p>Semi-monthly payment</p>
-                  <DisplayTextBox value={currency(per_half_month) + ' Pesos'} />
+                  <DisplayTextBox value={currency(this.props.new_borrower.calculated_values.semi_monthly) + ' Pesos'} />
                 </li>
                 <li>
                   <p>Daily payment</p>
-                  <DisplayTextBox value={currency(per_day) + ' Pesos'} />
+                  <DisplayTextBox value={currency(this.props.new_borrower.calculated_values.daily) + ' Pesos'} />
                 </li>
                 <li>
                   <InputButton

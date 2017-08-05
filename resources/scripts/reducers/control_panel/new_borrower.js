@@ -1,5 +1,7 @@
 import initial_state from '../initial_states/control_panel/new_borrower';
 
+import * as calculator from '../../helpers/Calculator';
+
 import {
   validateName,
   validateGender,
@@ -69,6 +71,69 @@ function allowSubmit(new_state) {
     || new_state.interest_rate.errors.length
     || !new_state.months_to_pay.value.length
     || new_state.months_to_pay.errors.length? false : true;
+}
+
+function calculatedValues(new_state) {
+  let computed_interest = 0;
+  let computed_profit = 0;
+  let monthly = 0;
+  let semi_monthly = 0;
+  let daily = 0;
+  let interest_percentage = 0;
+
+  if(new_state.amount_loan.condition == 'interest-only'
+  && new_state.amount_loan.value.length
+  && !new_state.amount_loan.errors.length) {
+    /**
+      * applying of interest only
+      * will compute and add the interest
+      * but will not compute for a monthly payment
+     */
+    interest_percentage = calculator.computeInterestPercentage(new_state.interest_rate.value, new_state.interest_rate.type);
+    computed_interest = calculator.computeInterest(new_state.amount_loan.value, interest_percentage, new_state.interest_rate.type, new_state.interest_rate.value);
+    computed_profit = calculator.computeProfit(computed_interest, new_state.months_to_pay.value);
+  } else if(new_state.amount_loan.condition == 'due-date-only'
+  && new_state.amount_loan.value.length
+  && new_state.months_to_pay.value.length
+  && !new_state.amount_loan.errors.length
+  && !new_state.months_to_pay.errors.length) {
+    /**
+     * applying of due date only
+     * will compute the monthly, half monthly and daily payment
+     * but will not compute for the interest
+     */
+    
+    monthly = calculator.computePerMonth(new_state.amount_loan.condition, new_state.amount_loan.value, new_state.months_to_pay.value, computed_profit);
+    semi_monthly = calculator.computePerHalfMonth(monthly);
+    daily = calculator.computePerDay(monthly);
+  } else if(new_state.amount_loan.condition == 'due-date-and-interest'
+  && new_state.amount_loan.value.length
+  && !new_state.amount_loan.errors.length
+  && new_state.months_to_pay.value.length
+  && !new_state.months_to_pay.errors.length
+  && new_state.interest_rate.value.length
+  && !new_state.interest_rate.errors.length) {
+    /**
+     * apply due date and interest
+     * will compute for the monthly, half monthly and daily payments
+     * will compute for the interest
+     */
+    
+    interest_percentage = calculator.computeInterestPercentage(new_state.interest_rate.value, new_state.interest_rate.type);
+    computed_interest = calculator.computeInterest(new_state.amount_loan.value, interest_percentage, new_state.interest_rate.type, new_state.interest_rate.value);
+    computed_profit = calculator.computeProfit(computed_interest, new_state.months_to_pay.value);
+    monthly = calculator.computePerMonth(new_state.amount_loan.condition, new_state.amount_loan.value, new_state.months_to_pay.value, computed_profit);
+    semi_monthly = calculator.computePerHalfMonth(monthly);
+    daily = calculator.computePerDay(monthly);
+  }
+  
+  return {
+    computed_interest,
+    computed_profit,
+    monthly,
+    semi_monthly,
+    daily
+  }
 }
 
 export default function new_borrower(state = initial_state, action) {
@@ -151,6 +216,7 @@ export default function new_borrower(state = initial_state, action) {
 
       return {
         ...new_state,
+        calculated_values: calculatedValues(new_state),
         backend: {
           ...new_state.backend,
           allow_submit: allowSubmit(new_state)
@@ -168,6 +234,7 @@ export default function new_borrower(state = initial_state, action) {
 
       return {
         ...new_state,
+        calculated_values: calculatedValues(new_state),
         backend: {
           ...new_state.backend,
           allow_submit: allowSubmit(new_state)
@@ -185,6 +252,7 @@ export default function new_borrower(state = initial_state, action) {
 
       return {
         ...new_state,
+        calculated_values: calculatedValues(new_state),
         backend: {
           ...new_state.backend,
           allow_submit: allowSubmit(new_state)
@@ -201,6 +269,7 @@ export default function new_borrower(state = initial_state, action) {
 
       return {
         ...new_state,
+        calculated_values: calculatedValues(new_state),
         backend: {
           ...new_state.backend,
           allow_submit: allowSubmit(new_state)
@@ -217,6 +286,7 @@ export default function new_borrower(state = initial_state, action) {
 
       return {
         ...new_state,
+        calculated_values: calculatedValues(new_state),
         backend: {
           ...new_state.backend,
           allow_submit: allowSubmit(new_state)

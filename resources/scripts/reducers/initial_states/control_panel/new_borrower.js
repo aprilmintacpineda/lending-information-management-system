@@ -44,6 +44,13 @@ export default {
     year: current_year,
     errors: []
   },
+  calculated_values: {
+    computed_interest: 0,
+    computed_profit: 0,
+    monthly: 0,
+    semi_monthly: 0,
+    daily: 0
+  },
   contact_numbers: [
     {
       value: '',
