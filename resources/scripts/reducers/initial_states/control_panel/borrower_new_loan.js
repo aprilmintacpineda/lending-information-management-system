@@ -24,7 +24,7 @@ export default {
     errors: []
   },
   payment_method: {
-    value: '',
+    value: '1',
     errors: []
   },
   allow_submit: false,

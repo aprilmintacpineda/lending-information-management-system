@@ -77,7 +77,7 @@ class BorrowerProfile extends Component {
             </section>
 
             <section>
-              <Link className="default-btn-blue" to={'borrowers/' + this.props.borrower_profile.data.id + '/new-loan'}>Add new loan</Link>
+              <Link className="default-btn-blue" to={'borrowers/' + this.props.params.id + '/new-loan'}>Add new loan</Link>
             </section>
 
             {this.props.borrower_profile.data.loans.map((loan, loan_index) => 

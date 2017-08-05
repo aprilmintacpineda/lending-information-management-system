@@ -243,6 +243,24 @@ export default function borrower_new_loan(state = initial_state, action) {
           message: null
         }
       }
+    case 'BORROWERNEWLOAN_SUBMIT_SUCCESSFUL':
+      return {
+        ...state,
+        backend: {
+          processing: false,
+          status: 'successful',
+          message: null
+        }
+      }
+    case 'BORROWERNEWLOAN_SUBMIT_FAILED':
+      return {
+        ...state,
+        backend: {
+          processing: false,
+          status: 'failed',
+          message: action.message
+        }
+      }
     case 'BORROWERNEWLOAN_RESET':
       return {...initial_state}
     default:

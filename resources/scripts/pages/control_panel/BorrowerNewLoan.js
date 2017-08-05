@@ -25,13 +25,22 @@ class BorrowerNewLoan extends Component {
     this.props.reset();
   }
 
+  componentWillUpdate(nextProps) {
+    if(nextProps.new_loan.backend.status == 'successful') {
+      this.props.router.push('/borrowers/'+ this.props.params.id +'/view');
+    }
+  }
+
   handleSubmit() {
     this.props.submit({
+      borrower_id: this.props.params.id,
       amount_loan: this.props.new_loan.amount_loan.value,
       payment_method: this.props.new_loan.apply_interest_only || this.props.new_loan.no_due_date_no_interest? null : this.props.new_loan.payment_method.value,
       months_to_pay: this.props.new_loan.amount_loan.condition == 'due-date-and-interest' || this.props.new_loan.amount_loan.condition == 'due-date-only'? this.props.new_loan.months_to_pay.value : null,
       condition_applied: this.props.new_loan.amount_loan.condition,
       date_loan: new Date(this.props.new_loan.date_loan.month + ' ' + this.props.new_loan.date_loan.date + ', ' + this.props.new_loan.date_loan.year).toISOString(),
+      interest_type: this.props.new_loan.interest_rate.type,
+      interest_rate: this.props.new_loan.interest_rate.value,
       ...this.props.new_loan.calculated_values
     });
   }
