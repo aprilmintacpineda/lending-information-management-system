@@ -259,3 +259,11 @@ export function editLoanInformatioSend(fields, loan_index) {
     loan_index
   }
 }
+
+export function togglePenaltyForm(visibility, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_PENALTYFIELD_TOGGLE',
+    visibility,
+    loan_index
+  }
+}

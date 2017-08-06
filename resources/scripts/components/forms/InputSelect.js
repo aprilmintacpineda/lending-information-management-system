@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 class InputSelect extends Component {
   static propTypes = {
     value: (props, propName, componentName) => {
-      if(props[propName].constructor !== Number
-      && props[propName].constructor !== String) {
+      if(props[propName] == undefined
+      || (props[propName].constructor !== Number && props[propName].constructor !== String)) {
         console.error('Invalid prop `' + propName + '` supplied to' +
         ' `' + componentName + '`. Expecting String or number. Type of ' + typeof props[propName] + ' given.');
       }
@@ -15,8 +15,8 @@ class InputSelect extends Component {
     disabled: PropTypes.bool.isRequired,
     className: PropTypes.string,
     children: (props, propName, componentName) => {
-      if(props[propName].constructor !== Array
-      && props[propName].constructor !== Object) {
+      if(props[propName] == undefined
+      || (props[propName].constructor !== Array && props[propName].constructor !== Object)) {
         console.error('Invalid prop `' + propName + '` supplied to' +
         ' `' + componentName + '`. Expecting Array or a single element. Type of ' + typeof props[propName] + ' given.');
       }

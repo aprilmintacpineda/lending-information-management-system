@@ -290,6 +290,41 @@ function allowLoanEditSubmit(new_state) {
     || new_state.months_to_pay.errors.length? false : true;
 }
 
+function getInitialPenaltyFields() {
+  return {
+    shown: false,
+    amount: {
+      value: '',
+      errors: []
+    },
+    remarks: {
+      value: '',
+      errors: []
+    },
+    date_given: {
+      month: monthList()[new Date().getMonth()],
+      date: new Date().getDate(),
+      year: new Date().getFullYear()
+    },
+    allow_submit: false,
+    backend: {
+      processing: false,
+      status: null,
+      message: null
+    }
+  }
+}
+
+function alterPenaltyFields(loans, target_index, fields) {
+  return loans.map((loan, loan_index) => loan_index == target_index? ({
+    ...loan,
+    penalty_fields: {
+      ...loan.penalty_fields,
+      ...fields
+    }
+  }) : {...loan});
+}
+
 export default function borrower_profile(state = initial_state, action) {
   let new_state;
 
@@ -312,6 +347,7 @@ export default function borrower_profile(state = initial_state, action) {
             ...loan,
             edit: getInitialLoanEditFields(loan),
             payment_fields: getInitialPaymentFields(loan),
+            penalty_fields: getInitialPenaltyFields(),
             summary: getLoanSummary(loan),
             payments: loan.payments.map(payment => getInitialPaymentEditFields(payment))
           }))
@@ -1170,6 +1206,29 @@ export default function borrower_profile(state = initial_state, action) {
     case 'BORROWER_PROFILE_RESET':
       return {
         ...initial_state
+      }
+    case 'BORROWER_PROFILE_PENALTYFIELD_TOGGLE':
+      if(!action.visibility) {
+        return {
+          ...state,
+          data: {
+            ...state.data,
+            loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+              ...loan,
+              penalty_fields: getInitialPenaltyFields()
+            }) : {...loan})
+          }
+        }
+      }
+
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterPenaltyFields(state.data.loans, action.loan_index, {
+            shown: true
+          })
+        }
       }
     default:
       return {
