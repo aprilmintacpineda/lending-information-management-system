@@ -819,12 +819,12 @@ class BorrowerProfile extends Component {
                           </ul>
                         : <ul className="penalty-form">
                             <li>
-                              Amount Paid
+                              Amount
                               <InputText
                               numberOnly={true}
                               value={loan.penalty_fields.amount.value}
-                              placeholder="Amount paid..."
-                              onChange={value => console.log(value)}
+                              placeholder="Amount..."
+                              onChange={value => this.props.changePenaltyFormAmount(value, loan_index)}
                               errors={loan.penalty_fields.amount.errors}
                               disabled={loan.penalty_fields.backend.processing} />
                               <p><strong>{currency(loan.penalty_fields.amount.value)}</strong> Pesos</p>
@@ -833,7 +833,7 @@ class BorrowerProfile extends Component {
                               <p>Date given</p>
                               <InputSelect
                               className="date"
-                              onChange={value => console.log(value, loan_index)}
+                              onChange={value => this.props.changePenaltyMonth(value, loan_index)}
                               value={loan.penalty_fields.date_given.month}
                               disabled={loan.penalty_fields.backend.processing}
                               errors={[]}>
@@ -843,7 +843,7 @@ class BorrowerProfile extends Component {
                               </InputSelect>
                               <InputSelect
                               className="date"
-                              onChange={value => console.log(value, loan_index)}
+                              onChange={value => this.props.changePenaltyDate(value, loan_index)}
                               value={loan.penalty_fields.date_given.date}
                               disabled={loan.penalty_fields.backend.processing}
                               errors={[]}>
@@ -860,7 +860,7 @@ class BorrowerProfile extends Component {
                               </InputSelect>
                               <InputSelect
                               className="date"
-                              onChange={value => console.log(value, loan_index)}
+                              onChange={value => this.props.changePenaltyYear(value, loan_index)}
                               value={loan.penalty_fields.date_given.year}
                               disabled={loan.penalty_fields.backend.processing}
                               errors={[]} >
@@ -881,20 +881,24 @@ class BorrowerProfile extends Component {
                             <li>
                               <p>Remarks</p>
                               <WithIcon icon={path.join(app_path, 'app/images/information.png')}>
-                                <p>A short description about this penalty.</p>
+                                <p>A short description about this penalty, e.g., <i>No payment in two months</i>.</p>
                               </WithIcon>
                               <InputText
-                              value={loan.penalty_fields.amount.value}
+                              value={loan.penalty_fields.remarks.value}
                               placeholder="Remarks..."
-                              onChange={value => console.log(value)}
-                              errors={loan.penalty_fields.amount.errors}
+                              onChange={value => this.props.changePenaltyFormRemarks(value, loan_index)}
+                              errors={loan.penalty_fields.remarks.errors}
                               disabled={loan.penalty_fields.backend.processing} />
                             </li>
                             <li>
                               <div className="buttons">
                                 <InputButton
                                 value="Create penalty"
-                                onClick={() => console.log('create penalty')}
+                                onClick={() => this.props.createPenalty({
+                                  amount: loan.penalty_fields.amount.value,
+                                  remarks: loan.penalty_fields.remarks.value,
+                                  date_given: new Date(loan.penalty_fields.date_given.month + ' ' + loan.penalty_fields.date_given.date + ', ' + loan.penalty_fields.date_given.year).toISOString()
+                                }, loan_index)}
                                 sending={loan.penalty_fields.backend.processing}
                                 disabled={loan.penalty_fields.allow_submit && !loan.penalty_fields.backend.processing? false : true}
                                 errors={[]} />
@@ -968,5 +972,11 @@ export default connect(store => ({
   editLoanInformationDateLoanYear: borrowerProfileActions.editLoanInformationDateLoanYear,
   editLoanInformatioPaymentMethod: borrowerProfileActions.editLoanInformatioPaymentMethod,
   editLoanInformatioSend: borrowerProfileActions.editLoanInformatioSend,
-  togglePenaltyForm: borrowerProfileActions.togglePenaltyForm
+  togglePenaltyForm: borrowerProfileActions.togglePenaltyForm,
+  changePenaltyFormAmount: borrowerProfileActions.changePenaltyFormAmount,
+  changePenaltyFormRemarks: borrowerProfileActions.changePenaltyFormRemarks,
+  changePenaltyDate: borrowerProfileActions.changePenaltyDate,
+  changePenaltyMonth: borrowerProfileActions.changePenaltyMonth,
+  changePenaltyYear: borrowerProfileActions.changePenaltyYear,
+  createPenalty: borrowerProfileActions.createPenalty
 })(BorrowerProfile);

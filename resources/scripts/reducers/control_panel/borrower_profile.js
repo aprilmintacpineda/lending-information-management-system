@@ -318,11 +318,42 @@ function getInitialPenaltyFields() {
 function alterPenaltyFields(loans, target_index, fields) {
   return loans.map((loan, loan_index) => loan_index == target_index? ({
     ...loan,
-    penalty_fields: {
+    penalty_fields: fields.amount? {
+      ...loan.penalty_fields,
+      amount: {
+        ...loan.penalty_fields.amount,
+        ...fields.amount
+      }
+    } : fields.remarks? {
+      ...loan.penalty_fields,
+      remarks: {
+        ...loan.penalty_fields.remarks,
+        ...fields.remarks
+      }
+    } : fields.date_given? {
+      ...loan.penalty_fields,
+      date_given: {
+        ...loan.penalty_fields.date_given,
+        ...fields.date_given
+      }
+    } : fields.backend? {
+      ...loan.penalty_fields,
+      backend: {
+        ...loan.penalty_fields.backend,
+        ...fields.backend
+      }
+    } : {
       ...loan.penalty_fields,
       ...fields
     }
   }) : {...loan});
+}
+
+function allowPenaltyFormSubmit(fields) {
+  return fields.amount.value.length
+    && !fields.amount.errors.length
+    && fields.remarks.value.length
+    && !fields.remarks.errors.length? true: false;
 }
 
 export default function borrower_profile(state = initial_state, action) {
@@ -1227,6 +1258,132 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: alterPenaltyFields(state.data.loans, action.loan_index, {
             shown: true
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_PENALTYFIELD_AMOUNT':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterPenaltyFields(state.data.loans, action.loan_index, {
+            amount: {
+              value: action.value
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterPenaltyFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowPenaltyFormSubmit(new_state.data.loans[action.loan_index].penalty_fields)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_PENALTYFIELD_REMARKS':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterPenaltyFields(state.data.loans, action.loan_index, {
+            remarks: {
+              value: action.value
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterPenaltyFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowPenaltyFormSubmit(new_state.data.loans[action.loan_index].penalty_fields)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_PENALTYFIELD_DATE':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterPenaltyFields(state.data.loans, action.loan_index, {
+            date_given: {
+              date: action.value
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterPenaltyFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowPenaltyFormSubmit(new_state.data.loans[action.loan_index].penalty_fields)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_PENALTYFIELD_MONTH':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterPenaltyFields(state.data.loans, action.loan_index, {
+            date_given: {
+              month
+
+              : action.value
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterPenaltyFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowPenaltyFormSubmit(new_state.data.loans[action.loan_index].penalty_fields)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_PENALTYFIELD_YEAR':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterPenaltyFields(state.data.loans, action.loan_index, {
+            date_given: {
+              year: action.value
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterPenaltyFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowPenaltyFormSubmit(new_state.data.loans[action.loan_index].penalty_fields)
+          })
+        }
+      }
+    case '_BORROWER_PROFILE_PENALTYFIELD_CREATE':
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterPenaltyFields(state.data.loans, action.loan_index, {
+            backend: {
+              status: null,
+              message: null,
+              processing: true
+            }
           })
         }
       }

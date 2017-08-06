@@ -267,3 +267,51 @@ export function togglePenaltyForm(visibility, loan_index) {
     loan_index
   }
 }
+
+export function changePenaltyFormAmount(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_PENALTYFIELD_AMOUNT',
+    value,
+    loan_index
+  }
+}
+
+export function changePenaltyFormRemarks(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_PENALTYFIELD_REMARKS',
+    value,
+    loan_index
+  }
+}
+
+export function changePenaltyDate(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_PENALTYFIELD_DATE',
+    value,
+    loan_index
+  }
+}
+
+export function changePenaltyMonth(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_PENALTYFIELD_MONTH',
+    value,
+    loan_index
+  }
+}
+
+export function changePenaltyYear(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_PENALTYFIELD_YEAR',
+    value,
+    loan_index
+  }
+}
+
+export function createPenalty(fields, loan_index) {
+  return {
+    type: '_BORROWER_PROFILE_PENALTYFIELD_CREATE',
+    ...fields,
+    loan_index
+  }
+}
