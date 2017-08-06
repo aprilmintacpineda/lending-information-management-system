@@ -639,13 +639,27 @@ export default function borrower_profile(state = initial_state, action) {
         }
       }
     case 'BORROWER_PROFILE_SEND_PAYMENT_SUCCESSFUL':
-      return {
+      new_state = {
         ...state,
         data: {
           ...state.data,
           loans: alterPaymentFields(state.data.loans, action.index, {
             payment_fields: getInitialPaymentFields(state.data.loans[action.index]),
             payments: state.data.loans[action.index].payments.addFirst(action.payment).map(payment => getInitialPaymentEditFields(payment))
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterPaymentFields(new_state.data.loans, action.index, {
+            backend: {
+              processing: false,
+              message: null,
+              status: 'successful'
+            }
           })
         }
       }
@@ -1383,6 +1397,45 @@ export default function borrower_profile(state = initial_state, action) {
               status: null,
               message: null,
               processing: true
+            }
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_PENALTYFIELD_CREATE_SUCCESSFUL':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => action.loan_index == loan_index? ({
+            ...loan,
+            penalty_fields: getInitialPenaltyFields()
+          }): {...loan})
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterPenaltyFields(new_state.data.loans, action.loan_index, {
+            backend: {
+              status: 'successful',
+              message: null,
+              processing: false
+            }
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_PENALTYFIELD_CREATE_FAILED':
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterPenaltyFields(new_state.data.loans, action.loan_index, {
+            backend: {
+              status: 'failed',
+              message: action.message,
+              processing: false
             }
           })
         }

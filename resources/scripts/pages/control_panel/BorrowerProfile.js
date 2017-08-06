@@ -42,8 +42,6 @@ class BorrowerProfile extends Component {
   render() {
     let app_path = remote.app.getAppPath();
 
-    console.log(this.props.borrower_profile);
-
     return (
       <WithSidebar>
         <div className="borrower-profile">
@@ -605,6 +603,14 @@ class BorrowerProfile extends Component {
                             </li>
                           </ul> }
 
+                        {loan.payment_fields.backend.status == 'successful'?
+                          <div className="row">
+                            <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                              <p className="okay">Payment added successfully.</p>
+                            </WithIcon>
+                           </div>
+                        : null}
+
                         {loan.payments.length? loan.payments.map((payment, payment_index) =>
                           payment.edit.shown?
                             <div className="payment-container" key={payment_index}>
@@ -917,6 +923,14 @@ class BorrowerProfile extends Component {
                               : null}
                             </li>
                           </ul>}
+
+                        {loan.penalty_fields.backend.status == 'successful'?
+                          <div className="row">
+                            <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                              <p className="okay">Penalty added successfully.</p>
+                            </WithIcon>
+                           </div>
+                        : null}
 
                         {loan.penalties.length? loan.penalties.map((penalty, penalty_index) =>
                           <div className="payment-container" key={penalty_index}>
