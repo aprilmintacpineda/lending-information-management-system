@@ -49,6 +49,9 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
         ...loan.dataValues,
         payments: loan.payments.map(payment => ({
           ...payment.dataValues
+        })),
+        penalties: loan.penalties.map(penalty => ({
+          ...penalty.dataValues
         }))
       }))
     }
