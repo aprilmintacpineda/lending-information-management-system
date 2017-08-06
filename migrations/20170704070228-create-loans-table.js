@@ -17,11 +17,11 @@ module.exports = {
         allowNull: false
       },
       amount: {
-        type: Sequelize.BIGINT,
+        type: Sequelize.FLOAT,
         allowNull: false
       },
       interest: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false
       },
       interest_type: {
@@ -29,11 +29,11 @@ module.exports = {
         allowNull: false
       },
       profit: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false
       },
       interest_rate: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false
       },
       months_to_pay: {
@@ -43,15 +43,15 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       per_month: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false
       },
       per_semi_month: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false
       },
       per_day: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false
       },
       condition_applied: {
@@ -64,7 +64,7 @@ module.exports = {
         defaultValue: false
       },
       created_at: {
-        type: Sequelize.NOW,
+        type: Sequelize.DATE,
         allowNull: false
       },
       updated_at: {

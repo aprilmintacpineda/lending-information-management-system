@@ -36,24 +36,6 @@ class Setup extends Component {
   }
 
   render() {
-    let month_list = monthList();
-    let months = month_list.map((month, index) => <option key={index}>{month}</option>);
-    let max_days_in_month = monthMaxdays(this.props.setup.birth_date.month, this.props.setup.birth_date.year);
-
-    let dates = [];
-    let years = [];
-
-    let min_year = minYear();
-    let max_year = maxYear();
-
-    for(let a = 1; a <= max_days_in_month; a++) {
-      dates.push(<option key={a}>{a}</option>);
-    }
-
-    for(let a = min_year; a <= max_year; a++) {
-      years .push(<option key={a}>{a}</option>);
-    }
-
     return (
       <div className="setup-wrapper default-content-wrapper">
         <h1>Hi there! It looks like this is your first time using this software. Let's setup your account.</h1>
@@ -106,7 +88,7 @@ class Setup extends Component {
               value={this.props.setup.birth_date.month}
               disabled={this.props.setup.backend.processing}
               errors={[]}>
-                {months}
+                {monthList().map(month => <option key={index}>{month}</option>)}
               </InputSelect>
 
               <InputSelect
@@ -115,7 +97,17 @@ class Setup extends Component {
               value={this.props.setup.birth_date.date}
               disabled={this.props.setup.backend.processing}
               errors={[]}>
-                {dates}
+                {(() => {
+                  let months = monthList().map((month, index) => <option key={index}>{month}</option>);
+                  let max_days_in_month = monthMaxdays(this.props.setup.birth_date.month, this.props.setup.birth_date.year);
+                  let dates = [];
+
+                  for(let a = 1; a <= max_days_in_month; a++) {
+                    dates.push(<option key={a}>{a}</option>);
+                  }
+
+                  return dates;
+                })()}
               </InputSelect>
 
               <InputSelect
@@ -124,7 +116,17 @@ class Setup extends Component {
               value={this.props.setup.birth_date.year}
               disabled={this.props.setup.backend.processing}
               errors={[]}>
-                {years}
+                {(() => {
+                  let years = [];
+                  let min_year = minYear();
+                  let max_year = maxYear();
+
+                  for(let a = min_year; a <= max_year; a++) {
+                    years .push(<option key={a}>{a}</option>);
+                  }
+
+                  return years;
+                })()}
               </InputSelect>
 
               {this.props.setup.birth_date.errors.length?

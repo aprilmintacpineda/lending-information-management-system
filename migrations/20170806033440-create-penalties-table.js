@@ -2,19 +2,28 @@
 
 module.exports = {
   up: function (queryInterface, Sequelize) {
-    return queryInterface.createTable('contact_numbers', {
+    return queryInterface.createTable('penalties', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: false,
         primaryKey: true
       },
-      borrower_id: {
+      loan_id: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      number: {
-        type: Sequelize.STRING('20'),
+      amount: {
+        type: Sequelize.FLOAT,
         allowNull: false
+      },
+      remarks: {
+        type: Sequelize.STRING(255),
+        allowNull: false
+      },
+      was_waved: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       },
       created_at: {
         type: Sequelize.DATE,
@@ -24,12 +33,10 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false
       }
-    }, {
-      charset: 'latin1'
     });
   },
 
   down: function (queryInterface, Sequelize) {
-    return queryInterface.dropTable('contact_numbers');
+    return queryInterface.dropTable('penalties');
   }
 };

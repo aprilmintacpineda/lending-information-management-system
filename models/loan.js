@@ -3,6 +3,7 @@ import Sequelize from 'sequelize';
 import Database from '../main_process/Database';
 import borrower from './borrower';
 import payment from './payment';
+import penalty from './penalty';
 
 const DB = new Database;
 
@@ -81,6 +82,11 @@ let loan = DB.createModel('loan', {
 });
 
 loan.hasMany(payment, {
+  foreignKey: 'loan_id',
+  localKey: 'id'
+});
+
+loan.hasMany(penalty, {
   foreignKey: 'loan_id',
   localKey: 'id'
 });

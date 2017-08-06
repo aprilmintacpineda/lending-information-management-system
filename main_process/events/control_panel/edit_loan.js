@@ -15,7 +15,7 @@ ipcMain.on('BORROWER_PROFILE_ELI_SEND', (event, args) => {
   Loan.update({
     amount: args.amount,
     condition_applied: args.condition_applied,
-    date_loan: args.date_loan,
+    loan_date: args.date_loan,
     interest_rate: args.interest_rate,
     interest_type: args.interest_type,
     months_to_pay: args.months_to_pay,

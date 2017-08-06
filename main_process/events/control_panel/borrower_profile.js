@@ -3,12 +3,16 @@ import Borrower from '../../../models/borrower';
 import ContactNumber from '../../../models/ContactNumber';
 import Loan from '../../../models/loan';
 import Payment from '../../../models/payment';
+import Penalty from '../../../models/penalty';
 
 ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
   Borrower.findOne({
     where: {
       id: args.id
     },
+    order: [
+      [ Loan, 'loan_date', 'desc' ]
+    ],
     include: [
       // contact numbers
       {
@@ -18,17 +22,21 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
       // loans
       {
         model: Loan,
-        include: {
-          model: Payment,
-          order: [ 'created_at', 'desc' ]
-        },
         order: [
           [ 'loan_date', 'desc' ]
+        ],
+        include: [
+          {
+            model: Payment,
+            order: [ 'created_at', 'desc' ]
+          },
+          // penalties
+          {
+            model: Penalty,
+            order: [ 'created_at', 'desc' ]
+          }
         ]
       }
-    ],
-    order: [
-      [ Loan, 'loan_date', 'desc' ]
     ]
   })
   .then(borrower => event.sender.send('BORROWER_PROFILE_FETCH_SUCCESSFUL', {
