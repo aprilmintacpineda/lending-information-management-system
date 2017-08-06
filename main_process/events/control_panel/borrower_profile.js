@@ -4,6 +4,7 @@ import ContactNumber from '../../../models/ContactNumber';
 import Loan from '../../../models/loan';
 import Payment from '../../../models/payment';
 import Penalty from '../../../models/penalty';
+import PenaltyPayment from '../../../models/penalty_payment';
 
 ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
   Borrower.findOne({
@@ -33,7 +34,14 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
           // penalties
           {
             model: Penalty,
-            order: [ 'created_at', 'desc' ]
+            order: [ 'created_at', 'desc' ],
+            include: [
+              // penalty_payments
+              {
+                model: PenaltyPayment,
+                order: [ 'created_at', 'desc' ]
+              }
+            ]
           }
         ]
       }
@@ -51,7 +59,10 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
           ...payment.dataValues
         })),
         penalties: loan.penalties.map(penalty => ({
-          ...penalty.dataValues
+          ...penalty.dataValues,
+          penalty_payments: penalty.penalty_payments.map(penalty_payment => ({
+            ...penalty_payment.dataValues
+          }))
         }))
       }))
     }

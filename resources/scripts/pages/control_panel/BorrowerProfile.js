@@ -42,6 +42,8 @@ class BorrowerProfile extends Component {
   render() {
     let app_path = remote.app.getAppPath();
 
+    console.log(this.props.borrower_profile);
+
     return (
       <WithSidebar>
         <div className="borrower-profile">

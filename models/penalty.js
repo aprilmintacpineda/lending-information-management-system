@@ -1,10 +1,11 @@
 import path from 'path';
 import Sequelize from 'sequelize';
 import Database from '../main_process/Database';
+import penalty_payment from './penalty_payment';
 
 const DB = new Database;
 
-export default DB.createModel('penalty', {
+let penaltyModel = DB.createModel('penalty', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: false,
@@ -48,3 +49,10 @@ export default DB.createModel('penalty', {
   timestamps: false,
   tableName: 'penalties'
 });
+
+penaltyModel.hasMany(penalty_payment, {
+  foreignKey: 'penalty_id',
+  localKey: 'id'
+});
+
+export default penaltyModel;
