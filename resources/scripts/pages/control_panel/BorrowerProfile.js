@@ -603,7 +603,7 @@ class BorrowerProfile extends Component {
                             </li>
                           </ul> }
 
-                        {loan.payment_fields.backend.status == 'successful'?
+                        {loan.payment_fields.backend.status == 'successful'  && !loan.payment_fields.shown?
                           <div className="row">
                             <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
                               <p className="okay">Payment added successfully.</p>
@@ -903,7 +903,8 @@ class BorrowerProfile extends Component {
                                 onClick={() => this.props.createPenalty({
                                   amount: loan.penalty_fields.amount.value,
                                   remarks: loan.penalty_fields.remarks.value,
-                                  date_given: new Date(loan.penalty_fields.date_given.month + ' ' + loan.penalty_fields.date_given.date + ', ' + loan.penalty_fields.date_given.year).toISOString()
+                                  date_given: new Date(loan.penalty_fields.date_given.month + ' ' + loan.penalty_fields.date_given.date + ', ' + loan.penalty_fields.date_given.year).toISOString(),
+                                  loan_id: loan.id
                                 }, loan_index)}
                                 sending={loan.penalty_fields.backend.processing}
                                 disabled={loan.penalty_fields.allow_submit && !loan.penalty_fields.backend.processing? false : true}
@@ -917,14 +918,15 @@ class BorrowerProfile extends Component {
                                   Cancel
                                 </a>
                               </div>
-
-                              {loan.penalty_fields.backend.status == 'failed'?
-                                <p className="errors">Failed to make payment: <u>{loan.penalty_fields.backend.message}</u></p>
-                              : null}
                             </li>
+                            {loan.penalty_fields.backend.status == 'failed' && !loan.penalty_fields.shown?
+                              <li>
+                                <p className="errors">Failed to create penalty: <u>{loan.penalty_fields.backend.message}</u></p>
+                              </li>
+                            : null}
                           </ul>}
 
-                        {loan.penalty_fields.backend.status == 'successful'?
+                        {loan.penalty_fields.backend.status == 'successful' && !loan.penalty_fields.shown?
                           <div className="row">
                             <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
                               <p className="okay">Penalty added successfully.</p>
@@ -934,7 +936,26 @@ class BorrowerProfile extends Component {
 
                         {loan.penalties.length? loan.penalties.map((penalty, penalty_index) =>
                           <div className="payment-container" key={penalty_index}>
-                            <p>{penalty.amount}</p>
+                            {penalty.was_waved?
+                              <div className="warning">
+                                <WithIcon icon={path.join(app_path, 'app/images/exclamation.png')}>
+                                  <p className="title">NOTICE</p>
+                                </WithIcon>
+                                <p>This penalty has been waved.</p>
+                              </div>
+                            : null}
+
+                            <WithLabel label="Amount">
+                              <p>{currency(penalty.amount)} Pesos</p>
+                            </WithLabel>
+
+                            <WithLabel label="Remarks">
+                              <p>{penalty.remarks}</p>
+                            </WithLabel>
+
+                            <WithLabel label="Date given">
+                              <p>{toFormalDate(penalty.date_given)}</p>
+                            </WithLabel>
                           </div>
                         ) :
                           <div className="row">

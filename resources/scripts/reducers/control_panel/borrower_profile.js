@@ -1248,10 +1248,6 @@ export default function borrower_profile(state = initial_state, action) {
           })
         }
       }
-    case 'BORROWER_PROFILE_RESET':
-      return {
-        ...initial_state
-      }
     case 'BORROWER_PROFILE_PENALTYFIELD_TOGGLE':
       if(!action.visibility) {
         return {
@@ -1408,7 +1404,8 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: state.data.loans.map((loan, loan_index) => action.loan_index == loan_index? ({
             ...loan,
-            penalty_fields: getInitialPenaltyFields()
+            penalty_fields: getInitialPenaltyFields(),
+            penalties: loan.penalties.addFirst(action.data)
           }): {...loan})
         }
       }
@@ -1428,10 +1425,10 @@ export default function borrower_profile(state = initial_state, action) {
       }
     case 'BORROWER_PROFILE_PENALTYFIELD_CREATE_FAILED':
       return {
-        ...new_state,
+        ...state,
         data: {
-          ...new_state.data,
-          loans: alterPenaltyFields(new_state.data.loans, action.loan_index, {
+          ...state.data,
+          loans: alterPenaltyFields(state.data.loans, action.loan_index, {
             backend: {
               status: 'failed',
               message: action.message,
@@ -1443,6 +1440,10 @@ export default function borrower_profile(state = initial_state, action) {
     default:
       return {
         ...state
+      }
+    case 'BORROWER_PROFILE_RESET':
+      return {
+        ...initial_state
       }
   }
 }

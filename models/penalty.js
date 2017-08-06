@@ -27,6 +27,10 @@ export default DB.createModel('penalty', {
     allowNull: false,
     defaultValue: false
   },
+  date_waved: {
+    type: Sequelize.DATE,
+    defaultValue: null
+  },
   date_given: {
     type: Sequelize.DATE,
     allowNull: false
@@ -41,5 +45,6 @@ export default DB.createModel('penalty', {
   }
 }, {
   charset: 'latin1',
-  timestamps: false
+  timestamps: false,
+  tableName: 'penalties'
 });

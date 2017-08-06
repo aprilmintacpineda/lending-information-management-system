@@ -25,6 +25,10 @@ module.exports = {
         allowNull: false,
         defaultValue: false
       },
+      date_waved: {
+        type: Sequelize.DATE,
+        defaultValue: null
+      },
       date_given: {
         type: Sequelize.DATE,
         allowNull: false
