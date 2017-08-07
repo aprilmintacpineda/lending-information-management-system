@@ -80,7 +80,7 @@ class BorrowersList extends Component {
         {this.props.borrowers_list.backend.processing?
           <img src={path.join(app_path, 'app/images/processing-blue.gif')} />
         : <div className="borrowers-list-wrapper">
-          {borrowers.length? borrowers : <p>There are no borrowers yet. To add a new borrower, click on the <strong>New Borrower</strong> on the side bar.</p>}
+          {borrowers.length? borrowers : <p>There are no borrowers yet. To add a new borrower, click on the <strong>Register new borrower</strong> on the side bar.</p>}
           </div>}
       </WithSidebar>
     );

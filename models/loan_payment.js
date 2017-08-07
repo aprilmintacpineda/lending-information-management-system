@@ -4,7 +4,7 @@ import Database from '../main_process/Database';
 
 const DB = new Database;
 
-export default DB.createModel('payment', {
+export default DB.createModel('loan_payment', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: false,
@@ -44,5 +44,6 @@ export default DB.createModel('payment', {
   }
 }, {
   charset: 'latin1',
-  timestamps: false
+  timestamps: false,
+  tableName: 'loan_payments'
 });

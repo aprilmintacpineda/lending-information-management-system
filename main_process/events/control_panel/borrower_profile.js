@@ -2,7 +2,7 @@ import { ipcMain } from 'electron';
 import Borrower from '../../../models/borrower';
 import ContactNumber from '../../../models/ContactNumber';
 import Loan from '../../../models/loan';
-import Payment from '../../../models/payment';
+import LoanPayment from '../../../models/loan_payment';
 import Penalty from '../../../models/penalty';
 import PenaltyPayment from '../../../models/penalty_payment';
 
@@ -28,7 +28,7 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
         ],
         include: [
           {
-            model: Payment,
+            model: LoanPayment,
             order: [ 'created_at', 'desc' ]
           },
           // penalties
@@ -55,7 +55,7 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
       })),
       loans: borrower.loans.map(loan => ({
         ...loan.dataValues,
-        payments: loan.payments.map(payment => ({
+        loan_payments: loan.loan_payments.map(payment => ({
           ...payment.dataValues
         })),
         penalties: loan.penalties.map(penalty => ({

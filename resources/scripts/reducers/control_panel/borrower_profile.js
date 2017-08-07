@@ -21,7 +21,7 @@ function allowLoanPaymentFieldsSubmit(fields) {
 function alterPaymentFields(loans, target_index, fields) {
   return loans.map((loan, index) => index == target_index? ({
     ...loan,
-    payments: fields.payments? fields.payments : loan.payments,
+    loan_payments: fields.loan_payments? fields.loan_payments : loan.loan_payments,
     payment_fields: fields.amount? {
       ...loan.payment_fields,
       amount: {
@@ -60,9 +60,9 @@ function getInitialPaymentFields(loan) {
   return {
     shown: false,
     period: {
-      month: loan.payments.length? monthList()[new Date(loan.payments[0].period_paid).getMonth() + 1] : monthList()[new Date(loan.loan_date).getMonth() + 1],
+      month: loan.loan_payments.length? monthList()[new Date(loan.loan_payments[0].period_paid).getMonth() + 1] : monthList()[new Date(loan.loan_date).getMonth() + 1],
       year: new Date().getFullYear(),
-      quarter: loan.payment_method != 2? null : loan.payments[0].quarter == 'q1'? 'q2' : 'q1'
+      quarter: loan.payment_method != 2? null : loan.loan_payments[0].quarter == 'q1'? 'q2' : 'q1'
     },
     amount: {
       value: '',
@@ -84,7 +84,7 @@ function getInitialPaymentFields(loan) {
 }
 
 function getLoanSummary(loan) {
-  let total_amount_paid = loan.payments.sum('amount');
+  let total_amount_paid = loan.loan_payments.sum('amount');
   let remaining_balance = Number(loan.amount) + Number(loan.profit) - total_amount_paid;
 
   return {
@@ -129,8 +129,8 @@ function allowPaymentsEditFieldsSubmit(fields) {
   || fields.amount.errors.length? false : true;
 }
 
-function alterPaymentEditFields(payments, target_index, fields) {
-  return payments.map((payment, index) => target_index == index? ({
+function alterPaymentEditFields(loan_payments, target_index, fields) {
+  return loan_payments.map((payment, index) => target_index == index? ({
     ...payment,
     edit: fields.amount?
       {
@@ -442,7 +442,7 @@ export default function borrower_profile(state = initial_state, action) {
               penalty_payment_fields: getInitialPenaltyPaymentFields()
             })),
             summary: getLoanSummary(loan),
-            payments: loan.payments.map(payment => getInitialPaymentEditFields(payment))
+            loan_payments: loan.loan_payments.map(payment => getInitialPaymentEditFields(payment))
           }))
         },
         backend: {
@@ -707,7 +707,7 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: alterPaymentFields(state.data.loans, action.index, {
             payment_fields: getInitialPaymentFields(state.data.loans[action.index]),
-            payments: state.data.loans[action.index].payments.addFirst(action.payment).map(payment => getInitialPaymentEditFields(payment))
+            loan_payments: state.data.loans[action.index].loan_payments.addFirst(action.payment).map(payment => getInitialPaymentEditFields(payment))
           })
         }
       }
@@ -748,7 +748,7 @@ export default function borrower_profile(state = initial_state, action) {
             ...state.data,
             loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
               ...loan,
-              payments: loan.payments.map((payment, payment_index) => payment_index == action.payment_index? getInitialPaymentEditFields(payment): ({...payment}))
+              loan_payments: loan.loan_payments.map((payment, payment_index) => payment_index == action.payment_index? getInitialPaymentEditFields(payment): ({...payment}))
             }): ({...loan}))
           }
         }
@@ -760,7 +760,7 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
               shown: true
             })
           }): ({...loan}))
@@ -773,7 +773,7 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
               amount: {
                 value: action.value,
                 errors: validateAmountPaid(action.value)
@@ -789,8 +789,8 @@ export default function borrower_profile(state = initial_state, action) {
           ...new_state.data,
           loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
-              allow_submit: allowPaymentsEditFieldsSubmit(loan.payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
+              allow_submit: allowPaymentsEditFieldsSubmit(loan.loan_payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
             })
           }): ({...loan}))
         }
@@ -802,7 +802,7 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
               period: {
                 year: action.value
               }
@@ -817,8 +817,8 @@ export default function borrower_profile(state = initial_state, action) {
           ...new_state.data,
           loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
-              allow_submit: allowPaymentsEditFieldsSubmit(loan.payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
+              allow_submit: allowPaymentsEditFieldsSubmit(loan.loan_payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
             })
           }): ({...loan}))
         }
@@ -830,7 +830,7 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
               period: {
                 month: action.value,
                 date: 1
@@ -846,8 +846,8 @@ export default function borrower_profile(state = initial_state, action) {
           ...new_state.data,
           loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
-              allow_submit: allowPaymentsEditFieldsSubmit(loan.payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
+              allow_submit: allowPaymentsEditFieldsSubmit(loan.loan_payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
             })
           }): ({...loan}))
         }
@@ -859,7 +859,7 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
               amount: {
                 type: action.value
               }
@@ -874,8 +874,8 @@ export default function borrower_profile(state = initial_state, action) {
           ...new_state.data,
           loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
-              allow_submit: allowPaymentsEditFieldsSubmit(loan.payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
+              allow_submit: allowPaymentsEditFieldsSubmit(loan.loan_payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
             })
           }): ({...loan}))
         }
@@ -887,7 +887,7 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
               date_paid: {
                 year: action.value
               }
@@ -902,8 +902,8 @@ export default function borrower_profile(state = initial_state, action) {
           ...new_state.data,
           loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
-              allow_submit: allowPaymentsEditFieldsSubmit(loan.payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
+              allow_submit: allowPaymentsEditFieldsSubmit(loan.loan_payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
             })
           }): ({...loan}))
         }
@@ -915,7 +915,7 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
               date_paid: {
                 date: action.value
               }
@@ -930,8 +930,8 @@ export default function borrower_profile(state = initial_state, action) {
           ...new_state.data,
           loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
-              allow_submit: allowPaymentsEditFieldsSubmit(loan.payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
+              allow_submit: allowPaymentsEditFieldsSubmit(loan.loan_payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
             })
           }): ({...loan}))
         }
@@ -943,7 +943,7 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
               date_paid: {
                 month: action.value
               }
@@ -958,8 +958,8 @@ export default function borrower_profile(state = initial_state, action) {
           ...new_state.data,
           loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
-              allow_submit: allowPaymentsEditFieldsSubmit(loan.payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
+              allow_submit: allowPaymentsEditFieldsSubmit(loan.loan_payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
             })
           }): ({...loan}))
         }
@@ -971,7 +971,7 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
               backend: {
                 processing: true,
                 message: null,
@@ -982,29 +982,18 @@ export default function borrower_profile(state = initial_state, action) {
         }
       }
     case 'BORROWER_PROFILE_EPI_SEND_SUCCESSFUL':
-      new_state = {
+      return {
         ...state,
         data: {
           ...state.data,
           loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments.map((payment, payment_index) => payment_index == action.payment_index? getInitialPaymentEditFields(action.data) : ({...payment})), action.payment_index, {
+            loan_payments: alterPaymentEditFields(loan.loan_payments.map((payment, payment_index) => payment_index == action.payment_index? getInitialPaymentEditFields(action.data) : ({...payment})), action.payment_index, {
               backend: {
-                status: 'successful'
+                status: 'successful',
+                processing: false,
+                message: null
               }
-            })
-          }): ({...loan}))
-        }
-      }
-
-      return {
-        ...new_state,
-        data: {
-          ...new_state.data,
-          loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
-            ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
-              shown: true
             })
           }): ({...loan}))
         }
@@ -1016,7 +1005,7 @@ export default function borrower_profile(state = initial_state, action) {
           ...state.data,
           loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
-            payments: alterPaymentEditFields(loan.payments, action.payment_index, {
+            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
               backend: {
                 processing: false,
                 status: 'failed',

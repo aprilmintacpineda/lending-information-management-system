@@ -2,7 +2,7 @@ import path from 'path';
 import Sequelize from 'sequelize';
 import Database from '../main_process/Database';
 import borrower from './borrower';
-import payment from './payment';
+import loan_payment from './loan_payment';
 import penalty from './penalty';
 
 const DB = new Database;
@@ -63,11 +63,6 @@ let loan = DB.createModel('loan', {
     type: Sequelize.STRING(50),
     allowNull: false
   },
-  fully_paid: {
-    type: Sequelize.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
-  },
   created_at: {
     type: Sequelize.NOW,
     allowNull: false
@@ -81,7 +76,7 @@ let loan = DB.createModel('loan', {
   timestamps: false
 });
 
-loan.hasMany(payment, {
+loan.hasMany(loan_payment, {
   foreignKey: 'loan_id',
   localKey: 'id'
 });

@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import Loan from '../../../models/loan';
-import Payment from '../../../models/payment';
+import LoanPayment from '../../../models/loan_payment';
 
 import * as calculator from '../../helpers/calculator';
 
@@ -35,14 +35,14 @@ ipcMain.on('BORROWER_PROFILE_ELI_SEND', (event, args) => {
       id: args.id
     },
     include: [{
-      model: Payment,
+      model: LoanPayment,
       order: [ 'created_at', 'desc' ]
     }]
   }))
   .then(data => event.sender.send('BORROWER_PROFILE_ELI_SEND_SUCCESSFUL', {
     data: {
       ...data.dataValues,
-      payments: data.payments.map(payment => payment.dataValues)
+      loan_payments: data.loan_payments.map(payment => payment.dataValues)
     },
     loan_index: args.loan_index
   }))

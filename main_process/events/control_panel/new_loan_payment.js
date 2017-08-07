@@ -1,12 +1,12 @@
 import { ipcMain } from 'electron';
-import Payment from '../../../models/payment';
+import LoanPayment from '../../../models/loan_payment';
 import { uniqueId } from '../../helpers/generators';
 
 ipcMain.on('BORROWER_PROFILE_SEND_PAYMENT', (event, arg) => {
   let created_at = new Date();
   let updated_at = created_at = created_at.toISOString();
 
-  Payment.create({
+  LoanPayment.create({
     id: uniqueId(),
     loan_id: arg.loan_id,
     amount: arg.amount,

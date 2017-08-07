@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron';
 import Borrower from '../../../models/borrower';
 import ContactNumber from '../../../models/contactNumber';
-import Payment from '../../../models/payment';
+import LoanPayment from '../../../models/loan_payment';
 import Loan from '../../../models/loan';
 import Sequelize from 'sequelize';
 
@@ -14,9 +14,9 @@ ipcMain.on('BORROWERS_LIST_FETCH', (event, arg) => {
       },
       {
         model: Loan,
-        include: [ Payment ],
+        include: [ LoanPayment ],
         order: [
-          [ Payment, 'created_at' ]
+          [ LoanPayment, 'created_at' ]
         ]
       }
     ],
@@ -32,7 +32,7 @@ ipcMain.on('BORROWERS_LIST_FETCH', (event, arg) => {
       })),
       loans: borrower.loans.map(loan => ({
         ...loan.dataValues,
-        payments: loan.payments.map(payment => ({
+        loan_payments: loan.loan_payments.map(payment => ({
           ...payment.dataValues
         }))
       }))

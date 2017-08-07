@@ -88,7 +88,7 @@ class Setup extends Component {
               value={this.props.setup.birth_date.month}
               disabled={this.props.setup.backend.processing}
               errors={[]}>
-                {monthList().map(month => <option key={index}>{month}</option>)}
+                {monthList().map((month, index) => <option key={index}>{month}</option>)}
               </InputSelect>
 
               <InputSelect
