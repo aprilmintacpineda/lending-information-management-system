@@ -324,3 +324,48 @@ export function togglePenaltyPaymentForm(visibility, penalty_index, loan_index) 
     loan_index
   }
 }
+
+export function changePenaltyPaymentFormAmount(value, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_PENALTYPAYMENTFORM_AMOUNT',
+    value,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function changePenaltyPaymentFormMonth(value, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_PENALTYPAYMENTFORM_MONTH',
+    value,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function changePenaltyPaymentFormDate(value, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_PENALTYPAYMENTFORM_DATE',
+    value,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function changePenaltyPaymentFormYear(value, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_PENALTYPAYMENTFORM_YEAR',
+    value,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function submitPenaltyPaymentForm(fields, penalty_index, loan_index) {
+  return {
+    type: '_BORROWER_PROFILE_PENALTYPAYMENTFORM_CREATE',
+    ...fields,
+    penalty_index,
+    loan_index
+  }
+}

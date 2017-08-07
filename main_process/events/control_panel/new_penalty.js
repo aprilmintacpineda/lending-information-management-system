@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron';
 import Penalty from '../../../models/penalty';
+import PenaltyPayment from '../../../models/penalty_payment';
 import { uniqueId } from '../../helpers/generators';
 
 ipcMain.on('BORROWER_PROFILE_PENALTYFIELD_CREATE', (event, args) => {
@@ -18,10 +19,22 @@ ipcMain.on('BORROWER_PROFILE_PENALTYFIELD_CREATE', (event, args) => {
     updated_at
   })
   .then(() => Penalty.findOne({
-    where: { id }
+    where: { id },
+    include: [
+      // penalty_payments
+      {
+        model: PenaltyPayment,
+        order: [ 'created_at', 'desc' ]
+      }
+    ]
   }))
   .then(penalty => event.sender.send('BORROWER_PROFILE_PENALTYFIELD_CREATE_SUCCESSFUL', {
-    data: {...penalty.dataValues},
+    data: {
+      ...penalty.dataValues,
+      penalty_payments: penalty.penalty_payments.map(penalty_payment => ({
+        ...penalty_payment.dataValues
+      }))
+    },
     loan_index: args.loan_index
   }))
   .catch(error => event.sender.send('BORROWER_PROFILE_PENALTYFIELD_CREATE_FAILED', {

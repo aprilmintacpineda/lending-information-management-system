@@ -11,3 +11,4 @@ import './control_panel/edit_payment';
 import './control_panel/edit_loan';
 import './control_panel/new_loan';
 import './control_panel/new_penalty';
+import './control_panel/new_penalty_payment';
