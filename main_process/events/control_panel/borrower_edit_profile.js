@@ -29,6 +29,7 @@ ipcMain.on('EDITBORRWOERPROFILE_SEND', (event, arg) => {
     middlename: arg.middlename,
     surname: arg.surname,
     gender: arg.gender,
+    updated_at: new Date().toISOString()
   }, {
     where: {
       id: arg.id
@@ -67,7 +68,8 @@ ipcMain.on('EDITBORRWOERPROFILE_SEND', (event, arg) => {
           ids_found.push(contact_number.id);
 
           ContactNumber.update({
-            number: contact_number.value
+            number: contact_number.value,
+            updated_at
           }, {
             where: {
               id: contact_number.id

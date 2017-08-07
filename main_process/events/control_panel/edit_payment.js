@@ -7,7 +7,8 @@ ipcMain.on('BORROWER_PROFILE_EPI_SEND', (event, arg) => {
     quarter: arg.quarter,
     payment_coverage: arg.payment_coverage,
     period_paid: arg.period_paid,
-    date_paid: arg.date_paid
+    date_paid: arg.date_paid,
+    updated_at: new Date().toISOString()
   }, {
     where: {
       id: arg.payment_id

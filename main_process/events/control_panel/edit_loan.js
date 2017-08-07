@@ -24,7 +24,8 @@ ipcMain.on('BORROWER_PROFILE_ELI_SEND', (event, args) => {
     interest,
     per_month,
     per_day,
-    per_semi_month
+    per_semi_month,
+    updated_at: new Date().toISOString()
   }, {
     where: {
       id: args.id
