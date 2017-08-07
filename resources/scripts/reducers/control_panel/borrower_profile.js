@@ -22,6 +22,7 @@ function alterPaymentFields(loans, target_index, fields) {
   return loans.map((loan, index) => index == target_index? ({
     ...loan,
     loan_payments: fields.loan_payments? fields.loan_payments : loan.loan_payments,
+    summary: fields.summary? fields.summary : loan.summary,
     payment_fields: fields.amount? {
       ...loan.payment_fields,
       amount: {
@@ -708,6 +709,16 @@ export default function borrower_profile(state = initial_state, action) {
           loans: alterPaymentFields(state.data.loans, action.index, {
             payment_fields: getInitialPaymentFields(state.data.loans[action.index]),
             loan_payments: state.data.loans[action.index].loan_payments.addFirst(action.payment).map(payment => getInitialPaymentEditFields(payment))
+          })
+        }
+      }
+
+      new_state = {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterPaymentFields(new_state.data.loans, action.index, {
+            summary: getLoanSummary(new_state.data.loans[action.index])
           })
         }
       }
