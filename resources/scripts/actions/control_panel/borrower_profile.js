@@ -315,3 +315,12 @@ export function createPenalty(fields, loan_index) {
     loan_index
   }
 }
+
+export function togglePenaltyPaymentForm(visibility, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_PENALTYPAYMENTFORM_TOGGLE',
+    visibility,
+    penalty_index,
+    loan_index
+  }
+}

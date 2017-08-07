@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { remote } from 'electron';
 import { Link } from 'react-router';
 import path from 'path';
+import CssTransitionGroup from 'react-addons-css-transition-group';
 
 // components
 import WithSidebar from '../../components/WithSidebar';
@@ -613,207 +614,212 @@ class BorrowerProfile extends Component {
                            </div>
                         : null}
 
-                        {loan.payments.length? loan.payments.map((payment, payment_index) =>
-                          payment.edit.shown?
-                            <div className="payment-container" key={payment_index}>
-                              <ul className="payment-edit-fields">
-                                <li>
-                                  Amount paid
-                                  <InputText
-                                  numberOnly={true}
-                                  value={payment.edit.amount.value}
-                                  placeholder="Amount paid..."
-                                  onChange={value => this.props.editPaymentInformationAmount(value, payment_index, loan_index)}
-                                  errors={payment.edit.amount.errors}
-                                  disabled={payment.edit.backend.processing} />
-                                  <p><strong>{currency(payment.edit.amount.value)}</strong> Pesos</p>
-                                </li>
-                                <li className="select-collection">
-                                  <p>For the month of</p>
-                                  <InputSelect
-                                  className="date"
-                                  onChange={value => this.props.editPaymentInformationPeriodMonth(value, payment_index, loan_index)}
-                                  value={payment.edit.period.month}
-                                  disabled={payment.edit.backend.processing}
-                                  errors={[]}>
-                                    {monthList().map((month, index) =>
-                                      <option key={index}>{month}</option>
-                                    )}
-                                  </InputSelect>
-                                  <InputSelect
-                                  className="date"
-                                  onChange={value => this.props.editPaymentInformationPeriodYear(value, payment_index, loan_index)}
-                                  value={payment.edit.period.year}
-                                  disabled={payment.edit.backend.processing}
-                                  errors={[]} >
-                                    {(() => {
-                                      let date = new Date;
-                                      let years = [];
-                                      let max_year = date.getFullYear();
-                                      let min_year = max_year - 10;
-
-                                      for(let a = max_year; a >= min_year; a--) {
-                                        years.push(<option key={a}>{a}</option>);
-                                      }
-
-                                      return years;
-                                    })()}
-                                  </InputSelect>
-                                </li>
-                                <li>
-                                  For the quarter of
-                                  <InputSelect
-                                  onChange={value => this.props.changePeriodQuarter(value, payment_index)}
-                                  value={loan.payment_method != 2? '' : payment.edit.period.quarter}
-                                  disabled={payment.edit.backend.processing || loan.payment_method != 2}
-                                  errors={[]}>
-                                    {loan.payment_method != 2?
-                                      <option>N/A</option>
-                                    : null}
-                                    <option value="q1">1st Quarter</option>
-                                    <option value="q2">2nd Quarter</option>
-                                  </InputSelect>
-                                </li>
-                                <li className="select-collection">
-                                  <p>Date paid</p>
-                                  <InputSelect
-                                  className="date"
-                                  onChange={value => this.props.editPaymentInformationPaymentMonth(value, payment_index, loan_index)}
-                                  value={payment.edit.date_paid.month}
-                                  disabled={payment.edit.backend.processing}
-                                  errors={[]}>
-                                    {monthList().map((month, index) =>
-                                      <option key={index}>{month}</option>
-                                    )}
-                                  </InputSelect>
-                                  <InputSelect
-                                  className="date"
-                                  onChange={value => this.props.editPaymentInformationPaymentDate(value, payment_index, loan_index)}
-                                  value={payment.edit.date_paid.date}
-                                  disabled={payment.edit.backend.processing}
-                                  errors={[]}>
-                                    {(() => {
-                                      let max_days_in_month = monthMaxdays(payment.edit.date_paid.month, payment.edit.date_paid.year);
-                                      let dates = [];
-
-                                      for(let a = 1; a <= max_days_in_month; a++) {
-                                        dates.push(<option key={a}>{a}</option>);
-                                      }
-
-                                      return dates;
-                                    })()}
-                                  </InputSelect>
-                                  <InputSelect
-                                  className="date"
-                                  onChange={value => this.props.editPaymentInformationPaymentYear(value, payment_index, loan_index)}
-                                  value={payment.edit.date_paid.year}
-                                  disabled={payment.edit.backend.processing}
-                                  errors={[]} >
-                                    {(() => {
-                                      let date = new Date;
-                                      let years = [];
-                                      let max_year = date.getFullYear();
-                                      let min_year = max_year - 10;
-
-                                      for(let a = max_year; a >= min_year; a--) {
-                                        years.push(<option key={a}>{a}</option>);
-                                      }
-
-                                      return years;
-                                    })()}
-                                  </InputSelect>
-                                </li>
-                                <li>
-                                  Payment coverage
-                                  <InputSelect
-                                  onChange={value => this.props.editPaymentInformationPaymentType(value, payment_index, loan_index)}
-                                  value={payment.edit.amount.type}
-                                  disabled={payment.edit.backend.processing}
-                                  errors={[]}>
-                                    <option value="period-only">For the period only</option>
-                                    <option value="partial-only">Partial payment</option>
-                                    <option value="paid-in-full">Full payment</option>
-                                  </InputSelect>
-                                </li>
-                                <li>
-                                  <div className="buttons">
-                                    <InputButton
-                                    value="Save changes"
-                                    onClick={() => this.props.editPaymentInformationSend({
-                                      payment_id: payment.id,
-                                      payment_coverage: payment.edit.amount.type,
-                                      quarter: payment.edit.period.quarter,
-                                      amount: payment.edit.amount.value,
-                                      period_paid: new Date(payment.edit.period.month + ' ' + new Date(loan.loan_date).getDate().toString() + ', ' + payment.edit.period.year).toISOString(),
-                                      date_paid: new Date(payment.edit.date_paid.month + ' ' + payment.edit.date_paid.date + ', ' + payment.edit.date_paid.year).toISOString()
-                                    }, payment_index, loan_index)}
-                                    sending={payment.edit.backend.processing}
-                                    disabled={payment.edit.allow_submit && !payment.edit.backend.processing? false : true}
-                                    errors={[]} />
-                                  </div>
-
-                                  <div className="buttons">
-                                    <a
-                                    className={payment.edit.backend.processing? 'default-btn-red disabled' : 'default-btn-red'}
-                                    onClick={() => payment.edit.backend.processing? false : this.props.toggleEditPaymentInformation(!payment.edit.shown, payment_index, loan_index)}>
-                                      Cancel
-                                    </a>
-                                  </div>
-                                </li>
-                                {payment.edit.backend.status == 'failed'?
+                        <CssTransitionGroup
+                        transitionName="emphasize-entry"
+                        transitionEnterTimeout={400}
+                        transitionLeaveTimeout={400}>
+                          {loan.payments.length? loan.payments.map((payment, payment_index) =>
+                            payment.edit.shown?
+                              <div className="payment-container" key={payment_index}>
+                                <ul className="payment-edit-fields">
                                   <li>
-                                    <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
-                                      <p className="errors">Failed to save changes <u>{payment.edit.backend.message}</u></p>
-                                    </WithIcon>
+                                    Amount paid
+                                    <InputText
+                                    numberOnly={true}
+                                    value={payment.edit.amount.value}
+                                    placeholder="Amount paid..."
+                                    onChange={value => this.props.editPaymentInformationAmount(value, payment_index, loan_index)}
+                                    errors={payment.edit.amount.errors}
+                                    disabled={payment.edit.backend.processing} />
+                                    <p><strong>{currency(payment.edit.amount.value)}</strong> Pesos</p>
                                   </li>
-                                : payment.edit.backend.status == 'successful'?
+                                  <li className="select-collection">
+                                    <p>For the month of</p>
+                                    <InputSelect
+                                    className="date"
+                                    onChange={value => this.props.editPaymentInformationPeriodMonth(value, payment_index, loan_index)}
+                                    value={payment.edit.period.month}
+                                    disabled={payment.edit.backend.processing}
+                                    errors={[]}>
+                                      {monthList().map((month, index) =>
+                                        <option key={index}>{month}</option>
+                                      )}
+                                    </InputSelect>
+                                    <InputSelect
+                                    className="date"
+                                    onChange={value => this.props.editPaymentInformationPeriodYear(value, payment_index, loan_index)}
+                                    value={payment.edit.period.year}
+                                    disabled={payment.edit.backend.processing}
+                                    errors={[]} >
+                                      {(() => {
+                                        let date = new Date;
+                                        let years = [];
+                                        let max_year = date.getFullYear();
+                                        let min_year = max_year - 10;
+
+                                        for(let a = max_year; a >= min_year; a--) {
+                                          years.push(<option key={a}>{a}</option>);
+                                        }
+
+                                        return years;
+                                      })()}
+                                    </InputSelect>
+                                  </li>
                                   <li>
-                                    <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
-                                      <p className="okay">Changes saved successfully.</p>
-                                    </WithIcon>
+                                    For the quarter of
+                                    <InputSelect
+                                    onChange={value => this.props.changePeriodQuarter(value, payment_index)}
+                                    value={loan.payment_method != 2? '' : payment.edit.period.quarter}
+                                    disabled={payment.edit.backend.processing || loan.payment_method != 2}
+                                    errors={[]}>
+                                      {loan.payment_method != 2?
+                                        <option>N/A</option>
+                                      : null}
+                                      <option value="q1">1st Quarter</option>
+                                      <option value="q2">2nd Quarter</option>
+                                    </InputSelect>
                                   </li>
-                                : null}
-                              </ul>
-                            </div> : 
-                            <div className="payment-container" key={payment_index}>
-                              <div className="row">
-                                <WithLabel label="Payment period">
-                                  {loan.payment_method == 1?
-                                    <p>For the Month of {monthList()[new Date(payment.period_paid).getMonth()]}</p>
-                                  : loan.payment_method == 2?
-                                    <p><strong>{payment.quarter == 'q1'? '1st' : '2nd'} quarter</strong> of <strong>{monthList()[new Date(payment.period_paid).getMonth()]}</strong></p>
-                                  : <p>blank day of the period</p>}
-                                </WithLabel>
-                              </div>
+                                  <li className="select-collection">
+                                    <p>Date paid</p>
+                                    <InputSelect
+                                    className="date"
+                                    onChange={value => this.props.editPaymentInformationPaymentMonth(value, payment_index, loan_index)}
+                                    value={payment.edit.date_paid.month}
+                                    disabled={payment.edit.backend.processing}
+                                    errors={[]}>
+                                      {monthList().map((month, index) =>
+                                        <option key={index}>{month}</option>
+                                      )}
+                                    </InputSelect>
+                                    <InputSelect
+                                    className="date"
+                                    onChange={value => this.props.editPaymentInformationPaymentDate(value, payment_index, loan_index)}
+                                    value={payment.edit.date_paid.date}
+                                    disabled={payment.edit.backend.processing}
+                                    errors={[]}>
+                                      {(() => {
+                                        let max_days_in_month = monthMaxdays(payment.edit.date_paid.month, payment.edit.date_paid.year);
+                                        let dates = [];
 
-                              <div className="row">
-                                <WithLabel label="Amount">
-                                  {payment.payment_coverage == 'period-only'?
-                                    <p>Payment of <strong>{currency(payment.amount)}</strong> Pesos <strong>for the period only</strong>.</p>
-                                  : payment.payment_coverage == 'partial-only'?
-                                    <p><strong>Partial payment</strong> of <strong>{currency(payment.amount)} Pesos</strong> for the period only.</p>
-                                  : <p><strong>Full payment</strong> of <strong>{currency(payment.amount)} Pesos</strong> for this loan.</p>}
-                                </WithLabel>
-                              </div>
+                                        for(let a = 1; a <= max_days_in_month; a++) {
+                                          dates.push(<option key={a}>{a}</option>);
+                                        }
 
-                              <div className="row">
-                                <WithLabel label="Date paid">
-                                  <p>{toFormalDate(payment.date_paid)}</p>
-                                </WithLabel>
-                              </div>
+                                        return dates;
+                                      })()}
+                                    </InputSelect>
+                                    <InputSelect
+                                    className="date"
+                                    onChange={value => this.props.editPaymentInformationPaymentYear(value, payment_index, loan_index)}
+                                    value={payment.edit.date_paid.year}
+                                    disabled={payment.edit.backend.processing}
+                                    errors={[]} >
+                                      {(() => {
+                                        let date = new Date;
+                                        let years = [];
+                                        let max_year = date.getFullYear();
+                                        let min_year = max_year - 10;
 
-                             <div className="row">
-                              <a
-                              className={loan.payment_fields.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
-                              onClick={() => loan.payment_fields.backend.processing? false : this.props.toggleEditPaymentInformation(!payment.edit.shown, payment_index, loan_index)}>
-                                Edit payment information
-                              </a>
-                             </div> 
-                            </div> ) :
-                          <div className="row">
-                            <p>No payments has been made since <strong>{toFormalDate(loan.loan_date)}</strong></p>
-                          </div>}
-                        
+                                        for(let a = max_year; a >= min_year; a--) {
+                                          years.push(<option key={a}>{a}</option>);
+                                        }
+
+                                        return years;
+                                      })()}
+                                    </InputSelect>
+                                  </li>
+                                  <li>
+                                    Payment coverage
+                                    <InputSelect
+                                    onChange={value => this.props.editPaymentInformationPaymentType(value, payment_index, loan_index)}
+                                    value={payment.edit.amount.type}
+                                    disabled={payment.edit.backend.processing}
+                                    errors={[]}>
+                                      <option value="period-only">For the period only</option>
+                                      <option value="partial-only">Partial payment</option>
+                                      <option value="paid-in-full">Full payment</option>
+                                    </InputSelect>
+                                  </li>
+                                  <li>
+                                    <div className="buttons">
+                                      <InputButton
+                                      value="Save changes"
+                                      onClick={() => this.props.editPaymentInformationSend({
+                                        payment_id: payment.id,
+                                        payment_coverage: payment.edit.amount.type,
+                                        quarter: payment.edit.period.quarter,
+                                        amount: payment.edit.amount.value,
+                                        period_paid: new Date(payment.edit.period.month + ' ' + new Date(loan.loan_date).getDate().toString() + ', ' + payment.edit.period.year).toISOString(),
+                                        date_paid: new Date(payment.edit.date_paid.month + ' ' + payment.edit.date_paid.date + ', ' + payment.edit.date_paid.year).toISOString()
+                                      }, payment_index, loan_index)}
+                                      sending={payment.edit.backend.processing}
+                                      disabled={payment.edit.allow_submit && !payment.edit.backend.processing? false : true}
+                                      errors={[]} />
+                                    </div>
+
+                                    <div className="buttons">
+                                      <a
+                                      className={payment.edit.backend.processing? 'default-btn-red disabled' : 'default-btn-red'}
+                                      onClick={() => payment.edit.backend.processing? false : this.props.toggleEditPaymentInformation(!payment.edit.shown, payment_index, loan_index)}>
+                                        Cancel
+                                      </a>
+                                    </div>
+                                  </li>
+                                  {payment.edit.backend.status == 'failed'?
+                                    <li>
+                                      <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                                        <p className="errors">Failed to save changes <u>{payment.edit.backend.message}</u></p>
+                                      </WithIcon>
+                                    </li>
+                                  : payment.edit.backend.status == 'successful'?
+                                    <li>
+                                      <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                                        <p className="okay">Changes saved successfully.</p>
+                                      </WithIcon>
+                                    </li>
+                                  : null}
+                                </ul>
+                              </div> : 
+                              <div className="payment-container" key={payment_index}>
+                                <div className="row">
+                                  <WithLabel label="Payment period">
+                                    {loan.payment_method == 1?
+                                      <p>For the Month of {monthList()[new Date(payment.period_paid).getMonth()]}</p>
+                                    : loan.payment_method == 2?
+                                      <p><strong>{payment.quarter == 'q1'? '1st' : '2nd'} quarter</strong> of <strong>{monthList()[new Date(payment.period_paid).getMonth()]}</strong></p>
+                                    : <p>blank day of the period</p>}
+                                  </WithLabel>
+                                </div>
+
+                                <div className="row">
+                                  <WithLabel label="Amount">
+                                    {payment.payment_coverage == 'period-only'?
+                                      <p>Payment of <strong>{currency(payment.amount)}</strong> Pesos <strong>for the period only</strong>.</p>
+                                    : payment.payment_coverage == 'partial-only'?
+                                      <p><strong>Partial payment</strong> of <strong>{currency(payment.amount)} Pesos</strong> for the period only.</p>
+                                    : <p><strong>Full payment</strong> of <strong>{currency(payment.amount)} Pesos</strong> for this loan.</p>}
+                                  </WithLabel>
+                                </div>
+
+                                <div className="row">
+                                  <WithLabel label="Date paid">
+                                    <p>{toFormalDate(payment.date_paid)}</p>
+                                  </WithLabel>
+                                </div>
+
+                               <div className="row">
+                                <a
+                                className={loan.payment_fields.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
+                                onClick={() => loan.payment_fields.backend.processing? false : this.props.toggleEditPaymentInformation(!payment.edit.shown, payment_index, loan_index)}>
+                                  Edit payment information
+                                </a>
+                               </div> 
+                              </div>)
+                          : <div className="row">
+                              <p>No payments has been made since <strong>{toFormalDate(loan.loan_date)}</strong></p>
+                            </div>}
+                        </CssTransitionGroup>
+
                         <h1>Penalties</h1>
 
                         {!loan.penalty_fields.shown?
@@ -936,33 +942,135 @@ class BorrowerProfile extends Component {
                            </div>
                         : null}
 
-                        {loan.penalties.length? loan.penalties.map((penalty, penalty_index) =>
-                          <div className="payment-container" key={penalty_index}>
-                            {penalty.was_waved?
-                              <div className="warning">
-                                <WithIcon icon={path.join(app_path, 'app/images/exclamation.png')}>
-                                  <p className="title">NOTICE</p>
-                                </WithIcon>
-                                <p>This penalty has been waved.</p>
+                        <CssTransitionGroup
+                        transitionName="emphasize-entry"
+                        transitionEnterTimeout={400}
+                        transitionLeaveTimeout={400}>
+                          {loan.penalties.length? loan.penalties.map((penalty, penalty_index) =>
+                            <div className="payment-container" key={penalty_index}>
+                              {penalty.was_waved?
+                                <div className="warning">
+                                  <WithIcon icon={path.join(app_path, 'app/images/exclamation.png')}>
+                                    <p className="title">NOTICE</p>
+                                  </WithIcon>
+                                  <p>This penalty has been waved.</p>
+                                </div>
+                              : null}
+
+                              <div className="row">
+                                <WithLabel label="Amount">
+                                  <p>{currency(penalty.amount)} Pesos</p>
+                                </WithLabel>
                               </div>
-                            : null}
 
-                            <WithLabel label="Amount">
-                              <p>{currency(penalty.amount)} Pesos</p>
-                            </WithLabel>
+                              <div className="row">
+                                <WithLabel label="Remarks">
+                                  <p>{penalty.remarks}</p>
+                                </WithLabel>
+                              </div>
 
-                            <WithLabel label="Remarks">
-                              <p>{penalty.remarks}</p>
-                            </WithLabel>
+                              <div className="row">
+                                <WithLabel label="Date given">
+                                  <p>{toFormalDate(penalty.date_given)}</p>
+                                </WithLabel>
+                              </div>
 
-                            <WithLabel label="Date given">
-                              <p>{toFormalDate(penalty.date_given)}</p>
-                            </WithLabel>
-                          </div>
-                        ) :
-                          <div className="row">
+                              <div className="row">
+                                {!penalty.penalty_payment_fields.shown?
+                                  <div>
+                                    <a
+                                    className={!penalty.penalty_payment_fields.backend.processing? 'default-btn-blue' : 'default-btn-blue disabled'}
+                                    onClick={() => penalty.penalty_payment_fields.backend.processing? false : this.props.togglePenaltyPaymentForm(true, penalty_index, loan_index)}>
+                                      Payment
+                                    </a>
+                                  </div> :
+                                  <ul className="penalty-payment-form">
+                                    <li>
+                                      Amount
+                                      <InputText
+                                      numberOnly={true}
+                                      value={penalty.penalty_payment_fields.amount.value}
+                                      placeholder="Amount..."
+                                      onChange={value => console.log(value, penalty_payment_fields, loan_index)}
+                                      errors={penalty.penalty_payment_fields.amount.errors}
+                                      disabled={penalty.penalty_payment_fields.backend.processing} />
+                                      <p><strong>{currency(penalty.penalty_payment_fields.amount.value)}</strong> Pesos</p>
+                                    </li>
+                                    <li className="select-collection">
+                                      <p>Date paid</p>
+                                      <InputSelect
+                                      className="date"
+                                      onChange={value => console.log(value, penalty_index, loan_index)}
+                                      value={penalty.penalty_payment_fields.date_paid.month}
+                                      disabled={penalty.penalty_payment_fields.backend.processing}
+                                      errors={[]}>
+                                        {monthList().map((month, index) =>
+                                          <option key={index}>{month}</option>
+                                        )}
+                                      </InputSelect>
+                                      <InputSelect
+                                      className="date"
+                                      onChange={value => console.log(value, penalty_index, loan_index)}
+                                      value={penalty.penalty_payment_fields.date_paid.date}
+                                      disabled={penalty.penalty_payment_fields.backend.processing}
+                                      errors={[]}>
+                                        {(() => {
+                                          let max_days_in_month = monthMaxdays(penalty.penalty_payment_fields.date_paid.month, penalty.penalty_payment_fields.date_paid.year);
+                                          let dates = [];
+
+                                          for(let a = 1; a <= max_days_in_month; a++) {
+                                            dates.push(<option key={a}>{a}</option>);
+                                          }
+
+                                          return dates;
+                                        })()}
+                                      </InputSelect>
+                                      <InputSelect
+                                      className="date"
+                                      onChange={value => console.log(value, penalty_index, loan_index)}
+                                      value={penalty.penalty_payment_fields.date_paid.year}
+                                      disabled={penalty.penalty_payment_fields.backend.processing}
+                                      errors={[]} >
+                                        {(() => {
+                                          let date = new Date;
+                                          let years = [];
+                                          let max_year = date.getFullYear();
+                                          let min_year = max_year - 10;
+
+                                          for(let a = max_year; a >= min_year; a--) {
+                                            years.push(<option key={a}>{a}</option>);
+                                          }
+
+                                          return years;
+                                        })()}
+                                      </InputSelect>
+                                    </li>
+                                    <li>
+                                      <div className="buttons">
+                                        <InputButton
+                                        value="Encode payment"
+                                        onClick={() => console.log('Encode payment')}
+                                        sending={penalty.penalty_payment_fields.backend.processing}
+                                        disabled={penalty.penalty_payment_fields.allow_submit && !penalty.penalty_payment_fields.backend.processing? false : true}
+                                        errors={[]} />
+                                      </div>
+
+                                      <div className="buttons">
+                                        <a
+                                        className={!penalty.penalty_payment_fields.backend.processing? 'default-btn-red' : 'default-btn-red disabled'}
+                                        onClick={() => penalty.penalty_payment_fields.backend.processing? false : this.props.togglePenaltyPaymentForm(false, penalty_index, loan_index)}>
+                                          Cancel
+                                        </a>
+                                      </div>
+                                    </li>
+                                  </ul>}
+                              </div>
+                            </div>
+                          )
+                        : <div className="row">
                             <p>No penalties where given so far.</p>
                           </div>}
+                        </CssTransitionGroup>
                       </div>
                     </div>
                   </div>
@@ -1015,5 +1123,6 @@ export default connect(store => ({
   changePenaltyDate: borrowerProfileActions.changePenaltyDate,
   changePenaltyMonth: borrowerProfileActions.changePenaltyMonth,
   changePenaltyYear: borrowerProfileActions.changePenaltyYear,
-  createPenalty: borrowerProfileActions.createPenalty
+  createPenalty: borrowerProfileActions.createPenalty,
+  togglePenaltyPaymentForm: borrowerProfileActions.togglePenaltyPaymentForm
 })(BorrowerProfile);

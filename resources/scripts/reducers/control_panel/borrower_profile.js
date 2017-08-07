@@ -356,6 +356,37 @@ function allowPenaltyFormSubmit(fields) {
     && !fields.remarks.errors.length? true: false;
 }
 
+function getInitialPenaltyPaymentFields() {
+  return {
+    shown: false,
+    allow_submit: false,
+    amount: {
+      value: '',
+      errors: []
+    },
+    date_paid: {
+      month: monthList()[new Date().getMonth()],
+      date: new Date().getDate(),
+      year: new Date().getFullYear()
+    },
+    backend: {
+      processing: false,
+      status: null,
+      message: null
+    }
+  }
+}
+
+function alterPenaltyPaymentFields(penalties, target_index, fields) {
+  return penalties.map((penalty, penalty_index) => penalty_index == target_index? ({
+    ...penalty,
+    penalty_payment_fields: {
+      ...penalty.penalty_payment_fields,
+      ...fields
+    }
+  }): {...penalty});
+}
+
 export default function borrower_profile(state = initial_state, action) {
   let new_state;
 
@@ -379,6 +410,10 @@ export default function borrower_profile(state = initial_state, action) {
             edit: getInitialLoanEditFields(loan),
             payment_fields: getInitialPaymentFields(loan),
             penalty_fields: getInitialPenaltyFields(),
+            penalties: loan.penalties.map(penalty => ({
+              ...penalty,
+              penalty_payment_fields: getInitialPenaltyPaymentFields()
+            })),
             summary: getLoanSummary(loan),
             payments: loan.payments.map(payment => getInitialPaymentEditFields(payment))
           }))
@@ -1405,7 +1440,10 @@ export default function borrower_profile(state = initial_state, action) {
           loans: state.data.loans.map((loan, loan_index) => action.loan_index == loan_index? ({
             ...loan,
             penalty_fields: getInitialPenaltyFields(),
-            penalties: loan.penalties.addFirst(action.data)
+            penalties: loan.penalties.addFirst(action.data).map((penalty, penalty_index) => penalty_index == 0? ({
+              ...penalty,
+              penalty_payment_fields: getInitialPenaltyPaymentFields()
+            }): {...penalty})
           }): {...loan})
         }
       }
@@ -1437,13 +1475,42 @@ export default function borrower_profile(state = initial_state, action) {
           })
         }
       }
-    default:
-      return {
-        ...state
-      }
     case 'BORROWER_PROFILE_RESET':
       return {
         ...initial_state
+      }
+    case 'BORROWER_PROFILE_PENALTYPAYMENTFORM_TOGGLE':
+      if(!action.visibility) {
+        return {
+          ...state,
+          data: {
+            ...state.data,
+            loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+              ...loan,
+              penalties: loan.penalties.map((penalty, penalty_index) => penalty_index == action.penalty_index? ({
+                ...penalty,
+                penalty_payment_fields: getInitialPenaltyPaymentFields()
+              }): {...penalty})
+            }): {...loan})
+          }
+        }
+      }
+
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: alterPenaltyPaymentFields(loan.penalties, action.penalty_index, {
+              shown: true
+            })
+          }): {...loan})
+        }
+      }
+    default:
+      return {
+        ...state
       }
   }
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import CssTransitionGroup from 'react-addons-css-transition-group';
 
 import Sidebar from '../components/Sidebar';
 
@@ -25,9 +26,16 @@ class WithSidebar extends Component {
       }>
         <Sidebar onLink={this.props.onLink} />
 
-        <div className="side-contents">
-          {this.props.children}
-        </div>
+        <CssTransitionGroup
+        transitionName="view"
+        transitionAppear={true}
+        transitionAppearTimeout={350}
+        transitionEnterTimeout={350}
+        transitionLeaveTimeout={350}>
+          <div className="side-contents">
+            {this.props.children}
+          </div>
+        </CssTransitionGroup>
       </div>
     );
   }

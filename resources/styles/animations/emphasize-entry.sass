@@ -1,0 +1,34 @@
+/* appear */
+.emphasize-entry-appear
+  background: #bfbfbf
+  opacity: 0.1
+  position: relative
+  left: -100px
+.emphasize-entry-appear.emphasize-entry-appear-active
+  background: #fff
+  opacity: 1
+  left: 0
+  transition: background 400ms linear, opacity 400ms linear, left 400ms linear
+/* enter */
+.emphasize-entry-enter
+  background: #bfbfbf
+  opacity: 0.1
+  position: relative
+  left: -100px
+.emphasize-entry-enter.emphasize-entry-enter-active
+  background: #fff
+  opacity: 1
+  left: 0
+  transition: background 400ms linear, opacity 400ms linear, left 400ms linear
+/* leave */
+.emphasize-entry-leave
+  background: #bfbfbf
+  opacity: 1
+  position: relative
+  left: 0
+.emphasize-entry-leave.emphasize-entry-leave-active
+  background: #fff
+  opacity: 0
+  left: -100px
+  position: relative
+  transition: background 400ms linear, opacity 400ms linear, left 400ms linear
