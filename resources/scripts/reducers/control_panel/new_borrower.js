@@ -348,6 +348,7 @@ export default function new_borrower(state = initial_state, action) {
       new_state = {
         ...state,
         contact_numbers: state.contact_numbers.concat({
+          id: new Date().getTime(),
           value: '',
           errors: []
         })
@@ -365,6 +366,7 @@ export default function new_borrower(state = initial_state, action) {
         return {
           ...state,
           contact_numbers: [{
+            id: new Date().getTime(),
             value: '',
             errors: []
           }]
@@ -388,6 +390,7 @@ export default function new_borrower(state = initial_state, action) {
         ...state,
         contact_numbers: state.contact_numbers.map((contact_number, index) => (
           index == action.index? {
+            ...contact_number,
             value: action.value,
             errors: validatePhoneNumber(action.value)
           } : contact_number

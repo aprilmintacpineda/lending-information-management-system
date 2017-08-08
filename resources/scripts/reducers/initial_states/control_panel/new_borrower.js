@@ -53,6 +53,7 @@ export default {
   },
   contact_numbers: [
     {
+      id: new Date().getTime(),
       value: '',
       errors: []
     }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
 import path from 'path';
+import CssTransitionGroup from 'react-addons-css-transition-group';
 
 // components
 import WithSidebar from '../../components/WithSidebar';
@@ -115,27 +116,34 @@ class NewBorrower extends Component {
                 <li>
                   <p>This information is optional.</p>
                 </li>
-                {this.props.new_borrower.contact_numbers.map((field, index) => (
-                  <li key={index} className="contact-fields">
-                    <InputText
-                    className={field.value.length || index > 0? 'closable-input' : ''}
-                    numberOnly={true}
-                    value={field.value}
-                    placeholder="Borrower's contact number..."
-                    onChange={value => this.props.changeContactNumber(value, index)}
-                    errors={field.errors}
-                    disabled={this.props.new_borrower.backend.processing} />
+                <li>
+                  <CssTransitionGroup
+                  transitionName="emphasize-entry"
+                  transitionEnterTimeout={400}
+                  transitionLeaveTimeout={400}>
+                    {this.props.new_borrower.contact_numbers.map((field, index) => (
+                      <div key={field.id} className="contact-fields">
+                        <InputText
+                        className={index > 0? 'closable-input' : ''}
+                        numberOnly={true}
+                        value={field.value}
+                        placeholder="Borrower's contact number..."
+                        onChange={value => this.props.changeContactNumber(value, index)}
+                        errors={field.errors}
+                        disabled={this.props.new_borrower.backend.processing} />
 
-                    {field.value.length || index > 0?
-                      <a className="remove-contact-field" onClick={() => this.props.new_borrower.backend.processing? false : this.props.removeContactNumber(index)}>X</a>
-                    : null}
-                  </li>
-                ))}
+                        {index > 0?
+                          <a className="remove-contact-field" onClick={() => this.props.new_borrower.backend.processing? false : this.props.removeContactNumber(index)}>X</a>
+                        : null}
+                      </div>
+                    ))}
+                  </CssTransitionGroup>
 
-                <a className={this.props.new_borrower.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
-                onClick={() => this.props.new_borrower.backend.processing? false : this.props.addMoreContactNumbers()}>
-                  Add more fields
-                </a>
+                  <a className={this.props.new_borrower.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
+                  onClick={() => this.props.new_borrower.backend.processing? false : this.props.addMoreContactNumbers()}>
+                    Add more fields
+                  </a>
+                </li>
               </ul>
             </div>
 
