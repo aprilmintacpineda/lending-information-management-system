@@ -425,6 +425,7 @@ class BorrowerProfile extends Component {
                           </div>
 
                           <h1>Payments summary</h1>
+
                           <div className="row">
                             <WithLabel label="Total amount paid">
                               <p><strong>{currency(loan.summary.total_amount_paid)}</strong> Pesos</p>
@@ -446,10 +447,52 @@ class BorrowerProfile extends Component {
                               : <p>{Math.ceil(loan.summary.months_left)} Month</p>}
                             </WithLabel>
                           </div>
+
+                          <h1>Penalties summary</h1>
+
+                          <div className="row">
+                            <WithLabel label="Total number of penalties">
+                              <p>{loan.penalties.length}</p>
+                            </WithLabel>
+                          </div>
+
+                          {(() => {
+                            let total_amount_to_pay = 0;
+                            let total_amount_paid = 0;
+                            let remaining_balance = 0;
+
+                            loan.penalties.forEach(penalty => {
+                              total_amount_to_pay += penalty.summary.remaining_balance + penalty.summary.total_amount_paid;
+                              total_amount_paid += penalty.summary.total_amount_paid;
+                              remaining_balance += penalty.summary.remaining_balance;
+                            });
+
+                            return (
+                              <div>
+                                <div className="row">
+                                  <WithLabel label="Total amount to pay">
+                                    <p><strong>{currency(total_amount_to_pay)}</strong> Pesos</p>
+                                  </WithLabel>
+                                </div>
+
+                                <div className="row">
+                                  <WithLabel label="Total amount paid">
+                                    <p><strong>{currency(total_amount_paid)}</strong> Pesos</p>
+                                  </WithLabel>
+                                </div>
+
+                                <div className="row">
+                                  <WithLabel label="Remaining balance">
+                                    <p><strong>{currency(remaining_balance)}</strong> Pesos</p>
+                                  </WithLabel>
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </div>}
 
                       <div className="right">
-                        <h1>Payments details</h1>
+                        <h1>Loan payments</h1>
 
                         {loan.summary.remaining_balance?
                           <div className="row">
@@ -1243,7 +1286,7 @@ class BorrowerProfile extends Component {
                                   : null}
                                 </div>}
                               
-                              <h1>Payments</h1>
+                              <h1>Penalty payments</h1>
 
                               <CssTransitionGroup
                               transitionName="emphasize-entry"
