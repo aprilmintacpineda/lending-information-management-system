@@ -369,3 +369,66 @@ export function submitPenaltyPaymentForm(fields, penalty_index, loan_index) {
     loan_index
   }
 }
+
+export function togglePenaltyEdit(visibility, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EDITPENALTYFORM_TOGGLE',
+    visibility,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function changePenaltyEditAmount(value, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EDITPENALTYFORM_AMOUNT',
+    value,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function changePenaltyEditMonth(value, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EDITPENALTYFORM_MONTH',
+    value,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function changePenaltyEditDate(value, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EDITPENALTYFORM_DATE',
+    value,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function changePenaltyEditYear(value, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EDITPENALTYFORM_YEAR',
+    value,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function changePenaltyEditRemarks(value, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EDITPENALTYFORM_REMARKS',
+    value,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function savePenaltyEdit(fields, penalty_index, loan_index) {
+  return {
+    type: '_BORROWER_PROFILE_EDITPENALTYFORM_SAVE',
+    ...fields,
+    penalty_index,
+    loan_index
+  }
+}

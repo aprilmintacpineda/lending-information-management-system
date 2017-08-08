@@ -29,11 +29,6 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: null
       },
-      fully_paid: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
-      },
       date_given: {
         type: Sequelize.DATE,
         allowNull: false

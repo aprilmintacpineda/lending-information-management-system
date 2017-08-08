@@ -1,6 +1,34 @@
 import { monthMaxdays, monthList, maxYear, minYear } from './DateTime';
 
 /**
+ * validates the amount
+ */
+export function validateAmount(value, payment_type) {
+  let errors = [];
+
+  if(!value.length) {
+    errors.push('Amount is required.');
+  } else if(isNaN(value) || Number(value) <= 0) {
+    errors.push('Invalid amount.');
+  }
+
+  return errors;
+}
+
+/**
+ * validates the remarks
+ */
+export function validateRemarks(value, payment_type) {
+  let errors = [];
+
+  if(!value.length) {
+    errors.push('Remarks is required.');
+  }
+
+  return errors;
+}
+
+/**
  * validates the amount paid
  */
 export function validateAmountPaid(value, payment_type) {
