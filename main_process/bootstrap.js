@@ -34,9 +34,9 @@ function createSplashScreen() {
 function createMainScreen() {
   // create the main screen
   mainScreen = new BrowserWindow({
-    width: 800,
+    width: 1000,
     height: 600,
-    minWidth: 800,
+    minWidth: 1000,
     minHeight: 600,
     show: false,
     icon: path.join(__dirname, '../app/images/icon.png')
@@ -54,6 +54,7 @@ function createMainScreen() {
   });
 
   mainScreen.once('ready-to-show', () => {
+    mainScreen.maximize();
     mainScreenShown = true;
     splashScreen.close();
     mainScreen.show();

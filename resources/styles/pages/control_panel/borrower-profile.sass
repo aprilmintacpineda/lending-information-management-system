@@ -27,7 +27,22 @@
       > ul
         margin-left: 20px
       .loan-container
+        .left-right-columned.inner
+          @media all and (max-width: 1275px)
+            .left, .right
+              float: none
+              padding: 0
+          .left, .right
+            min-width: 300px
         .left-right-columned
+          @media all and (max-width: $fluid-width)
+            .left, .right
+              min-width: 0
+          +fitWidth
+          margin: 0 auto
+          .right, .left
+            float: left
+            min-width: 250px
           h1
             letter-spacing: 5px
             color: #737373
@@ -35,8 +50,7 @@
             margin-bottom: 10px
           +clearFloat
           .left
-            float: left
-            width: 50%
+            padding-right: 50px
             label
               cursor: pointer
               padding-left: 2px
@@ -109,8 +123,6 @@
                 list-style: none
                 float: left
                 margin-right: 10px
-            float: left
-            width: 50%
         .row
           margin-bottom: 10px
           &:last-child
