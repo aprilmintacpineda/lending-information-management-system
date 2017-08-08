@@ -469,6 +469,76 @@ function alterPenaltyEditFields(penalties, target_index, fields) {
   }) : {...penalty});
 }
 
+function getInitialPenaltyPaymentEditFields(penalty_payments, target_index) {
+  if(penalty_payments.constructor == Array) {
+    return penalty_payments.map(penalty_payment => ({
+      ...penalty_payment,
+      edit: {
+        shown: false,
+        allow_submit: true,
+        amount: {
+          value: penalty_payment.amount,
+          errors: []
+        },
+        date_paid: {
+          month: monthList()[new Date(penalty_payment.date_paid).getMonth()],
+          date: new Date(penalty_payment.date_paid).getDate(),
+          year: new Date(penalty_payment.date_paid).getFullYear()
+        },
+        backend: {
+          processing: false,
+          message: null,
+          status: null
+        }
+      }
+    }));
+  }
+
+  return {
+    shown: false,
+    allow_submit: true,
+    amount: {
+      value: penalty_payments.amount,
+      errors: []
+    },
+    date_paid: {
+      month: monthList()[new Date(penalty_payments.date_paid).getMonth()],
+      date: new Date(penalty_payments.date_paid).getDate(),
+      year: new Date(penalty_payments.date_paid).getFullYear()
+    },
+    backend: {
+      processing: false,
+      message: null,
+      status: null
+    }
+  }
+}
+
+function alterPenaltyPaymentEditFields(penalties, target_penalty, target_payment, fields) {
+  return penalties.map((penalty, penalty_index) => penalty_index == target_penalty? ({
+    ...penalty,
+    penalty_payments: penalty.penalty_payments.map((penalty_payment, penalty_payment_index) => penalty_payment_index == target_payment? ({
+      ...penalty_payment,
+      edit: fields.amount? {
+        ...penalty_payment.edit,
+        amount: {
+          ...penalty_payment.edit.amount,
+          ...fields.amount
+        }
+      } : fields.date_paid? {
+        ...penalty_payment.edit,
+        date_paid: {
+          ...penalty_payment.edit.date_paid,
+          ...fields.date_paid
+        }
+      } : {
+        ...penalty_payment.edit,
+        ...fields
+      }
+    }) : {...penalty_payment})
+  }): ({...penalty}));
+}
+
 export default function borrower_profile(state = initial_state, action) {
   let new_state;
 
@@ -496,7 +566,8 @@ export default function borrower_profile(state = initial_state, action) {
               ...penalty,
               edit: getInitialPenaltyEditFields(penalty),
               summary: getPenaltySummary(penalty),
-              penalty_payment_fields: getInitialPenaltyPaymentFields()
+              penalty_payment_fields: getInitialPenaltyPaymentFields(),
+              penalty_payments: getInitialPenaltyPaymentEditFields(penalty.penalty_payments)
             })),
             summary: getLoanSummary(loan),
             loan_payments: loan.loan_payments.map(payment => getInitialPaymentEditFields(payment))
@@ -1542,7 +1613,8 @@ export default function borrower_profile(state = initial_state, action) {
               ...penalty,
               edit: getInitialPenaltyEditFields(penalty),
               summary: getPenaltySummary(penalty),
-              penalty_payment_fields: getInitialPenaltyPaymentFields()
+              penalty_payment_fields: getInitialPenaltyPaymentFields(),
+              penalty_payments: []
             }): {...penalty})
           }): {...loan})
         }
@@ -1742,7 +1814,6 @@ export default function borrower_profile(state = initial_state, action) {
             ...loan,
             penalties: loan.penalties.map((penalty, penalty_index) => penalty_index == action.penalty_index? ({
               ...penalty,
-              summary: getPenaltySummary(penalty),
               penalty_payment_fields: getInitialPenaltyPaymentFields(),
               penalty_payments: penalty.penalty_payments.addFirst(action.data)
             }) : {...penalty})
@@ -1758,7 +1829,8 @@ export default function borrower_profile(state = initial_state, action) {
             ...loan,
             penalties: loan.penalties.map((penalty, penalty_index) => penalty_index == action.penalty_index? ({
               ...penalty,
-              summary: getPenaltySummary(penalty)
+              summary: getPenaltySummary(penalty),
+              penalty_payments: getInitialPenaltyPaymentEditFields(penalty.penalty_payments)
             }) : {...penalty})
           }): {...loan})
         }
@@ -2029,6 +2101,231 @@ export default function borrower_profile(state = initial_state, action) {
           loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
             ...loan,
             penalties: alterPenaltyEditFields(loan.penalties, action.penalty_index, {
+              backend: {
+                status: 'failed',
+                message: action.message,
+                processing: false
+              }
+            })
+          }) : {...loan})
+        }
+      }
+    case 'BORROWER_PROFILE_EDITPENALTYPAYMENT':
+      if(!action.visibility) {
+        return {
+          ...state,
+          data: {
+            ...state.data,
+            loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+              ...loan,
+              penalties: loan.penalties.map((penalty, penalty_index) => penalty_index == action.penalty_index? ({
+                ...penalty,
+                penalty_payments: getInitialPenaltyPaymentEditFields(penalty.penalty_payments)
+              }) : {...penalty})
+            }) : {...loan})
+          }
+        }
+      }
+
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: alterPenaltyPaymentEditFields(loan.penalties, action.penalty_index, action.penalty_payment_index, {
+              shown: true
+            })
+          }) : {...loan})
+        }
+      }
+    case 'BORROWER_PROFILE_EDITPENALTYPAYMENT_AMOUNT':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: alterPenaltyPaymentEditFields(loan.penalties, action.penalty_index, action.penalty_payment_index, {
+              amount: {
+                value: action.value,
+                errors: validateAmount(action.value)
+              }
+            })
+          }) : {...loan})
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: alterPenaltyPaymentEditFields(loan.penalties, action.penalty_index, action.penalty_payment_index, {
+              allow_submit: allowPenaltyPaymentFormSubmit(loan.penalties[action.penalty_index].penalty_payments[action.penalty_payment_index].edit)
+            })
+          }) : {...loan})
+        }
+      }
+    case 'BORROWER_PROFILE_EDITPENALTYPAYMENT_DATE':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: alterPenaltyPaymentEditFields(loan.penalties, action.penalty_index, action.penalty_payment_index, {
+              date_paid: {
+                date: action.value
+              }
+            })
+          }) : {...loan})
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: alterPenaltyPaymentEditFields(loan.penalties, action.penalty_index, action.penalty_payment_index, {
+              allow_submit: allowPenaltyPaymentFormSubmit(loan.penalties[action.penalty_index].penalty_payments[action.penalty_payment_index].edit)
+            })
+          }) : {...loan})
+        }
+      }
+    case 'BORROWER_PROFILE_EDITPENALTYPAYMENT_MONTH':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: alterPenaltyPaymentEditFields(loan.penalties, action.penalty_index, action.penalty_payment_index, {
+              date_paid: {
+                month: action.value
+              }
+            })
+          }) : {...loan})
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: alterPenaltyPaymentEditFields(loan.penalties, action.penalty_index, action.penalty_payment_index, {
+              allow_submit: allowPenaltyPaymentFormSubmit(loan.penalties[action.penalty_index].penalty_payments[action.penalty_payment_index].edit)
+            })
+          }) : {...loan})
+        }
+      }
+    case 'BORROWER_PROFILE_EDITPENALTYPAYMENT_YEAR':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: alterPenaltyPaymentEditFields(loan.penalties, action.penalty_index, action.penalty_payment_index, {
+              date_paid: {
+                year: action.value
+              }
+            })
+          }) : {...loan})
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: alterPenaltyPaymentEditFields(loan.penalties, action.penalty_index, action.penalty_payment_index, {
+              allow_submit: allowPenaltyPaymentFormSubmit(loan.penalties[action.penalty_index].penalty_payments[action.penalty_payment_index].edit)
+            })
+          }) : {...loan})
+        }
+      }
+    case '_BORROWER_PROFILE_EDITPENALTYPAYMENT_SAVE':
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: alterPenaltyPaymentEditFields(loan.penalties, action.penalty_index, action.penalty_payment_index, {
+              backend: {
+                processing: true,
+                message: null,
+                status: null
+              }
+            })
+          }) : {...loan})
+        }
+      }
+    case 'BORROWER_PROFILE_EDITPENALTYPAYMENT_SAVE_SUCCESSFUL':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: loan.penalties.map((penalty, penalty_index) => penalty_index == action.penalty_index? ({
+              ...penalty,
+              penalty_payments: penalty.penalty_payments.map((penalty_payment, penalty_payment_index) => penalty_payment_index == action.penalty_payment_index? ({
+                ...penalty_payment,
+                ...action.data,
+                edit: getInitialPenaltyPaymentEditFields(action.data)
+              }) : {...penalty_payment})
+            }) : {...penalty})
+          }) : {...loan})
+        }
+      }
+
+      new_state = {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: loan.penalties.map((penalty, penalty_index) => penalty_index == action.penalty_index? ({
+              ...penalty,
+              summary: getPenaltySummary(penalty)
+            }) : {...penalty})
+          }) : {...loan})
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: alterPenaltyPaymentEditFields(loan.penalties, action.penalty_index, action.penalty_payment_index, {
+              backend: {
+                status: 'successful',
+                message: null,
+                processing: false
+              }
+            })
+          }) : {...loan})
+        }
+      }
+    case 'BORROWER_PROFILE_EDITPENALTYPAYMENT_SAVE_FAILED':
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: alterPenaltyPaymentEditFields(loan.penalties, action.penalty_index, action.penalty_payment_index, {
               backend: {
                 status: 'failed',
                 message: action.message,

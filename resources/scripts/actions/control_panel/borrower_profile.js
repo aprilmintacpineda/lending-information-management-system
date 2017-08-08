@@ -432,3 +432,62 @@ export function savePenaltyEdit(fields, penalty_index, loan_index) {
     loan_index
   }
 }
+
+export function togglePenaltyPaymentEdit(visibility, penalty_payment_index, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EDITPENALTYPAYMENT',
+    visibility,
+    penalty_payment_index,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function changePenaltyPaymentEditAmount(value, penalty_payment_index, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EDITPENALTYPAYMENT_AMOUNT',
+    value,
+    penalty_payment_index,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function changePenaltyPaymentEditDate(value, penalty_payment_index, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EDITPENALTYPAYMENT_DATE',
+    value,
+    penalty_payment_index,
+    penalty_index,
+    loan_index
+  }
+}
+export function changePenaltyPaymentEditYear(value, penalty_payment_index, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EDITPENALTYPAYMENT_YEAR',
+    value,
+    penalty_payment_index,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function changePenaltyPaymentEditMonth(value, penalty_payment_index, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_EDITPENALTYPAYMENT_MONTH',
+    value,
+    penalty_payment_index,
+    penalty_index,
+    loan_index
+  }
+}
+
+export function changePenaltyPaymentEditSave(fields, penalty_payment_index, penalty_index, loan_index) {
+  return {
+    type: '_BORROWER_PROFILE_EDITPENALTYPAYMENT_SAVE',
+    ...fields,
+    penalty_payment_index,
+    penalty_index,
+    loan_index
+  }
+}
