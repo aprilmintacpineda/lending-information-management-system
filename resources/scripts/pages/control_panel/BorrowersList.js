@@ -52,6 +52,12 @@ class BorrowersList extends Component {
           </div>
 
           <div className="row">
+            <WithLabel label="Total unpaid penalties balance">
+              <p>{currency(borrower.summary.total_unpaid_penalties)} Pesos</p>
+            </WithLabel>
+          </div>
+
+          <div className="row">
             <WithLabel label="Total loans">
               <div>
                 {borrower.summary.total_loans > 1?

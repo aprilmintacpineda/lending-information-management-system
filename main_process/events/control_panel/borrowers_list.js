@@ -3,6 +3,8 @@ import Borrower from '../../../models/borrower';
 import ContactNumber from '../../../models/contactNumber';
 import LoanPayment from '../../../models/loan_payment';
 import Loan from '../../../models/loan';
+import Penalty from '../../../models/penalty';
+import PenaltyPayment from '../../../models/penalty_payment';
 import Sequelize from 'sequelize';
 
 ipcMain.on('BORROWERS_LIST_FETCH', (event, arg) => {
@@ -14,7 +16,17 @@ ipcMain.on('BORROWERS_LIST_FETCH', (event, arg) => {
       },
       {
         model: Loan,
-        include: [ LoanPayment ],
+        include: [
+          {
+            model: LoanPayment,
+            order: [ 'created_at', 'asc' ]
+          },
+          {
+            model: Penalty,
+            order: [ 'created_at', 'asc' ],
+            include: [ PenaltyPayment ]
+          }
+        ],
         order: [
           [ LoanPayment, 'created_at' ]
         ]
@@ -34,6 +46,12 @@ ipcMain.on('BORROWERS_LIST_FETCH', (event, arg) => {
         ...loan.dataValues,
         loan_payments: loan.loan_payments.map(payment => ({
           ...payment.dataValues
+        })),
+        penalties: loan.penalties.map(penalty => ({
+          ...penalty.dataValues,
+          penalty_payments: penalty.penalty_payments.map(penalty_payment => ({
+            ...penalty_payment.dataValues
+          }))
         }))
       }))
     }))
