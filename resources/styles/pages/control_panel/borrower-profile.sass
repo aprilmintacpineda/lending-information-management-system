@@ -34,10 +34,12 @@
               padding: 0
           .left, .right
             min-width: 300px
+            max-width: 300px
         .left-right-columned
           @media all and (max-width: $fluid-width)
             .left, .right
               min-width: 0
+              max-width: auto
           +fitWidth
           margin: 0 auto
           .right, .left

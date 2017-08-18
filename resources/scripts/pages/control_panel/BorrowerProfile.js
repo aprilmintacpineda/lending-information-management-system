@@ -502,7 +502,7 @@ class BorrowerProfile extends Component {
                                   <li>
                                     <a className={loan.payment_fields.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
                                     onClick={() => loan.payment_fields.backend.processing? false : this.props.togglePaymentForm(true, loan_index)}>
-                                      Loan payment
+                                      Add new loan payment
                                     </a>
                                   </li>
                                 </ul>
