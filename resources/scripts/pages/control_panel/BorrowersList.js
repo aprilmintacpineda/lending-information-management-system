@@ -18,6 +18,10 @@ class BorrowersList extends Component {
     this.props.fetch();
   }
 
+  componentWillUnmount() {
+    this.props.reset();
+  }
+
   render() {
     let app_path = remote.app.getAppPath();
 
@@ -54,11 +58,11 @@ class BorrowersList extends Component {
                   <p>{borrower.summary.total_loans} total loans</p>
                 : <p>{borrower.summary.total_loans} total loan</p>}
 
-                {borrower.summary.total_unpaid_loans > 1?
+                {borrower.summary.total_unpaid_loans >= 0?
                   <p>{borrower.summary.total_unpaid_loans} total unpaid loans.</p>
                 : <p>{borrower.summary.total_unpaid_loans} total unpaid loan.</p>}
 
-                {borrower.summary.total_paid_loans > 1?
+                {borrower.summary.total_paid_loans >= 0?
                   <p>{borrower.summary.total_paid_loans} total paid loans.</p>
                 : <p>{borrower.summary.total_paid_loans} total paid loan.</p>}
               </div>
