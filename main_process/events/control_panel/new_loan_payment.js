@@ -3,8 +3,8 @@ import LoanPayment from '../../../models/loan_payment';
 import { uniqueId } from '../../helpers/generators';
 
 ipcMain.on('BORROWER_PROFILE_SEND_PAYMENT', (event, arg) => {
-  let created_at = new Date();
-  let updated_at = created_at = created_at.toISOString();
+  let created_at;
+  let updated_at = created_at = new Date().toISOString();
 
   LoanPayment.create({
     id: uniqueId(),

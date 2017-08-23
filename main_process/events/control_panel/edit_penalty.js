@@ -5,7 +5,8 @@ ipcMain.on('BORROWER_PROFILE_EDITPENALTYFORM_SAVE', (event, args) => {
   Penalty.update({
     amount: args.amount,
     remarks: args.remarks,
-    date_given: args.date_given
+    date_given: args.date_given,
+    updated_at: new Date().toISOString()
   }, {
     where: {
       id: args.penalty_id

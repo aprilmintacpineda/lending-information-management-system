@@ -64,7 +64,7 @@ let loan = DB.createModel('loan', {
     allowNull: false
   },
   created_at: {
-    type: Sequelize.NOW,
+    type: Sequelize.DATE,
     allowNull: false
   },
   updated_at: {

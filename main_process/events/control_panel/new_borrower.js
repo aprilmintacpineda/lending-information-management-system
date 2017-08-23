@@ -1,18 +1,17 @@
 import { ipcMain, app } from 'electron';
 import path from 'path';
 import Borrower from '../../../models/borrower';
-import ContactNumber from '../../../models/contactNumber';
+import ContactNumber from '../../../models/contact_number';
 import Loan from '../../../models/loan';
 import { uniqueId } from '../../helpers/generators';
 
 ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
   // created_at and updated_at
-  let created_at = new Date();
-  let updated_at = created_at = created_at.toISOString();
+  let created_at;
+  let updated_at = created_at = new Date().toISOString();
 
   let new_borrower_id = uniqueId();
-  let loan_date = new Date(arg.loan_date);
-  loan_date = loan_date.toISOString();
+  let loan_date = new Date(arg.loan_date).toISOString();
 
   Borrower.create({
     id: new_borrower_id,

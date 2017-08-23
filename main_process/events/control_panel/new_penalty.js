@@ -6,8 +6,8 @@ import { uniqueId } from '../../helpers/generators';
 ipcMain.on('BORROWER_PROFILE_PENALTYFIELD_CREATE', (event, args) => {
   let id = uniqueId();
 
-  let created_at = new Date;
-  let updated_at = created_at = created_at.toISOString();
+  let created_at;
+  let updated_at = created_at = new Date().toISOString();
 
   Penalty.create({
     id,

@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import Borrower from '../../../models/borrower';
-import ContactNumber from '../../../models/ContactNumber';
+import ContactNumber from '../../../models/contact_number';
 import { uniqueId } from '../../helpers/generators';
 
 ipcMain.on('EDITBORROWERPROFILE_FETCH', (event, arg) => {

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import CssTransitionGroup from 'react-addons-css-transition-group';
 
-class PopMessage extends Component {
+class Modal extends Component {
   static propTypes = {
-    message: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired
+    dismiss: PropTypes.func.isRequired,
+    children: PropTypes.array.isRequired
   }
 
   componentDidMount() {
@@ -27,16 +27,12 @@ class PopMessage extends Component {
           transitionEnterTimeout={350}
           transitionLeaveTimeout={350}>
             <div className="modal">
-              <div className="title">
-                <h1>{this.props.title}</h1>
-              </div>
-
               <div className="message">
-                <h3>{this.props.message}</h3>
+                {this.props.children}
               </div>
 
               <div className="btns-wrapper">
-                <div className="btn-dismiss" onClick={this.props.onClick}>
+                <div className="btn-dismiss" onClick={this.props.dismiss}>
                   Dismiss
                 </div>
               </div>
@@ -48,4 +44,4 @@ class PopMessage extends Component {
   }
 }
 
-export default PopMessage;
+export default Modal;

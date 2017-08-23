@@ -1,0 +1,40 @@
+.dashboard
+  .modal-container
+    width: 80% !important
+  .search-result-list
+    .search-result-row
+      padding: 10px
+      background: #eeeeee
+      border-radius: 4px
+      margin-bottom: 10px
+      .row
+        margin-bottom: 10px
+        &:last-child
+          margin-bottom: 0
+    .header h1
+      letter-spacing: 5px
+      color: #595959
+      font-size: 18px
+      margin-bottom: 10px
+  .title
+    letter-spacing: 5px
+    color: #33cccc
+    font-size: 18px
+    margin-bottom: 10px
+  .search
+    p
+      margin-bottom: 10px
+    .errors
+      color: #ff6600
+    ul
+      +clearFloat
+      &:last-child
+        margin-bottom: 10px
+      li
+        @media all and (max-width: $fluid-width)
+          float: none
+          margin-right: 0
+          margin-bottom: 10px
+        list-style: none
+        float: left
+        margin-right: 10px

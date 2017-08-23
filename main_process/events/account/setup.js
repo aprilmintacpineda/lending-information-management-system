@@ -12,10 +12,10 @@ ipcMain.on('SETUP_SUBMIT', (event, arg) => {
         message: 'An account already exists.'
       });
     } else {
-      let birth_date = new Date(arg.setup.birth_date.month + ' ' + arg.setup.birth_date.date + ', ' + arg.setup.birth_date.year);
-      birth_date = birth_date.toISOString();
-      let created_at = new Date();
-      let updated_at = created_at = created_at.toISOString();
+      let birth_date = new Date(arg.setup.birth_date.month + ' ' + arg.setup.birth_date.date + ', ' + arg.setup.birth_date.year).toISOString();
+
+      let created_at;
+      let updated_at = created_at = new Date().toISOString();
 
       Admin.create({
         id: uniqueId(),

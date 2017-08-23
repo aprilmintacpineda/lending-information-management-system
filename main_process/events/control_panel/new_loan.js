@@ -3,8 +3,8 @@ import Loan from '../../../models/loan';
 import { uniqueId } from '../../helpers/generators';
 
 ipcMain.on('BORROWERNEWLOAN_SUBMIT', (event, args) => {
-  let created_at = new Date();
-  let updated_at = created_at = created_at.toISOString();
+  let created_at;
+  let updated_at = created_at = new Date().toISOString();
 
   Loan.create({
     id: uniqueId(),

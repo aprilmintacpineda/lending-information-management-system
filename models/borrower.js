@@ -1,6 +1,6 @@
 import path from 'path';
 import Sequelize from 'sequelize';
-import contactNumber from './contactNumber';
+import contactNumber from './contact_number';
 import loan from './loan';
 import Database from '../main_process/Database';
 
@@ -29,7 +29,7 @@ let borrower = DB.createModel('borrowers', {
     allowNull: false
   },
   created_at: {
-    type: Sequelize.NOW,
+    type: Sequelize.DATE,
     allowNull: false
   },
   updated_at: {

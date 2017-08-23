@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import Borrower from '../../../models/borrower';
-import ContactNumber from '../../../models/ContactNumber';
+import ContactNumber from '../../../models/contact_number';
 import Loan from '../../../models/loan';
 import LoanPayment from '../../../models/loan_payment';
 import Penalty from '../../../models/penalty';
