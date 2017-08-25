@@ -5,7 +5,8 @@ import { remote } from 'electron';
 import { Link } from 'react-router';
 
 // helpers
-import { toFormalDateTime } from '../../helpers/DateTime';
+import { toFormalDate } from '../../helpers/DateTime';
+import { currency } from '../../helpers/Numbers';
 // components
 import WithSidebar from '../../components/WithSidebar';
 import WithLabel from '../../components/WithLabel';
@@ -55,25 +56,106 @@ class Dashboard extends Component {
 
                       <div className="row">
                         <WithLabel label="Date registered">
-                          <p>{toFormalDateTime(search_result.created_at)}</p>
+                          <p>{toFormalDate(search_result.created_at)}</p>
                         </WithLabel>
                       </div>
 
-                      <Link className="default-btn-blue" to="/borrowers/:id/view">View borrower profile</Link>
+                      <Link className="default-btn-blue" to={'/borrowers/'+ search_result.id +'/view'}>View borrower profile</Link>
                     </div>
                   )}
                 </div>
               : this.props.search.query.type == 'loan'?
-                <div>
-                  {this.props.search.search_results.length > 1?
-                    <h1>{this.props.search.search_results.length} loans were found.</h1>
-                  : <h1>{this.props.search.search_results.length} loan was found.</h1>}
+                <div className="search-result-list">
+                  <div className="header">
+                    {this.props.search.search_results.length > 1?
+                      <h1>{this.props.search.search_results.length} loans were found.</h1>
+                    : <h1>{this.props.search.search_results.length} loan was found.</h1>}
+                  </div>
+
+                  {this.props.search.search_results.map((search_result, search_result_index) => 
+                    <div className="search-result-row" key={search_result_index}>
+                      <div className="row">
+                        <WithLabel label="Trace ID">
+                          <p>{search_result.id}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Loan date">
+                          <p>{toFormalDate(search_result.loan_date)}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <h1>Loan summary</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total amount loan">
+                          <p>{currency(search_result.amount)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total amount paid">
+                          <p>{currency(search_result.loan_payments_summary.total_amount_paid)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Remaining balance">
+                          <p>{currency(search_result.loan_payments_summary.remaining_balance)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <h1>Penalties summary</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total number of penalties">
+                          <div>
+                            {search_result.penalties.length > 1 || search_result.penalties.length == 0?
+                              <p>{search_result.penalties.length} Penalties</p>
+                            : <p>{search_result.penalties.length} Penalty</p>}
+                          </div>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total penalty amount">
+                          <p>{currency(search_result.penalties_summary.total_penalty)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total amount paid">
+                          <p>{currency(search_result.penalties_summary.total_amount_paid)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Remaining balance">
+                          <p>{currency(search_result.penalties_summary.remaining_balance)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <Link className="default-btn-blue" to={'/borrowers/'+ search_result.borrower_id +'/view#' + search_result.id}>View loan</Link>
+                    </div>
+                  )}
                 </div>
               : this.props.search.query.type == 'penalty'?
                 <div>
                   {this.props.search.search_results.length > 1?
                     <h1>{this.props.search.search_results.length} penalties were found.</h1>
                   : <h1>{this.props.search.search_results.length} penalty was found.</h1>}
+
+                  {this.props.search.search_results.map((search_result, search_result_index) => 
+                    <div className="search-result-row" key={search_result_index}>
+                      
+                      <Link className="default-btn-blue" to={'/borrowers/'+ search_result.borrower_id +'/view#' + search_result.id}>View penalty</Link>
+                    </div>
+                  )}
                 </div>
               : this.props.search.query.type == 'loan-payment'?
                 <div>

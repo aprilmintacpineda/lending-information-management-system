@@ -4,7 +4,7 @@ import Database from '../main_process/Database';
 
 const DB = new Database;
 
-export default DB.createModel('penalty_payment', {
+let penalty_payment = DB.createModel('penalty_payment', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -35,3 +35,5 @@ export default DB.createModel('penalty_payment', {
   timestamps: false,
   tableName: 'penalty_payments'
 });
+
+export default penalty_payment;

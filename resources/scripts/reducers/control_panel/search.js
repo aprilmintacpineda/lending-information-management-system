@@ -4,6 +4,46 @@ function allowSubmit(new_state) {
   return new_state.query.value.length? true: false;
 }
 
+function getPenaltySummary(penalties) {
+  let total_penalty = 0,
+      total_amount_paid = 0,
+      remaining_balance = 0;
+
+  penalties.forEach(penalty => {
+    total_penalty += penalty.amount;
+
+    penalty.penalty_payments.forEach(penalty_payment => {
+      total_amount_paid += penalty_payment.amount;
+    });
+  });
+
+  remaining_balance = total_penalty - total_amount_paid;
+
+  return {
+    total_penalty,
+    total_amount_paid,
+    remaining_balance
+  }
+}
+
+function getLoanPaymentsSummary(loan) {
+  let total_loan = loan.amount,
+      total_amount_paid = 0,
+      remaining_balance = 0;
+
+  loan.loan_payments.forEach(loan_payment => {
+    total_amount_paid += loan_payment.amount;
+  });
+
+  remaining_balance = total_loan - total_amount_paid;
+
+  return {
+    total_loan,
+    total_amount_paid,
+    remaining_balance
+  }
+}
+
 export default function search(state = initial_state, action) {
   let new_state;
 
@@ -60,6 +100,22 @@ export default function search(state = initial_state, action) {
         }
       }
     case 'SEARCH_SUBMIT_SUCCESSFUL':
+      if(state.query.type == 'loan') {
+        return {
+          ...state,
+          search_results: action.search_results.map(search_result => ({
+            ...search_result,
+            penalties_summary: getPenaltySummary(search_result.penalties),
+            loan_payments_summary: getLoanPaymentsSummary(search_result)
+          })),
+          backend: {
+            processing: false,
+            status: 'successful',
+            message: null
+          }
+        }
+      }
+
       return {
         ...state,
         search_results: action.search_results,

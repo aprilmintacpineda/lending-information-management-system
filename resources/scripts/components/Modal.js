@@ -5,7 +5,7 @@ import CssTransitionGroup from 'react-addons-css-transition-group';
 class Modal extends Component {
   static propTypes = {
     dismiss: PropTypes.func.isRequired,
-    children: PropTypes.array.isRequired
+    children: PropTypes.element.isRequired
   }
 
   componentDidMount() {

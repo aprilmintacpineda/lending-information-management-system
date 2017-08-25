@@ -1,6 +1,7 @@
 import path from 'path';
 import Sequelize from 'sequelize';
 import Database from '../main_process/Database';
+import loan from './loan';
 import penalty_payment from './penalty_payment';
 
 const DB = new Database;
