@@ -1,6 +1,7 @@
 import { ipcMain } from 'electron';
+import models from '../../../models';
+
 import { uniqueId } from '../../helpers/generators';
-import PenaltyPayment from '../../../models/penalty_payment';
 
 ipcMain.on('BORROWER_PROFILE_PENALTYPAYMENTFORM_CREATE', (event, args) => {
   let id = uniqueId();
@@ -8,7 +9,7 @@ ipcMain.on('BORROWER_PROFILE_PENALTYPAYMENTFORM_CREATE', (event, args) => {
   let created_at;
   let updated_at = created_at = new Date().toISOString();
 
-  PenaltyPayment.create({
+  models.penalty_payments.create({
     id,
     penalty_id: args.penalty_id,
     amount: args.amount,

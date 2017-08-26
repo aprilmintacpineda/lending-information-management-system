@@ -1,12 +1,12 @@
 import { ipcMain } from 'electron';
 import path from 'path';
 import PasswordHash from 'password-hash';
-import Admin from '../../../models/admin';
 import { uniqueId } from '../../helpers/generators';
 import { ucfirst } from '../../helpers/strings';
+import models from '../../../models';
 
 ipcMain.on('SETUP_SUBMIT', (event, arg) => {
-  Admin.findAll().then(admins => {
+  models.admins.findAll().then(admins => {
     if(admins.length) {
       event.sender.send('SETUP_SUBMIT_FAILED', {
         message: 'An account already exists.'
@@ -17,7 +17,7 @@ ipcMain.on('SETUP_SUBMIT', (event, arg) => {
       let created_at;
       let updated_at = created_at = new Date().toISOString();
 
-      Admin.create({
+      models.admins.create({
         id: uniqueId(),
         password: PasswordHash.generate(arg.setup.password.value),
         firstname: ucfirst(arg.setup.firstname.value),

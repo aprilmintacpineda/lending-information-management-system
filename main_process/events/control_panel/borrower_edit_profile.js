@@ -1,14 +1,13 @@
 import { ipcMain } from 'electron';
-import Borrower from '../../../models/borrower';
-import ContactNumber from '../../../models/contact_number';
 import { uniqueId } from '../../helpers/generators';
+import models from '../../../models';
 
 ipcMain.on('EDITBORROWERPROFILE_FETCH', (event, arg) => {
-  Borrower.findOne({
+  models.borrowers.findOne({
     where: {
       id: arg.id
     },
-    include: [ ContactNumber ]
+    include: [ models.contact_numbers ]
   })
   .then(borrower => event.sender.send('EDITBORROWERPROFILE_FETCH_SUCCESSFUL', {
     data: {
@@ -24,7 +23,7 @@ ipcMain.on('EDITBORROWERPROFILE_FETCH', (event, arg) => {
 });
 
 ipcMain.on('EDITBORRWOERPROFILE_SEND', (event, arg) => {
-  Borrower.update({
+  models.borrowers.update({
     firstname: arg.firstname,
     middlename: arg.middlename,
     surname: arg.surname,
@@ -35,7 +34,7 @@ ipcMain.on('EDITBORRWOERPROFILE_SEND', (event, arg) => {
       id: arg.id
     }
   })
-  .then(() => ContactNumber.findAll({
+  .then(() => models.contact_numbers.findAll({
     where: {
       borrower_id: arg.id
     }
@@ -56,7 +55,7 @@ ipcMain.on('EDITBORRWOERPROFILE_SEND', (event, arg) => {
           let created_at = new Date();
           let updated_at = created_at = created_at.toISOString();
 
-          ContactNumber.create({
+          models.contact_numbers.create({
             id: uniqueId(),
             borrower_id: arg.id,
             number: contact_number.value,
@@ -67,7 +66,7 @@ ipcMain.on('EDITBORRWOERPROFILE_SEND', (event, arg) => {
         } else {
           ids_found.push(contact_number.id);
 
-          ContactNumber.update({
+          models.contact_numbers.update({
             number: contact_number.value,
             updated_at
           }, {
@@ -85,7 +84,7 @@ ipcMain.on('EDITBORRWOERPROFILE_SEND', (event, arg) => {
       .filter(contact_number => ids_found.indexOf(contact_number.id) < 0 && contact_number.id)
       .forEach(contact_number => {
         promises.push(new Promise((resolve, reject) => {
-          ContactNumber.findOne({
+          models.contact_numbers.findOne({
             where: {
               id: contact_number.id,
               borrower_id: arg.id
@@ -99,12 +98,12 @@ ipcMain.on('EDITBORRWOERPROFILE_SEND', (event, arg) => {
 
     return Promise.all(promises);
   })
-  .then(() => Borrower.findOne({
+  .then(() => models.borrowers.findOne({
     where: {
       id: arg.id
     },
     include: {
-      model: ContactNumber,
+      model: models.contact_numbers,
       order: [ 'created_at', 'desc' ]
     }
   }))

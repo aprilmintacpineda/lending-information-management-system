@@ -1,6 +1,5 @@
 import { ipcMain } from 'electron';
-import Loan from '../../../models/loan';
-import LoanPayment from '../../../models/loan_payment';
+import models from '../../../models';
 
 import * as calculator from '../../helpers/calculator';
 
@@ -12,7 +11,7 @@ ipcMain.on('BORROWER_PROFILE_ELI_SEND', (event, args) => {
   let per_semi_month = calculator.computePerHalfMonth(per_month);
   let per_day = calculator.computePerDay(per_month);
 
-  Loan.update({
+  models.loans.update({
     amount: args.amount,
     condition_applied: args.condition_applied,
     loan_date: args.date_loan,
@@ -31,12 +30,12 @@ ipcMain.on('BORROWER_PROFILE_ELI_SEND', (event, args) => {
       id: args.id
     }
   })
-  .then(() => Loan.findOne({
+  .then(() => models.loans.findOne({
     where: {
       id: args.id
     },
     include: [{
-      model: LoanPayment,
+      model: models.loan_payments,
       order: [ 'created_at', 'desc' ]
     }]
   }))

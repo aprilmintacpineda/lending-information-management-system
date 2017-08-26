@@ -1,15 +1,10 @@
 import { ipcMain } from 'electron';
-import Borrower from '../../../models/borrower';
-import ContactNumber from '../../../models/contact_number';
-import Loan from '../../../models/loan';
-import Penalty from '../../../models/penalty';
-import LoanPayment from '../../../models/loan_payment';
-import PenaltyPayment from '../../../models/penalty_payment';
+import models from '../../../models';
 
 ipcMain.on('SEARCH_SUBMIT', (event, args) => {
   switch(args.at) {
     case 'borrower':
-      Borrower.findAll({
+      models.borrowers.findAll({
         where: {
           $or: [
             {
@@ -54,7 +49,7 @@ ipcMain.on('SEARCH_SUBMIT', (event, args) => {
     break;
 
     case 'loan':
-      Loan.findAll({
+      models.loans.findAll({
         where: {
           $or: [
             {
@@ -72,21 +67,21 @@ ipcMain.on('SEARCH_SUBMIT', (event, args) => {
         include: [
           // loan payments
           {
-            model: LoanPayment,
+            model: models.loan_payments,
             order: [
               ['created_at', 'desc']
             ]
           },
           // penalties
           {
-            model: Penalty,
+            model: models.penalties,
             order: [
               ['created_at', 'desc']
             ],
             include: [
               // penalty_payments
               {
-                model: PenaltyPayment,
+                model: models.penalty_payments,
                 order: [ 'created_at', 'desc' ]
               }
             ]
@@ -121,7 +116,7 @@ ipcMain.on('SEARCH_SUBMIT', (event, args) => {
     break;
 
     case 'penalty':
-      Penalty.findAll({
+      models.penalties.findAll({
         where: {
           $or: [
             {
@@ -161,7 +156,7 @@ ipcMain.on('SEARCH_SUBMIT', (event, args) => {
     break;
 
     case 'loan-payment':
-      Penalty.findAll({
+      models.penalties.findAll({
         where: {
           $or: [
             {
@@ -196,7 +191,7 @@ ipcMain.on('SEARCH_SUBMIT', (event, args) => {
     break;
 
     case 'penalty-payment':
-      Penalty.findAll({
+      models.penalties.findAll({
         where: {
           $or: [
             {

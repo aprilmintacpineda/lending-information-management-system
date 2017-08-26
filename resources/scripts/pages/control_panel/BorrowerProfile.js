@@ -41,7 +41,7 @@ class BorrowerProfile extends Component {
     }
   }
 
-  showLoanPayment(loan, loan_payment, loan_payment_index) {
+  showLoanPayment(loan, loan_payment, loan_payment_index, loan_index, app_path) {
     return (
       <div>
         <div className="row">
@@ -857,9 +857,9 @@ class BorrowerProfile extends Component {
                             transitionName="emphasize-background"
                             transitionAppear={true}
                             transitionAppearTimeout={400}>
-                              {this.showLoanPayment(loan, loan_payment, loan_payment_index)}
+                              {this.showLoanPayment(loan, loan_payment, loan_payment_index, loan_index, app_path)}
                             </CssTransitionGroup>
-                          : this.showLoanPayment(loan, loan_payment, loan_payment_index)}
+                          : this.showLoanPayment(loan, loan_payment, loan_payment_index, loan_index, app_path)}
                         </div>)
                     : <div className="row">
                         <p>No payments has been made since <strong>{toFormalDate(loan.loan_date)}</strong></p>
@@ -1152,6 +1152,14 @@ class BorrowerProfile extends Component {
                           </div>
 
                           <div className="row">
+                            {penalty.edit.backend.status == 'successful'?
+                              <div className="row">
+                                <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                                  <p className="okay">Changes saved successfully.</p>
+                                </WithIcon>
+                              </div>
+                            : null}
+
                             {!penalty.penalty_payment_fields.shown?
                               <ul className="actions">
                                 <li>
@@ -1254,21 +1262,14 @@ class BorrowerProfile extends Component {
                                     </a>
                                   </div>
                                 </li>
+                                {penalty.edit.backend.status == 'failed'?
+                                  <li className="row">
+                                    <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                                      <p className="errors">Failed to save changes: <u>{penalty.edit.backend.message}</u></p>
+                                    </WithIcon>
+                                  </li>
+                                : null}
                               </ul>}
-
-                              {penalty.edit.backend.status == 'successful'?
-                                <div className="row">
-                                  <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
-                                    <p className="okay">Changes saved successfully.</p>
-                                  </WithIcon>
-                                </div>
-                              : penalty.edit.backend.status == 'failed'?
-                                <div className="row">
-                                  <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
-                                    <p className="errors">Failed to save changes: <u>{penalty.edit.backend.message}</u></p>
-                                  </WithIcon>
-                                </div>
-                              : null}
                           </div>
 
                           {penalty.penalty_payment_fields.backend.status == 'successful'?
@@ -1408,10 +1409,10 @@ class BorrowerProfile extends Component {
                                   </WithLabel>
                                 </div>
 
-                                {penalty_payment.edit.backend.status == 'failed'?
+                                {penalty_payment.edit.backend.status == 'successful'?
                                   <div className="row">
                                     <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
-                                      <p className="okay">{penalty_payment.edit.backend.message}</p>
+                                      <p className="okay">Changes saved successfully.</p>
                                     </WithIcon>
                                   </div>
                                 : null}

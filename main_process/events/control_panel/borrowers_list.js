@@ -1,39 +1,34 @@
 import { ipcMain } from 'electron';
-import Borrower from '../../../models/borrower';
-import ContactNumber from '../../../models/contact_number';
-import LoanPayment from '../../../models/loan_payment';
-import Loan from '../../../models/loan';
-import Penalty from '../../../models/penalty';
-import PenaltyPayment from '../../../models/penalty_payment';
 import Sequelize from 'sequelize';
+import models from '../../../models';
 
 ipcMain.on('BORROWERS_LIST_FETCH', (event, arg) => {
-  Borrower.findAll({
+  models.borrowers.findAll({
     include: [
       {
-        model: ContactNumber,
+        model: models.contact_numbers,
         order: [ 'created_at', 'desc' ]
       },
       {
-        model: Loan,
+        model: models.loans,
         include: [
           {
-            model: LoanPayment,
+            model: models.loan_payments,
             order: [ 'created_at', 'asc' ]
           },
           {
-            model: Penalty,
+            model: models.penalties,
             order: [ 'created_at', 'asc' ],
-            include: [ PenaltyPayment ]
+            include: [ models.penalty_payments ]
           }
         ],
         order: [
-          [ LoanPayment, 'created_at' ]
+          [ models.loan_payments, 'created_at' ]
         ]
       }
     ],
     order: [
-      [ Loan, 'loan_date', 'desc' ]
+      [ models.loans, 'loan_date', 'desc' ]
     ]
   })
   .then(borrowers => event.sender.send('BORROWERS_LIST_FETCH_SUCCESSFUL', {

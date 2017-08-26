@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
-import Penalty from '../../../models/penalty';
-import PenaltyPayment from '../../../models/penalty_payment';
+import models from '../../../models';
+
 import { uniqueId } from '../../helpers/generators';
 
 ipcMain.on('BORROWER_PROFILE_PENALTYFIELD_CREATE', (event, args) => {
@@ -9,7 +9,7 @@ ipcMain.on('BORROWER_PROFILE_PENALTYFIELD_CREATE', (event, args) => {
   let created_at;
   let updated_at = created_at = new Date().toISOString();
 
-  Penalty.create({
+  models.penalties.create({
     id,
     loan_id: args.loan_id,
     amount: args.amount,
@@ -18,12 +18,12 @@ ipcMain.on('BORROWER_PROFILE_PENALTYFIELD_CREATE', (event, args) => {
     created_at,
     updated_at
   })
-  .then(() => Penalty.findOne({
+  .then(() => models.penalties.findOne({
     where: { id },
     include: [
       // penalty_payments
       {
-        model: PenaltyPayment,
+        model: models.penalty_payments,
         order: [ 'created_at', 'desc' ]
       }
     ]

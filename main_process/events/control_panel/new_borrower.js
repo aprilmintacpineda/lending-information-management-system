@@ -1,8 +1,6 @@
 import { ipcMain, app } from 'electron';
-import path from 'path';
-import Borrower from '../../../models/borrower';
-import ContactNumber from '../../../models/contact_number';
-import Loan from '../../../models/loan';
+import models from '../../../models';
+
 import { uniqueId } from '../../helpers/generators';
 
 ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
@@ -13,7 +11,7 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
   let new_borrower_id = uniqueId();
   let loan_date = new Date(arg.loan_date).toISOString();
 
-  Borrower.create({
+  models.borrowers.create({
     id: new_borrower_id,
     firstname: arg.firstname,
     middlename: arg.middlename,
@@ -22,7 +20,7 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
     created_at,
     updated_at
   })
-  .then(new_borrower => Loan.create({
+  .then(new_borrower => models.loans.create({
     id: uniqueId(),
     borrower_id: new_borrower_id,
     loan_date,
@@ -42,7 +40,7 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
   }))
   .then(() => {
     if(arg.contact_numbers.filter(contact_number => contact_number.value.length).length > 0) {
-      return ContactNumber.bulkCreate(arg.contact_numbers.filter(contact_number => contact_number.value.length).map(contact_number => ({
+      return models.contact_numbers.bulkCreate(arg.contact_numbers.filter(contact_number => contact_number.value.length).map(contact_number => ({
         id: uniqueId(),
         borrower_id: new_borrower_id,
         number: contact_number.value,

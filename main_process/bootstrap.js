@@ -69,16 +69,14 @@ app.on('ready', () => {
   createSplashScreen();
 
   // check to see if sqlite file exists
-  const DB = new Database;
-
-  DB.checkConnection().then(() => {
-    DB.closeConnection();
+  Database.authenticate()
+  .then(() => {
     // if SQLite database exists create the main screen
     createMainScreen();
-  }).catch(() => {
-    DB.closeConnection();
+  })
+  .catch(err => {
     // show error message
-    dialog.showErrorBox('Missing Dependency', 'The SQLite Database located on database directory was not found. Please contact your developer for more information about this.');
+    dialog.showErrorBox('Missing Dependency', 'The SQLite Database located on database directory was not found. Please contact your developer for more information about this: ' + err);
     app.quit();
   });
 });

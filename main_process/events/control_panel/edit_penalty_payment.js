@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron';
-import PenaltyPayment from '../../../models/penalty_payment';
+import models from '../../../models';
 
 ipcMain.on('BORROWER_PROFILE_EDITPENALTYPAYMENT_SAVE', (event, args) => {
-  PenaltyPayment.update({
+  models.penalty_payments.update({
     amount: args.amount,
     date_paid: args.date_paid,
     updated_at: new Date().toISOString()
@@ -11,7 +11,7 @@ ipcMain.on('BORROWER_PROFILE_EDITPENALTYPAYMENT_SAVE', (event, args) => {
       id: args.id
     }
   })
-  .then(() => PenaltyPayment.findOne({
+  .then(() => models.penalty_payments.findOne({
     where: {
       id: args.id
     }

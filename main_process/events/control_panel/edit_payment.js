@@ -1,8 +1,8 @@
 import { ipcMain } from 'electron';
-import LoanPayment from '../../../models/loan_payment';
+import models from '../../../models';
 
 ipcMain.on('BORROWER_PROFILE_EPI_SEND', (event, arg) => {
-  LoanPayment.update({
+  models.loan_payments.update({
     amount: arg.amount,
     quarter: arg.quarter,
     payment_coverage: arg.payment_coverage,
@@ -14,7 +14,7 @@ ipcMain.on('BORROWER_PROFILE_EPI_SEND', (event, arg) => {
       id: arg.payment_id
     }
   })
-  .then(() => LoanPayment.findOne({
+  .then(() => models.loan_payments.findOne({
     where: {
       id: arg.payment_id
     }

@@ -1,10 +1,9 @@
 import { ipcMain } from 'electron';
-import path from 'path';
-import Admin from '../../../models/admin';
 import PasswordHash from 'password-hash';
+import models from '../../../models';
 
 ipcMain.on('LOGIN', (event, arg) => {
-  Admin.findAll({
+  models.admins.findAll({
     limit: 1,
     offset: 0
   }).then(user_data => {

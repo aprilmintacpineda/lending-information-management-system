@@ -1,44 +1,39 @@
 import { ipcMain } from 'electron';
-import Borrower from '../../../models/borrower';
-import ContactNumber from '../../../models/contact_number';
-import Loan from '../../../models/loan';
-import LoanPayment from '../../../models/loan_payment';
-import Penalty from '../../../models/penalty';
-import PenaltyPayment from '../../../models/penalty_payment';
+import models from '../../../models';
 
 ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
-  Borrower.findOne({
+  models.borrowers.findOne({
     where: {
       id: args.id
     },
     order: [
-      [ Loan, 'loan_date', 'desc' ]
+      [ models.loans, 'loan_date', 'desc' ]
     ],
     include: [
       // contact numbers
       {
-        model: ContactNumber,
+        model: models.contact_numbers,
         order: [ 'created_at', 'desc' ]
       },
       // loans
       {
-        model: Loan,
+        model: models.loans,
         order: [
           [ 'loan_date', 'desc' ]
         ],
         include: [
           {
-            model: LoanPayment,
+            model: models.loan_payments,
             order: [ 'created_at', 'desc' ]
           },
           // penalties
           {
-            model: Penalty,
+            model: models.penalties,
             order: [ 'created_at', 'desc' ],
             include: [
               // penalty_payments
               {
-                model: PenaltyPayment,
+                model: models.penalty_payments,
                 order: [ 'created_at', 'desc' ]
               }
             ]
