@@ -135,7 +135,18 @@ ipcMain.on('SEARCH_SUBMIT', (event, args) => {
               }
             }
           ]
-        }
+        },
+        include: [
+          {
+            model: models.loans,
+            include: [
+              {
+                model: models.loan_payments,
+                order: [ 'created_at', 'desc' ]
+              }
+            ]
+          }
+        ]
       })
       .catch(err => event.sender.send('SEARCH_SUBMIT_FAILED', {
         message: err.message
@@ -144,7 +155,13 @@ ipcMain.on('SEARCH_SUBMIT', (event, args) => {
         if(search_results.length) {
           event.sender.send('SEARCH_SUBMIT_SUCCESSFUL', {
             search_results: search_results.map(search_result => ({
-              ...search_result.dataValues
+              ...search_result.dataValues,
+              loan: {
+                ...search_result.loan.dataValues,
+                loan_payments: search_result.loan.loan_payments.map(loan_payment => ({
+                  ...loan_payment.dataValues
+                }))
+              }
             }))
           });
         } else {
