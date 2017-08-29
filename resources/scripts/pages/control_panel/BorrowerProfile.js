@@ -43,7 +43,7 @@ class BorrowerProfile extends Component {
         window.scrollTo(0, (this['loan_id_' + this.props.borrower_profile.hash.parent].offsetTop + this['penalty_id_' + this.props.borrower_profile.hash.value].offsetTop) - 15);
       }
 
-      this.props.removeHash();
+      setTimeout(() => this.props.removeHash(), 1000);
     }
   }
 
@@ -101,7 +101,7 @@ class BorrowerProfile extends Component {
     );
   }
 
-  showPenalty(penalty, penalty_index, app_path) {
+  showPenalty(penalty, penalty_index, app_path, loan_index) {
     return (
       <div>
         <div className="row">
@@ -1440,7 +1440,7 @@ class BorrowerProfile extends Component {
                           </li>
                         </ul>
                       : <div>
-                          {this.props.borrower_profile.hash.value == penalty.id?
+                          {this.props.borrower_profile.hash.value == penalty.id && !this.props.borrower_profile.hash.removed?
                             <CssTransitionGroup
                             key={loan_index}
                             transitionName="emphasize-background"
@@ -1448,9 +1448,9 @@ class BorrowerProfile extends Component {
                             transitionAppearTimeout={1000}
                             transitionEnterTimeout={1000}
                             transitionLeaveTimeout={1000}>
-                              {this.showPenalty(penalty, penalty_index, app_path)}
+                              {this.showPenalty(penalty, penalty_index, app_path, loan_index)}
                             </CssTransitionGroup>
-                          : this.showPenalty(penalty, penalty_index, app_path)}
+                          : this.showPenalty(penalty, penalty_index, app_path, loan_index)}
                         </div>}
                     </div>
                   )
@@ -1502,7 +1502,7 @@ class BorrowerProfile extends Component {
                 <Link className="default-btn-blue" to={'borrowers/' + this.props.params.id + '/new-loan'}>Add new loan</Link>
               </section>
 
-              {this.props.borrower_profile.data.loans.map((loan, loan_index) => this.props.borrower_profile.hash.value == loan.id?
+              {this.props.borrower_profile.data.loans.map((loan, loan_index) => this.props.borrower_profile.hash.value == loan.id && !this.props.borrower_profile.hash.removed?
                 <section ref={element => this['loan_id_' + loan.id] = element} key={loan_index}>
                   <CssTransitionGroup
                   key={loan_index}
@@ -1515,7 +1515,7 @@ class BorrowerProfile extends Component {
                   </CssTransitionGroup>
                 </section>
               : <section ref={element => this['loan_id_' + loan.id] = element} key={loan_index}>
-                {this.showLoanInformation(loan, loan_index, app_path)}
+                  {this.showLoanInformation(loan, loan_index, app_path)}
                 </section>
               )}
             </section>}

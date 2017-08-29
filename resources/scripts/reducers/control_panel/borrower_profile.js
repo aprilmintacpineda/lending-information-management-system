@@ -1419,7 +1419,7 @@ export default function borrower_profile(state = initial_state, action) {
             ...action.data,
             summary: getLoanSummary({...action.data}),
             edit: getInitialLoanEditFields(action.data)
-          }) : {...loans})
+          }) : {...loan})
         }
       }
 
