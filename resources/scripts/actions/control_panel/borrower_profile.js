@@ -491,3 +491,16 @@ export function changePenaltyPaymentEditSave(fields, penalty_payment_index, pena
     loan_index
   }
 }
+
+export function putHash(value) {
+  return {
+    type: 'BORROWER_PROFILE_HASH_PUT',
+    value
+  }
+}
+
+export function removeHash(value) {
+  return {
+    type: 'BORROWER_PROFILE_HASH_REMOVE'
+  }
+}

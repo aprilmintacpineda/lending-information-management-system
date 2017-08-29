@@ -10,6 +10,7 @@ import { currency } from '../../helpers/Numbers';
 // components
 import WithSidebar from '../../components/WithSidebar';
 import WithLabel from '../../components/WithLabel';
+import WithIcon from '../../components/WithIcon';
 import InputText from '../../components/forms/InputText';
 import InputButton from '../../components/forms/InputButton';
 import InputSelect from '../../components/forms/InputSelect';
@@ -17,6 +18,7 @@ import Modal from '../../components/Modal';
 // actions
 import * as dashboardActions from '../../actions/control_panel/dashboard';
 import * as searchActions from '../../actions/control_panel/search';
+import { putHash } from '../../actions/control_panel/borrower_profile';
 
 class Dashboard extends Component {
   componentWillMount() {
@@ -140,20 +142,144 @@ class Dashboard extends Component {
                         </WithLabel>
                       </div>
 
-                      <Link className="default-btn-blue" to={'/borrowers/'+ search_result.borrower_id +'/view#' + search_result.id}>View loan</Link>
+                      <div className="row">
+                        <h1>Borrower</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Trace ID">
+                          <p>{search_result.borrower.id}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Full name">
+                          <p>{search_result.borrower.firstname} {search_result.borrower.middlename} {search_result.borrower.surname}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Full name">
+                          {search_result.borrower.gender?
+                            <p>Male</p>
+                          : <p>Female</p>}
+                        </WithLabel>
+                      </div>
+
+                      <Link onClick={() => this.props.putHash(search_result.id)} className="default-btn-blue" to={'/borrowers/'+ search_result.borrower_id +'/view'}>View loan</Link>
                     </div>
                   )}
                 </div>
               : this.props.search.query.type == 'penalty'?
-                <div>
+                <div className="search-result-list">
                   {this.props.search.search_results.length > 1?
                     <h1>{this.props.search.search_results.length} penalties were found.</h1>
                   : <h1>{this.props.search.search_results.length} penalty was found.</h1>}
 
                   {this.props.search.search_results.map((search_result, search_result_index) => 
                     <div className="search-result-row" key={search_result_index}>
-                      
-                      <Link className="default-btn-blue" to={'/borrowers/'+ search_result.borrower_id +'/view#' + search_result.id}>View penalty</Link>
+                      <div className="row">
+                        <WithLabel label="Trace ID">
+                          <p>{search_result.id}</p>
+                        </WithLabel>
+                      </div>
+
+                      {search_result.was_waved?
+                        <div className="warning">
+                          <WithIcon icon={path.join(app_path, 'app/images/exclamation.png')}>
+                            <p className="title">NOTICE</p>
+                          </WithIcon>
+                          <p>This penalty has been waved.</p>
+                        </div>
+                      : null}
+
+                      <div className="row">
+                        <WithLabel label="Date given">
+                          <p>{toFormalDate(search_result.date_given)}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Remarks">
+                          <p>{search_result.remarks}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <h1>Penalty summary</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total penalty">
+                          <p>{currency(search_result.penalties_summary.total_penalty)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total amount paid">
+                          <p>{currency(search_result.penalties_summary.total_amount_paid)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Remaining balance">
+                          <p>{currency(search_result.penalties_summary.remaining_balance)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <h1>Loan summary</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Trace ID">
+                          <p>{search_result.loan.id}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total amount loan">
+                          <p>{currency(search_result.loan_payments_summary.total_loan)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total amount paid">
+                          <p>{currency(search_result.loan_payments_summary.total_amount_paid)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Remaining balance">
+                          <p>{currency(search_result.loan_payments_summary.remaining_balance)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <h1>Borrower</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Trace ID">
+                          <p>{search_result.loan.borrower.id}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Full name">
+                          <p>{search_result.loan.borrower.firstname} {search_result.loan.borrower.middlename} {search_result.loan.borrower.surname}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Gender">
+                          {search_result.loan.borrower.gender?
+                            <p>Male</p>
+                          : <p>Female</p>}
+                        </WithLabel>
+                      </div>
+
+                      <Link onClick={() => this.props.putHash(search_result.id)} className="default-btn-blue" to={'/borrowers/'+ search_result.loan.borrower.id +'/view#' + search_result.id}>View penalty</Link>
                     </div>
                   )}
                 </div>
@@ -253,5 +379,6 @@ export default connect(store => ({
   changeSearchString: searchActions.changeSearchString,
   changeSearchType: searchActions.changeSearchType,
   submit: searchActions.submit,
-  searchReset: searchActions.reset
+  searchReset: searchActions.reset,
+  putHash: putHash
 })(Dashboard);

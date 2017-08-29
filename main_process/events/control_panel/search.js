@@ -85,6 +85,10 @@ ipcMain.on('SEARCH_SUBMIT', (event, args) => {
                 order: [ 'created_at', 'desc' ]
               }
             ]
+          },
+          // borrowers
+          {
+            model: models.borrowers
           }
         ]
       })
@@ -96,6 +100,7 @@ ipcMain.on('SEARCH_SUBMIT', (event, args) => {
           event.sender.send('SEARCH_SUBMIT_SUCCESSFUL', {
             search_results: search_results.map(search_result => ({
               ...search_result.dataValues,
+              borrower: { ...search_result.borrower.dataValues },
               loan_payments: search_result.loan_payments.map(loan_payment => ({
                 ...loan_payment.dataValues
               })),
@@ -142,9 +147,16 @@ ipcMain.on('SEARCH_SUBMIT', (event, args) => {
             include: [
               {
                 model: models.loan_payments,
-                order: [ 'created_at', 'desc' ]
+                order: [ 'date_given', 'desc' ]
+              },
+              {
+                model: models.borrowers
               }
             ]
+          },
+          {
+            model: models.penalty_payments,
+            order: [ 'date_paid', 'desc' ]
           }
         ]
       })
@@ -156,8 +168,12 @@ ipcMain.on('SEARCH_SUBMIT', (event, args) => {
           event.sender.send('SEARCH_SUBMIT_SUCCESSFUL', {
             search_results: search_results.map(search_result => ({
               ...search_result.dataValues,
+              penalty_payments: search_result.penalty_payments.map(penalty_payment => ({
+                ...penalty_payment.dataValues
+              })),
               loan: {
                 ...search_result.loan.dataValues,
+                borrower: { ...search_result.loan.borrower.dataValues },
                 loan_payments: search_result.loan.loan_payments.map(loan_payment => ({
                   ...loan_payment.dataValues
                 }))

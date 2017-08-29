@@ -114,6 +114,20 @@ export default function search(state = initial_state, action) {
             message: null
           }
         }
+      } else if(state.query.type == 'penalty') {
+        return {
+          ...state,
+          search_results: action.search_results.map(search_result => ({
+            ...search_result,
+            loan_payments_summary: getLoanPaymentsSummary(search_result.loan),
+            penalties_summary: getPenaltySummary([search_result]),
+          })),
+          backend: {
+            processing: false,
+            status: 'successful',
+            message: null
+          }
+        }
       }
 
       return {

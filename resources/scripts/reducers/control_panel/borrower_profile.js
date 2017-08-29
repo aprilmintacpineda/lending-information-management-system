@@ -2335,6 +2335,22 @@ export default function borrower_profile(state = initial_state, action) {
           }) : {...loan})
         }
       }
+    case 'BORROWER_PROFILE_HASH_PUT':
+      return {
+        ...state,
+        hash: {
+          value: action.value,
+          removed: false
+        }
+      }
+    case 'BORROWER_PROFILE_HASH_REMOVE':
+      return {
+        ...state,
+        hash: {
+          value: state.hash.value,
+          removed: true
+        }
+      }
     case 'BORROWER_PROFILE_RESET':
       return {
         ...initial_state
