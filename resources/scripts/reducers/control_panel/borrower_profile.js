@@ -2340,6 +2340,7 @@ export default function borrower_profile(state = initial_state, action) {
         ...state,
         hash: {
           value: action.value,
+          parent: action.parent? action.parent : null,
           removed: false
         }
       }
@@ -2348,6 +2349,7 @@ export default function borrower_profile(state = initial_state, action) {
         ...state,
         hash: {
           value: state.hash.value,
+          parent: state.hash.parent,
           removed: true
         }
       }

@@ -279,7 +279,7 @@ class Dashboard extends Component {
                         </WithLabel>
                       </div>
 
-                      <Link onClick={() => this.props.putHash(search_result.id)} className="default-btn-blue" to={'/borrowers/'+ search_result.loan.borrower.id +'/view#' + search_result.id}>View penalty</Link>
+                      <Link onClick={() => this.props.putHash(search_result.id, search_result.loan.id)} className="default-btn-blue" to={'/borrowers/'+ search_result.loan.borrower.id +'/view#' + search_result.id}>View penalty</Link>
                     </div>
                   )}
                 </div>

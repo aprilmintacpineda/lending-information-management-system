@@ -40,7 +40,7 @@ class BorrowerProfile extends Component {
       if(this['loan_id_' + this.props.borrower_profile.hash.value]) {
         window.scrollTo(0, this['loan_id_' + this.props.borrower_profile.hash.value].offsetTop - 40);
       } else if(this['penalty_id_' + this.props.borrower_profile.hash.value]) {
-        window.scrollTo(0, (this['penalty_id_' + this.props.borrower_profile.hash.value].parentElement.offsetTop + this['penalty_id_' + this.props.borrower_profile.hash.value].offsetTop) - 15);
+        window.scrollTo(0, (this['loan_id_' + this.props.borrower_profile.hash.parent].offsetTop + this['penalty_id_' + this.props.borrower_profile.hash.value].offsetTop) - 15);
       }
 
       this.props.removeHash();
@@ -1338,7 +1338,7 @@ class BorrowerProfile extends Component {
                 transitionEnterTimeout={400}
                 transitionLeaveTimeout={400}>
                   {loan.penalties.length? loan.penalties.map((penalty, penalty_index) =>
-                    <div className="payment-container" key={loan.penalties.length - penalty_index}>
+                    <div ref={element => this['penalty_id_' + penalty.id] = element} className="payment-container" key={loan.penalties.length - penalty_index}>
                       {penalty.edit.shown?
                         <ul className="penalty-form">
                           <li>
@@ -1439,7 +1439,7 @@ class BorrowerProfile extends Component {
                             </div>
                           </li>
                         </ul>
-                      : <div ref={element => this['penalty_id_' + penalty.id] = element}>
+                      : <div>
                           {this.props.borrower_profile.hash.value == penalty.id?
                             <CssTransitionGroup
                             key={loan_index}

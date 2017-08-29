@@ -2,6 +2,7 @@ export default {
   data: null,
   hash: {
     value: null,
+    parent: null,
     removed: false
   },
   backend: {

@@ -492,10 +492,11 @@ export function changePenaltyPaymentEditSave(fields, penalty_payment_index, pena
   }
 }
 
-export function putHash(value) {
+export function putHash(target, parent) {
   return {
     type: 'BORROWER_PROFILE_HASH_PUT',
-    value
+    value: target,
+    parent
   }
 }
 
