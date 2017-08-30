@@ -5,7 +5,7 @@ import { remote } from 'electron';
 import { Link } from 'react-router';
 
 // helpers
-import { toFormalDate } from '../../helpers/DateTime';
+import { toFormalDate, monthList } from '../../helpers/DateTime';
 import { currency } from '../../helpers/Numbers';
 // components
 import WithSidebar from '../../components/WithSidebar';
@@ -279,15 +279,127 @@ class Dashboard extends Component {
                         </WithLabel>
                       </div>
 
-                      <Link onClick={() => this.props.putHash(search_result.id, search_result.loan.id)} className="default-btn-blue" to={'/borrowers/'+ search_result.loan.borrower.id +'/view#' + search_result.id}>View penalty</Link>
+                      <Link onClick={() => this.props.putHash(search_result.id, search_result.loan.id)} className="default-btn-blue" to={'/borrowers/'+ search_result.loan.borrower.id +'/view'}>View penalty</Link>
                     </div>
                   )}
                 </div>
               : this.props.search.query.type == 'loan-payment'?
-                <div>
+                <div className="search-result-list">
                   {this.props.search.search_results.length > 1?
                     <h1>{this.props.search.search_results.length} loan payments were found.</h1>
                   : <h1>{this.props.search.search_results.length} loan payment was found.</h1>}
+
+                  {this.props.search.search_results.map((search_result, search_result_index) => (
+                    <div className="search-result-row" key={search_result_index}>
+                      <div className="row">
+                        <WithLabel label="Trace ID">
+                          <p>{search_result.id}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Date paid">
+                          <p>{toFormalDate(search_result.date_paid)}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Amount">
+                          <p>{currency(search_result.amount)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      {search_result.period_paid == 'paid-in-full'?
+                        <div className="row">
+                          <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                            <p>Full payment</p>
+                          </WithIcon>
+                        </div>
+                      : <div className="multiple-rows">
+                          <div className="row">
+                            <WithLabel label="Month of">
+                              <p>{monthList()[new Date(search_result.period_paid).getMonth()]}</p>
+                            </WithLabel>
+                          </div>
+
+                          <div className="row">
+                            <WithLabel label="Payment coverage">
+                              <p>{search_result.payment_coverage == 'period-ony'? 'Period only' : 'Partial only'}</p>
+                            </WithLabel>
+                          </div>
+
+                          {search_result.quarter?
+                            <div className="row">
+                              <WithLabel label="Quarter">
+                                <p>{search_result.quarter == 1? '1st quarter' : '2nd quarter'}</p>
+                              </WithLabel>
+                            </div>
+                          : null}
+                        </div>}
+
+                      <div className="row">
+                        <h1>Loan summary</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total amount loan">
+                          <p>{currency(search_result.loan_payments_summary.total_loan)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total amount paid">
+                          <p>{currency(search_result.loan_payments_summary.total_amount_paid)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Remaining balance">
+                          <p>{currency(search_result.loan_payments_summary.remaining_balance)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <h1>Penalties summary</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total penalty">
+                          <p>{currency(search_result.penalties_summary.total_penalty)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total amount paid">
+                          <p>{currency(search_result.penalties_summary.total_amount_paid)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Remaining balance">
+                          <p>{currency(search_result.penalties_summary.remaining_balance)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <h1>Borrower</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Full name">
+                          <p>{search_result.loan.borrower.firstname} {search_result.loan.borrower.middlename} {search_result.loan.borrower.surname}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Gender">
+                          <p>{search_result.loan.borrower.gender? 'Male' : 'Female'}</p>
+                        </WithLabel>
+                      </div>
+
+                      <Link onClick={() => this.props.putHash(search_result.id, search_result.loan.id)} className="default-btn-blue" to={'/borrowers/'+ search_result.loan.borrower.id +'/view'}>View payment</Link>
+                    </div>
+                  ))}
                 </div>
               : this.props.search.query.type == 'penalty-payment'?
                 <div>

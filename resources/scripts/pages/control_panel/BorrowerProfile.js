@@ -41,6 +41,8 @@ class BorrowerProfile extends Component {
         window.scrollTo(0, this['loan_id_' + this.props.borrower_profile.hash.value].offsetTop - 40);
       } else if(this['penalty_id_' + this.props.borrower_profile.hash.value]) {
         window.scrollTo(0, (this['loan_id_' + this.props.borrower_profile.hash.parent].offsetTop + this['penalty_id_' + this.props.borrower_profile.hash.value].offsetTop) - 15);
+      } else if(this['loan_payment_id_' + this.props.borrower_profile.hash.value]) {
+        window.scrollTo(0, (this['loan_id_' + this.props.borrower_profile.hash.parent].offsetTop + this['loan_payment_id_' + this.props.borrower_profile.hash.value].offsetTop) - 15);
       }
 
       setTimeout(() => this.props.removeHash(), 1000);
@@ -1040,8 +1042,8 @@ class BorrowerProfile extends Component {
                   transitionEnterTimeout={400}
                   transitionLeaveTimeout={400}>
                     {loan.loan_payments.length? loan.loan_payments.map((loan_payment, loan_payment_index) =>
-                      loan_payment.edit.shown?
-                        <div className="payment-container" key={loan.loan_payments.length - loan_payment_index}>
+                      <div ref={element => this['loan_payment_id_' + loan_payment.id] = element} className="payment-container" key={loan.loan_payments.length - loan_payment_index}>
+                        {loan_payment.edit.shown?
                           <ul className="payment-edit-fields">
                             <li>
                               Amount paid
@@ -1193,18 +1195,20 @@ class BorrowerProfile extends Component {
                                 </WithIcon>
                               </li>
                             : null}
-                          </ul>
-                        </div> : 
-                        <div className="payment-container" key={loan.loan_payments.length - loan_payment_index}>
-                          {this.props.borrower_profile.hash.value == loan_payment.id?
-                            <CssTransitionGroup
-                            transitionName="emphasize-background"
-                            transitionAppear={true}
-                            transitionAppearTimeout={400}>
-                              {this.showLoanPayment(loan, loan_payment, loan_payment_index, loan_index, app_path)}
-                            </CssTransitionGroup>
-                          : this.showLoanPayment(loan, loan_payment, loan_payment_index, loan_index, app_path)}
-                        </div>)
+                          </ul> : 
+                          <div>
+                            {this.props.borrower_profile.hash.value == loan_payment.id && !this.props.borrower_profile.hash.removed?
+                              <CssTransitionGroup
+                              transitionName="emphasize-background"
+                              transitionAppear={true}
+                              transitionAppearTimeout={1000}
+                              transitionEnterTimeout={400}
+                              transitionLeaveTimeout={400}>
+                                {this.showLoanPayment(loan, loan_payment, loan_payment_index, loan_index, app_path)}
+                              </CssTransitionGroup>
+                            : this.showLoanPayment(loan, loan_payment, loan_payment_index, loan_index, app_path)}
+                          </div>}
+                      </div>)
                     : <div className="row">
                         <p>No payments has been made since <strong>{toFormalDate(loan.loan_date)}</strong></p>
                       </div>}

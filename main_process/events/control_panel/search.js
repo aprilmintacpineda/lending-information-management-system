@@ -218,6 +218,9 @@ ipcMain.on('SEARCH_SUBMIT', (event, args) => {
                 model: models.penalty_payments,
                 order: [ 'date_paid', 'desc' ]
               }]
+            },
+            {
+              model: models.borrowers
             }
           ]
         }]
@@ -240,7 +243,8 @@ ipcMain.on('SEARCH_SUBMIT', (event, args) => {
                 })),
                 loan_payments: search_result.loan.loan_payments.map(loan_payment => ({
                   ...loan_payment.dataValues
-                }))
+                })),
+                borrower: { ...search_result.loan.borrower.dataValues }
               }
             }))
           });
