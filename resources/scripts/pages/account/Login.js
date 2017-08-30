@@ -59,7 +59,7 @@ class Login extends Component {
               <InputText
               password={true}
               value={this.props.login_info.password.value}
-              placeholder="Desired password..."
+              placeholder="Admin password..."
               onChange={this.props.changePassword}
               errors={this.props.login_info.password.errors}
               disabled={this.props.login_info.backend.processing} />
