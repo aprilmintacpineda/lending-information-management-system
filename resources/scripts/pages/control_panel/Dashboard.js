@@ -304,7 +304,7 @@ class Dashboard extends Component {
             <ul>
               <li>
                 <InputText
-                placeholder="Start typing..."
+                placeholder="Trace ID..."
                 onChange={this.props.changeSearchString}
                 disabled={this.props.search.backend.processing}
                 value={this.props.search.query.value}
@@ -325,7 +325,7 @@ class Dashboard extends Component {
               </li>
               <li>
                 <InputButton
-                value="Start search"
+                value="Search"
                 onClick={() => this.props.submit({
                   search_query: this.props.search.query.value,
                   at: this.props.search.query.type
