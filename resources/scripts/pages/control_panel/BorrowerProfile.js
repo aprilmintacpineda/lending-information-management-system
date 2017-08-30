@@ -43,10 +43,52 @@ class BorrowerProfile extends Component {
         window.scrollTo(0, (this['loan_id_' + this.props.borrower_profile.hash.parent].offsetTop + this['penalty_id_' + this.props.borrower_profile.hash.value].offsetTop) - 15);
       } else if(this['loan_payment_id_' + this.props.borrower_profile.hash.value]) {
         window.scrollTo(0, (this['loan_id_' + this.props.borrower_profile.hash.parent].offsetTop + this['loan_payment_id_' + this.props.borrower_profile.hash.value].offsetTop) - 15);
+      } else if(this['penalty_payment_id_' + this.props.borrower_profile.hash.value]) {
+        window.scrollTo(0, (this['loan_id_' + this.props.borrower_profile.hash.parent].offsetTop + this['penalty_payment_id_' + this.props.borrower_profile.hash.value].offsetTop) - 15);
       }
 
       setTimeout(() => this.props.removeHash(), 1000);
     }
+  }
+
+  showPenaltyPayment(penalty_payment, penalty_payment_index, app_path) {
+    return (
+      <div>
+        <div className="row">
+          <WithLabel label="Trace ID">
+            <p>{penalty_payment.id}</p>
+          </WithLabel>
+        </div>
+
+        <div className="row">
+          <WithLabel label="Amount">
+            <p>{currency(penalty_payment.amount)} Pesos</p>
+          </WithLabel>
+        </div>
+
+        <div className="row">
+          <WithLabel label="Date paid">
+            <p>{toFormalDate(penalty_payment.date_paid)}</p>
+          </WithLabel>
+        </div>
+
+        {penalty_payment.edit.backend.status == 'successful'?
+          <div className="row">
+            <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+              <p className="okay">Changes saved successfully.</p>
+            </WithIcon>
+          </div>
+        : null}
+
+        <div className="row">
+          <a
+          className={!penalty_payment.edit.backend.processing? 'default-btn-blue' : 'default-btn-blue disabled'}
+          onClick={() => penalty_payment.edit.backend.processing? false : this.props.togglePenaltyPaymentEdit(true, penalty_payment_index, penalty_index, loan_index)}>
+            Edit payment information
+          </a>
+        </div>
+      </div>
+    );
   }
 
   showLoanPayment(loan, loan_payment, loan_payment_index, loan_index, app_path) {
@@ -303,7 +345,7 @@ class BorrowerProfile extends Component {
         transitionEnterTimeout={400}
         transitionLeaveTimeout={400}>
           {penalty.penalty_payments.length? penalty.penalty_payments.map((penalty_payment, penalty_payment_index) =>
-            <div className="payment-container" key={penalty.penalty_payments.length - penalty_payment_index}>
+            <div ref={element => this['penalty_payment_id_' + penalty_payment.id] = element} className="payment-container" key={penalty.penalty_payments.length - penalty_payment_index}>
               {penalty_payment.edit.shown?
                 <ul className="penalty-form">
                   <li>
@@ -399,41 +441,16 @@ class BorrowerProfile extends Component {
                     </li>
                   : null}
                 </ul>
-              : <div>
-                  <div className="row">
-                    <WithLabel label="Trace ID">
-                      <p>{penalty_payment.id}</p>
-                    </WithLabel>
-                  </div>
-
-                  <div className="row">
-                    <WithLabel label="Amount">
-                      <p>{currency(penalty_payment.amount)} Pesos</p>
-                    </WithLabel>
-                  </div>
-
-                  <div className="row">
-                    <WithLabel label="Date paid">
-                      <p>{toFormalDate(penalty_payment.date_paid)}</p>
-                    </WithLabel>
-                  </div>
-
-                  {penalty_payment.edit.backend.status == 'successful'?
-                    <div className="row">
-                      <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
-                        <p className="okay">Changes saved successfully.</p>
-                      </WithIcon>
-                    </div>
-                  : null}
-
-                  <div className="row">
-                    <a
-                    className={!penalty_payment.edit.backend.processing? 'default-btn-blue' : 'default-btn-blue disabled'}
-                    onClick={() => penalty_payment.edit.backend.processing? false : this.props.togglePenaltyPaymentEdit(true, penalty_payment_index, penalty_index, loan_index)}>
-                      Edit payment information
-                    </a>
-                  </div>
-                </div>}
+              : penalty_payment.id == this.props.borrower_profile.hash.value && !this.props.borrower_profile.hash.removed?
+                <CssTransitionGroup
+                transitionName="emphasize-background"
+                transitionAppear={true}
+                transitionAppearTimeout={1000}
+                transitionEnterTimeout={400}
+                transitionLeaveTimeout={400}>
+                  {this.showPenaltyPayment(penalty_payment, penalty_payment_index, app_path)}
+                </CssTransitionGroup>
+              : this.showPenaltyPayment(penalty_payment, penalty_payment_index, app_path)}
             </div>
           ) : <p>No payments since <strong>{toFormalDate(penalty.date_given)}</strong></p>}
         </CssTransitionGroup>

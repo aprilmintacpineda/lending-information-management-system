@@ -51,6 +51,12 @@ class Dashboard extends Component {
                   {this.props.search.search_results.map((search_result, search_result_index) =>
                     <div className="search-result-row" key={search_result_index}>
                       <div className="row">
+                        <WithLabel label="Trace ID">
+                          <p>{search_result.id}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
                         <WithLabel label="Full name">
                           <p>{search_result.firstname} {search_result.middlename} {search_result.surname}</p>
                         </WithLabel>
@@ -206,28 +212,6 @@ class Dashboard extends Component {
                       </div>
 
                       <div className="row">
-                        <h1>Penalty summary</h1>
-                      </div>
-
-                      <div className="row">
-                        <WithLabel label="Total penalty">
-                          <p>{currency(search_result.penalties_summary.total_penalty)} Pesos</p>
-                        </WithLabel>
-                      </div>
-
-                      <div className="row">
-                        <WithLabel label="Total amount paid">
-                          <p>{currency(search_result.penalties_summary.total_amount_paid)} Pesos</p>
-                        </WithLabel>
-                      </div>
-
-                      <div className="row">
-                        <WithLabel label="Remaining balance">
-                          <p>{currency(search_result.penalties_summary.remaining_balance)} Pesos</p>
-                        </WithLabel>
-                      </div>
-
-                      <div className="row">
                         <h1>Loan summary</h1>
                       </div>
 
@@ -252,6 +236,28 @@ class Dashboard extends Component {
                       <div className="row">
                         <WithLabel label="Remaining balance">
                           <p>{currency(search_result.loan_payments_summary.remaining_balance)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <h1>Penalty summary</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total penalty">
+                          <p>{currency(search_result.penalties_summary.total_penalty)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total amount paid">
+                          <p>{currency(search_result.penalties_summary.total_amount_paid)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Remaining balance">
+                          <p>{currency(search_result.penalties_summary.remaining_balance)} Pesos</p>
                         </WithLabel>
                       </div>
 
@@ -304,7 +310,7 @@ class Dashboard extends Component {
                       </div>
 
                       <div className="row">
-                        <WithLabel label="Amount">
+                        <WithLabel label="Amount paid">
                           <p>{currency(search_result.amount)} Pesos</p>
                         </WithLabel>
                       </div>
@@ -339,6 +345,12 @@ class Dashboard extends Component {
 
                       <div className="row">
                         <h1>Loan summary</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Trace ID">
+                          <p>{search_result.loan.id}</p>
+                        </WithLabel>
                       </div>
 
                       <div className="row">
@@ -386,6 +398,12 @@ class Dashboard extends Component {
                       </div>
 
                       <div className="row">
+                        <WithLabel label="Trace ID">
+                          <p>{search_result.loan.borrower.id}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
                         <WithLabel label="Full name">
                           <p>{search_result.loan.borrower.firstname} {search_result.loan.borrower.middlename} {search_result.loan.borrower.surname}</p>
                         </WithLabel>
@@ -402,10 +420,106 @@ class Dashboard extends Component {
                   ))}
                 </div>
               : this.props.search.query.type == 'penalty-payment'?
-                <div>
+                <div className="search-result-list">
                   {this.props.search.search_results.length > 1?
                     <h1>{this.props.search.search_results.length} penalty payments were found.</h1>
                   : <h1>{this.props.search.search_results.length} penalty payment was found.</h1>}
+
+                  {this.props.search.search_results.map((search_result, search_result_index) => (
+                    <div className="search-result-row" key={search_result_index}>
+                      <div className="row">
+                        <WithLabel label="Trace ID">
+                          <p>{search_result.id}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Date paid">
+                          <p>{toFormalDate(search_result.date_paid)}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Amount paid">
+                          <p>{currency(search_result.amount)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <h1>Loan summary</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Trace ID">
+                          <p>{search_result.penalty.loan.id}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total loan">
+                          <p>{currency(search_result.loan_payments_summary.total_loan)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total amount paid">
+                          <p>{currency(search_result.loan_payments_summary.total_amount_paid)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Remaining balance">
+                          <p>{currency(search_result.loan_payments_summary.remaining_balance)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <h1>Penalties summary</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total penalties">
+                          <p>{currency(search_result.penalties_summary.total_penalty)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Total amount paid">
+                          <p>{currency(search_result.penalties_summary.total_amount_paid)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Remaining balance">
+                          <p>{currency(search_result.penalties_summary.remaining_balance)} Pesos</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <h1>Borrower</h1>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Trace ID">
+                          <p>{search_result.penalty.loan.borrower.id}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Full name">
+                          <p>{search_result.penalty.loan.borrower.firstname} {search_result.penalty.loan.borrower.middlename} {search_result.penalty.loan.borrower.surname}</p>
+                        </WithLabel>
+                      </div>
+
+                      <div className="row">
+                        <WithLabel label="Gender">
+                          <p>{search_result.penalty.loan.borrower.gender? 'Male' : 'Female'}</p>
+                        </WithLabel>
+                      </div>
+
+                      <Link onClick={() => this.props.putHash(search_result.id, search_result.penalty.loan.id)} className="default-btn-blue" to={'/borrowers/'+ search_result.penalty.loan.borrower.id +'/view'}>View payment</Link>
+                    </div>
+                  ))}
                 </div>
               : null}
             </Modal>
