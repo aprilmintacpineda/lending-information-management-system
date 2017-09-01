@@ -519,6 +519,8 @@ class BorrowerProfile extends Component {
   }
 
   showLoanInformation(loan, loan_index, app_path) {
+    console.log(this.props.borrower_profile);
+
     return (
       <div>
         <h1 className="loan-date-h1">{toFormalDate(loan.loan_date)}</h1>
@@ -774,7 +776,7 @@ class BorrowerProfile extends Component {
                 {!loan.fully_paid?
                   <div className="row">
                     <WithLabel label="Next due date">
-                      <p>{loan.loan_payments.length? getFormalDueDate(loan.loan_payments[0].period_paid) : getFormalDueDate(loan.loan_date)}</p>
+                      <p>{getFormalDueDate(loan)}</p>
                     </WithLabel>
                   </div>
                 : null}
@@ -997,20 +999,6 @@ class BorrowerProfile extends Component {
                             })()}
                           </InputSelect>
                         </li>
-                        <li>
-                          For the quarter of
-                          <InputSelect
-                          onChange={value => this.props.changePeriodQuarter(value, loan_index)}
-                          value={loan.payment_method != 2? '' : loan.payment_fields.period.quarter}
-                          disabled={loan.payment_fields.backend.processing || loan.payment_method != 2}
-                          errors={[]}>
-                            {loan.payment_method != 2?
-                              <option>N/A</option>
-                            : null}
-                            <option value="q1">1st Quarter</option>
-                            <option value="q2">2nd Quarter</option>
-                          </InputSelect>
-                        </li>
                         <li className="select-collection">
                           <p>Date paid</p>
                           <InputSelect
@@ -1058,18 +1046,6 @@ class BorrowerProfile extends Component {
 
                               return years;
                             })()}
-                          </InputSelect>
-                        </li>
-                        <li>
-                          Payment coverage
-                          <InputSelect
-                          onChange={value => this.props.changePaymentType(value, loan_index)}
-                          value={loan.payment_fields.amount.type}
-                          disabled={loan.payment_fields.backend.processing}
-                          errors={[]}>
-                            <option value="period-only">For the period only</option>
-                            <option value="partial-only">Partial payment</option>
-                            <option value="paid-in-full">Full payment</option>
                           </InputSelect>
                         </li>
                         <li>
@@ -1165,20 +1141,6 @@ class BorrowerProfile extends Component {
                                 })()}
                               </InputSelect>
                             </li>
-                            <li>
-                              For the quarter of
-                              <InputSelect
-                              onChange={value => this.props.changePeriodQuarter(value, loan_payment_index)}
-                              value={loan.payment_method != 2? '' : loan_payment.edit.period.quarter}
-                              disabled={loan_payment.edit.backend.processing || loan.payment_method != 2}
-                              errors={[]}>
-                                {loan.payment_method != 2?
-                                  <option>N/A</option>
-                                : null}
-                                <option value="q1">1st Quarter</option>
-                                <option value="q2">2nd Quarter</option>
-                              </InputSelect>
-                            </li>
                             <li className="select-collection">
                               <p>Date paid</p>
                               <InputSelect
@@ -1226,18 +1188,6 @@ class BorrowerProfile extends Component {
 
                                   return years;
                                 })()}
-                              </InputSelect>
-                            </li>
-                            <li>
-                              Payment coverage
-                              <InputSelect
-                              onChange={value => this.props.editPaymentInformationPaymentType(value, loan_payment_index, loan_index)}
-                              value={loan_payment.edit.amount.type}
-                              disabled={loan_payment.edit.backend.processing}
-                              errors={[]}>
-                                <option value="period-only">For the period only</option>
-                                <option value="partial-only">Partial payment</option>
-                                <option value="paid-in-full">Full payment</option>
                               </InputSelect>
                             </li>
                             <li>
@@ -1547,8 +1497,6 @@ class BorrowerProfile extends Component {
   }
 
   render() {
-    console.log(this.props.borrower_profile);
-
     let app_path = remote.app.getAppPath();
 
     return (

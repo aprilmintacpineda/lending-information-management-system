@@ -18,14 +18,7 @@ module.exports = {
       },
       period_paid: {
         type: Sequelize.DATE,
-        allowNull: false
-      },
-      payment_coverage: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      quarter: {
-        type: Sequelize.STRING,
+        allowNull: true,
         defaultValue: null
       },
       date_paid: {

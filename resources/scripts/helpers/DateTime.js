@@ -50,9 +50,27 @@ export function toFormalDate(timestamp) {
   return months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
 }
 
-export function getFormalDueDate(timestamp) {
-  let date = new Date(timestamp);
-  return months[date.getMonth() + 1] + ' ' + date.getDate() + ', ' + date.getFullYear();
+export function getFormalDueDate(loan) {
+  let date;
+
+  if(loan.loan_payments.length) {
+    date = new Date(loan.loan_payments[0].date_paid);
+  } else {
+    date = new Date(loan.loan_date);
+  }
+
+  if(loan.payment_method == 2) {
+    // semi monthly
+    date = new Date(date.getTime() + 1296000000);
+  } else if(loan.payment_method == 1) {
+    // monthly
+    date = new Date(months[date.getMonth() + 1] + ' ' + date.getDate() + ', ' + date.getFullYear());
+  } else {
+    // daily
+    date = new Date(date.getTime() + 86400000);
+  }
+
+  return months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
 }
 
 export function toUnixTimestamp(timestamp) {

@@ -15,14 +15,7 @@ export default (sequelize, DataTypes) => {
     },
     period_paid: {
       type: DataTypes.DATE,
-      allowNull: false
-    },
-    payment_coverage: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    quarter: {
-      type: DataTypes.STRING,
+      allowNull: true,
       defaultValue: null
     },
     date_paid: {

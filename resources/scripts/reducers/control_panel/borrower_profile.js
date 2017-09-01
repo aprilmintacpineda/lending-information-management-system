@@ -9,7 +9,6 @@ import {
   validateLoanDate,
   validatePaymentMethod,
   validateAmountPaid,
-  validatePaymentType,
   validatePhoneNumber,
   validateAmount,
   validateRemarks
@@ -64,12 +63,10 @@ function getInitialPaymentFields(loan) {
     shown: false,
     period: {
       month: loan.loan_payments.length? monthList()[new Date(loan.loan_payments[0].period_paid).getMonth() + 1] : monthList()[new Date(loan.loan_date).getMonth() + 1],
-      year: new Date().getFullYear(),
-      quarter: loan.payment_method != 2? null : loan.loan_payments[0].quarter == 'q1'? 'q2' : 'q1'
+      year: new Date().getFullYear()
     },
     amount: {
       value: '',
-      type: 'period-only',
       errors: []
     },
     date_paid: {
@@ -104,12 +101,10 @@ function getInitialPaymentEditFields(payment) {
       shown: false,
       period: {
         month: monthList()[new Date(payment.period_paid).getMonth()],
-        year: new Date(payment.period_paid).getFullYear(),
-        quarter: payment.quarter
+        year: new Date(payment.period_paid).getFullYear()
       },
       amount: {
         value: payment.amount,
-        type: payment.payment_coverage,
         errors: []
       },
       date_paid: {
@@ -681,28 +676,6 @@ export default function borrower_profile(state = initial_state, action) {
           })
         }
       }
-    case 'BORROWER_PROFILE_CPQ':
-      new_state = {
-        ...state,
-        data: {
-          ...state.data,
-          loans: alterPaymentFields(state.data.loans, action.index, {
-            period: {
-              quarter: action.quarter
-            }
-          })
-        }
-      }
-
-      return {
-        ...new_state,
-        data: {
-          ...state.data,
-          loans: alterPaymentFields(new_state.data.loans, action.index, {
-            allow_submit: allowLoanPaymentFieldsSubmit(new_state.data.loans[action.index].payment_fields)
-          })
-        }
-      }
     case 'BORROWER_PROFILE_CAP':
       new_state = {
         ...state,
@@ -712,29 +685,6 @@ export default function borrower_profile(state = initial_state, action) {
             amount: {
               value: action.value,
               errors: validateAmountPaid(action.value)
-            }
-          })
-        }
-      }
-
-      return {
-        ...new_state,
-        data: {
-          ...new_state.data,
-          loans: alterPaymentFields(new_state.data.loans, action.index, {
-            allow_submit: allowLoanPaymentFieldsSubmit(new_state.data.loans[action.index].payment_fields)
-          })
-        }
-      }
-    case 'BORROWER_PROFILE_CPT':
-      new_state = {
-        ...state,
-        data: {
-          ...state.data,
-          loans: alterPaymentFields(state.data.loans, action.index, {
-            amount: {
-              type: action.payment_type,
-              errors: validatePaymentType(action.payment_type)
             }
           })
         }
@@ -984,34 +934,6 @@ export default function borrower_profile(state = initial_state, action) {
               period: {
                 month: action.value,
                 date: 1
-              }
-            })
-          }): ({...loan}))
-        }
-      }
-
-      return {
-        ...new_state,
-        data: {
-          ...new_state.data,
-          loans: new_state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
-            ...loan,
-            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
-              allow_submit: allowPaymentsEditFieldsSubmit(loan.loan_payments.filter((payment, payment_index) => payment_index == action.payment_index)[0].edit)
-            })
-          }): ({...loan}))
-        }
-      }
-    case 'BORROWER_PROFILE_EPIPT':
-      new_state = {
-        ...state,
-        data: {
-          ...state.data,
-          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
-            ...loan,
-            loan_payments: alterPaymentEditFields(loan.loan_payments, action.payment_index, {
-              amount: {
-                type: action.value
               }
             })
           }): ({...loan}))

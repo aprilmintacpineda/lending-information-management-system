@@ -332,14 +332,6 @@ class Dashboard extends Component {
                               <p>{search_result.payment_coverage == 'period-ony'? 'Period only' : 'Partial only'}</p>
                             </WithLabel>
                           </div>
-
-                          {search_result.quarter?
-                            <div className="row">
-                              <WithLabel label="Quarter">
-                                <p>{search_result.quarter == 1? '1st quarter' : '2nd quarter'}</p>
-                              </WithLabel>
-                            </div>
-                          : null}
                         </div>}
 
                       <div className="row">
