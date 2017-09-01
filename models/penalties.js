@@ -26,6 +26,11 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       defaultValue: null
     },
+    wave_remarks: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null
+    },
     date_given: {
       type: DataTypes.DATE,
       allowNull: false

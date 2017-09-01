@@ -564,6 +564,18 @@ export default function borrower_profile(state = initial_state, action) {
             penalty_fields: getInitialPenaltyFields(),
             penalties: loan.penalties.map(penalty => ({
               ...penalty,
+              wave: {
+                remarks: {
+                  errors: [],
+                  value: ''
+                },
+                shown: false,
+                backend: {
+                  processing: false,
+                  status: null,
+                  message: null
+                }
+              },
               edit: getInitialPenaltyEditFields(penalty),
               summary: getPenaltySummary(penalty),
               penalty_payment_fields: getInitialPenaltyPaymentFields(),
@@ -1614,7 +1626,20 @@ export default function borrower_profile(state = initial_state, action) {
               edit: getInitialPenaltyEditFields(penalty),
               summary: getPenaltySummary(penalty),
               penalty_payment_fields: getInitialPenaltyPaymentFields(),
-              penalty_payments: []
+              penalty_payments: [],
+              wave: {
+                remarks: {
+                  value: '',
+                  errors: []
+                },
+                shown: false,
+                backend: {
+                  processing: false,
+                  status: 'successful',
+                  message: null,
+                  allow_submit: false
+                }
+              }
             }): {...penalty})
           }): {...loan})
         }
@@ -2067,6 +2092,19 @@ export default function borrower_profile(state = initial_state, action) {
             penalties: loan.penalties.map((penalty, penalty_index) => penalty_index == action.penalty_index? ({
               ...penalty,
               ...action.data,
+              wave: {
+                remarks: {
+                  value: '',
+                  errors: []
+                },
+                shown: false,
+                backend: {
+                  processing: false,
+                  status: 'successful',
+                  message: null,
+                  allow_submit: false
+                }
+              },
               edit: getInitialPenaltyEditFields(action.data),
               summary: getPenaltySummary({
                 ...penalty,
@@ -2351,6 +2389,133 @@ export default function borrower_profile(state = initial_state, action) {
           value: state.hash.value,
           parent: state.hash.parent,
           removed: true
+        }
+      }
+    case 'BORROWER_PROFILE_WAVE_PENALTY_TOGGLE':
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: loan.penalties.map((penalty, penalty_index) => penalty_index == action.penalty_index? ({
+              ...penalty,
+              wave: {
+                remarks: {
+                  value: '',
+                  errors: []
+                },
+                shown: !penalty.wave.shown,
+                backend: {
+                  processing: false,
+                  status: null,
+                  message: null
+                }
+              }
+            }): {...penalty})
+          }): {...loan})
+        }
+      }
+    case 'BORROWER_PROFILE_WAVE_PENALTY_CHANGE_REMARKS':
+      let errors = validateRemarks(action.value);
+
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: loan.penalties.map((penalty, penalty_index) => penalty_index == action.penalty_index? ({
+              ...penalty,
+              wave: {
+                remarks: {
+                  errors,
+                  value: action.value
+                },
+                shown: penalty.wave.shown,
+                backend: {
+                  processing: false,
+                  status: null,
+                  message: null,
+                  allow_submit: errors.length? false : true
+                }
+              }
+            }): {...penalty})
+          }): {...loan})
+        }
+      }
+    case '_BORROWER_PROFILE_WAVE_SUBMIT':
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: loan.penalties.map((penalty, penalty_index) => penalty_index == action.penalty_index? ({
+              ...penalty,
+              wave: {
+                ...penalty.wave,
+                backend: {
+                  ...penalty.wave.backend,
+                  processing: true,
+                  status: null,
+                  message: null
+                }
+              }
+            }): {...penalty})
+          }): {...loan})
+        }
+      }
+    case 'BORROWER_PROFILE_WAVE_SUBMIT_SUCCESSFUL':
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: loan.penalties.map((penalty, penalty_index) => penalty_index == action.penalty_index? ({
+              ...action.updated_penalty,
+              edit: getInitialPenaltyEditFields(action.updated_penalty),
+              summary: getPenaltySummary(action.updated_penalty),
+              penalty_payment_fields: getInitialPenaltyPaymentFields(),
+              penalty_payments: getInitialPenaltyPaymentEditFields(action.updated_penalty.penalty_payments),
+              wave: {
+                remarks: {
+                  value: '',
+                  errors: []
+                },
+                shown: false,
+                backend: {
+                  processing: false,
+                  status: 'successful',
+                  message: null,
+                  allow_submit: false
+                }
+              }
+            }): {...penalty})
+          }): {...loan})
+        }
+      }
+    case 'BORROWER_PROFILE_WAVE_SUBMIT_FAILED':
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          loans: state.data.loans.map((loan, loan_index) => loan_index == action.loan_index? ({
+            ...loan,
+            penalties: loan.penalties.map((penalty, penalty_index) => penalty_index == action.penalty_index? ({
+              ...penalty,
+              wave: {
+                ...penalty.wave,
+                backend: {
+                  ...penalty.wave.backend,
+                  processing: false,
+                  status: 'failed',
+                  message: action.message,
+                }
+              }
+            }): {...penalty})
+          }): {...loan})
         }
       }
     case 'BORROWER_PROFILE_RESET':

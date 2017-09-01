@@ -191,11 +191,10 @@ class Dashboard extends Component {
                       </div>
 
                       {search_result.was_waved?
-                        <div className="warning">
+                        <div className="row">
                           <WithIcon icon={path.join(app_path, 'app/images/exclamation.png')}>
-                            <p className="title">NOTICE</p>
+                            <p>This penalty has been waved.</p>
                           </WithIcon>
-                          <p>This penalty has been waved.</p>
                         </div>
                       : null}
 

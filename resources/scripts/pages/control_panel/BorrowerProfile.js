@@ -155,11 +155,10 @@ class BorrowerProfile extends Component {
         </div>
 
         {penalty.was_waved?
-          <div className="warning">
+          <div className="row">
             <WithIcon icon={path.join(app_path, 'app/images/exclamation.png')}>
-              <p className="title">NOTICE</p>
+              <p>This penalty has been waived.</p>
             </WithIcon>
-            <p>This penalty has been waved.</p>
           </div>
         : <div className="row">
             {!penalty.summary.remaining_balance?
@@ -212,7 +211,45 @@ class BorrowerProfile extends Component {
             </div>
           : null}
 
-          {!penalty.penalty_payment_fields.shown?
+          {penalty.wave.shown?
+            <ul className="penalty-waiving-form">
+              <li>
+                Remarks
+                <WithIcon icon={path.join(app_path, 'app/images/information.png')}>
+                  <p>A short description for waving this penalty.</p>
+                </WithIcon>
+                <InputText
+                value={penalty.wave.remarks.value}
+                placeholder="Remarks..."
+                onChange={value => this.props.wavePenaltyChangeRemarks(value, penalty_index, loan_index)}
+                errors={penalty.wave.remarks.errors}
+                disabled={penalty.wave.backend.processing} />
+              </li>
+              <li>
+                <div className="buttons">
+                  <InputButton
+                  value="Waive this penalty"
+                  onClick={() => this.props.wavePenaltySubmit(penalty.id, penalty_index, loan_index, penalty.wave.remarks.value)}
+                  sending={penalty.wave.backend.processing}
+                  disabled={!penalty.wave.backend.processing && penalty.wave.backend.allow_submit? false: true}
+                  errors={[]} />
+                </div>
+
+                <div className="buttons">
+                  <a
+                  className={penalty.wave.backend.processing? 'default-btn-red disabled': 'default-btn-red'}
+                  onClick={() => penalty.wave.backend.processing? false : this.props.wavePenaltyToggle(penalty_index, loan_index)}>
+                    Cancel
+                  </a>
+                </div>
+              </li>
+              {penalty.wave.backend.status == 'failed'?
+                <li>
+                  <p className="errors">{penalty.wave.backend.message}</p>
+                </li>
+              : null}
+            </ul>
+          : !penalty.penalty_payment_fields.shown && !penalty.was_waved?
             <ul className="actions">
               <li>
                 <a
@@ -228,7 +265,17 @@ class BorrowerProfile extends Component {
                   Add new payment
                 </a>
               </li>
-            </ul> :
+              {!penalty.penalty_payments.length?
+                <li>
+                  <a
+                  className="default-btn-red"
+                  onClick={() => this.props.wavePenaltyToggle(penalty_index, loan_index)}>
+                    Waive this penalty
+                  </a>
+                </li>
+              : null}
+            </ul>
+          : penalty.penalty_payment_fields.shown && !penalty.was_waved?
             <ul className="penalty-payment-form">
               <li>
                 Amount
@@ -321,8 +368,17 @@ class BorrowerProfile extends Component {
                   </WithIcon>
                 </li>
               : null}
-            </ul>}
+            </ul>
+          : null}
         </div>
+
+        {penalty.wave.backend.status == 'successful'?
+          <div className="row">
+            <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+              <p className="okay">Penalty waived successfully.</p>
+            </WithIcon>
+          </div>
+        : null}
 
         {penalty.penalty_payment_fields.backend.status == 'successful'?
           <div className="row">
@@ -338,122 +394,126 @@ class BorrowerProfile extends Component {
           </div>
         : null}
 
-        <h1>Penalty payments</h1>
+        {!penalty.was_waved?
+          <div>
+            <h1>Penalty payments</h1>
 
-        <CssTransitionGroup
-        transitionName="emphasize-entry"
-        transitionEnterTimeout={400}
-        transitionLeaveTimeout={400}>
-          {penalty.penalty_payments.length? penalty.penalty_payments.map((penalty_payment, penalty_payment_index) =>
-            <div ref={element => this['penalty_payment_id_' + penalty_payment.id] = element} className="payment-container" key={penalty.penalty_payments.length - penalty_payment_index}>
-              {penalty_payment.edit.shown?
-                <ul className="penalty-form">
-                  <li>
-                    Amount
-                    <InputText
-                    numberOnly={true}
-                    value={penalty_payment.edit.amount.value}
-                    placeholder="Amount..."
-                    onChange={value => this.props.changePenaltyPaymentEditAmount(value, penalty_payment_index, penalty_index, loan_index)}
-                    errors={penalty_payment.edit.amount.errors}
-                    disabled={penalty_payment.edit.backend.processing} />
-                    <p><strong>{currency(penalty_payment.edit.amount.value)}</strong> Pesos</p>
-                  </li>
-                  <li className="select-collection">
-                    <p>Date paid</p>
-                    <InputSelect
-                    className="date"
-                    onChange={value => this.props.changePenaltyPaymentEditMonth(value, penalty_payment_index, penalty_index, loan_index)}
-                    value={penalty_payment.edit.date_paid.month}
-                    disabled={penalty_payment.edit.backend.processing}
-                    errors={[]}>
-                      {monthList().map((month, index) =>
-                        <option key={index}>{month}</option>
-                      )}
-                    </InputSelect>
-                    <InputSelect
-                    className="date"
-                    onChange={value => this.props.changePenaltyPaymentEditDate(value, penalty_payment_index, penalty_index, loan_index)}
-                    value={penalty_payment.edit.date_paid.date}
-                    disabled={penalty_payment.edit.backend.processing}
-                    errors={[]}>
-                      {(() => {
-                        let max_days_in_month = monthMaxdays(penalty_payment.edit.date_paid.month, penalty_payment.edit.date_paid.year);
-                        let dates = [];
+            <CssTransitionGroup
+            transitionName="emphasize-entry"
+            transitionEnterTimeout={400}
+            transitionLeaveTimeout={400}>
+              {penalty.penalty_payments.length? penalty.penalty_payments.map((penalty_payment, penalty_payment_index) =>
+                <div ref={element => this['penalty_payment_id_' + penalty_payment.id] = element} className="payment-container" key={penalty.penalty_payments.length - penalty_payment_index}>
+                  {penalty_payment.edit.shown?
+                    <ul className="penalty-form">
+                      <li>
+                        Amount
+                        <InputText
+                        numberOnly={true}
+                        value={penalty_payment.edit.amount.value}
+                        placeholder="Amount..."
+                        onChange={value => this.props.changePenaltyPaymentEditAmount(value, penalty_payment_index, penalty_index, loan_index)}
+                        errors={penalty_payment.edit.amount.errors}
+                        disabled={penalty_payment.edit.backend.processing} />
+                        <p><strong>{currency(penalty_payment.edit.amount.value)}</strong> Pesos</p>
+                      </li>
+                      <li className="select-collection">
+                        <p>Date paid</p>
+                        <InputSelect
+                        className="date"
+                        onChange={value => this.props.changePenaltyPaymentEditMonth(value, penalty_payment_index, penalty_index, loan_index)}
+                        value={penalty_payment.edit.date_paid.month}
+                        disabled={penalty_payment.edit.backend.processing}
+                        errors={[]}>
+                          {monthList().map((month, index) =>
+                            <option key={index}>{month}</option>
+                          )}
+                        </InputSelect>
+                        <InputSelect
+                        className="date"
+                        onChange={value => this.props.changePenaltyPaymentEditDate(value, penalty_payment_index, penalty_index, loan_index)}
+                        value={penalty_payment.edit.date_paid.date}
+                        disabled={penalty_payment.edit.backend.processing}
+                        errors={[]}>
+                          {(() => {
+                            let max_days_in_month = monthMaxdays(penalty_payment.edit.date_paid.month, penalty_payment.edit.date_paid.year);
+                            let dates = [];
 
-                        for(let a = 1; a <= max_days_in_month; a++) {
-                          dates.push(<option key={a}>{a}</option>);
-                        }
+                            for(let a = 1; a <= max_days_in_month; a++) {
+                              dates.push(<option key={a}>{a}</option>);
+                            }
 
-                        return dates;
-                      })()}
-                    </InputSelect>
-                    <InputSelect
-                    className="date"
-                    onChange={value => this.props.changePenaltyPaymentEditYear(value, penalty_payment_index, penalty_index, loan_index)}
-                    value={penalty_payment.edit.date_paid.year}
-                    disabled={penalty_payment.edit.backend.processing}
-                    errors={[]} >
-                      {(() => {
-                        let date = new Date;
-                        let years = [];
-                        let max_year = date.getFullYear();
-                        let min_year = max_year - 10;
+                            return dates;
+                          })()}
+                        </InputSelect>
+                        <InputSelect
+                        className="date"
+                        onChange={value => this.props.changePenaltyPaymentEditYear(value, penalty_payment_index, penalty_index, loan_index)}
+                        value={penalty_payment.edit.date_paid.year}
+                        disabled={penalty_payment.edit.backend.processing}
+                        errors={[]} >
+                          {(() => {
+                            let date = new Date;
+                            let years = [];
+                            let max_year = date.getFullYear();
+                            let min_year = max_year - 10;
 
-                        for(let a = max_year; a >= min_year; a--) {
-                          years.push(<option key={a}>{a}</option>);
-                        }
+                            for(let a = max_year; a >= min_year; a--) {
+                              years.push(<option key={a}>{a}</option>);
+                            }
 
-                        return years;
-                      })()}
-                    </InputSelect>
-                  </li>
-                  <li>
-                    <div className="buttons">
-                      <InputButton
-                      value="Save changes"
-                      onClick={() => this.props.changePenaltyPaymentEditSave({
-                        amount: penalty_payment.edit.amount.value,
-                        date_paid: new Date(penalty_payment.edit.date_paid.month + ' ' + penalty_payment.edit.date_paid.date + ', ' + penalty_payment.edit.date_paid.year).toISOString(),
-                        id: penalty_payment.id,
-                        penalty_payment_index,
-                        penalty_index,
-                        loan_index
-                      }, penalty_payment_index, penalty_index, loan_index)}
-                      sending={penalty_payment.edit.backend.processing}
-                      disabled={penalty_payment.edit.allow_submit && !penalty_payment.edit.backend.processing? false : true}
-                      errors={[]} />
-                    </div>
+                            return years;
+                          })()}
+                        </InputSelect>
+                      </li>
+                      <li>
+                        <div className="buttons">
+                          <InputButton
+                          value="Save changes"
+                          onClick={() => this.props.changePenaltyPaymentEditSave({
+                            amount: penalty_payment.edit.amount.value,
+                            date_paid: new Date(penalty_payment.edit.date_paid.month + ' ' + penalty_payment.edit.date_paid.date + ', ' + penalty_payment.edit.date_paid.year).toISOString(),
+                            id: penalty_payment.id,
+                            penalty_payment_index,
+                            penalty_index,
+                            loan_index
+                          }, penalty_payment_index, penalty_index, loan_index)}
+                          sending={penalty_payment.edit.backend.processing}
+                          disabled={penalty_payment.edit.allow_submit && !penalty_payment.edit.backend.processing? false : true}
+                          errors={[]} />
+                        </div>
 
-                    <div className="buttons">
-                      <a
-                      className={!penalty_payment.edit.backend.processing? 'default-btn-red' : 'default-btn-red disabled'}
-                      onClick={() => penalty_payment.edit.backend.processing? false : this.props.togglePenaltyPaymentEdit(false, penalty_payment_index, penalty_index, loan_index)}>
-                        Cancel
-                      </a>
-                    </div>
-                  </li>
-                  {penalty_payment.edit.backend.status == 'failed'?
-                    <li>
-                      <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
-                        <p className="errors">{penalty_payment.edit.backend.message}</p>
-                      </WithIcon>
-                    </li>
-                  : null}
-                </ul>
-              : penalty_payment.id == this.props.borrower_profile.hash.value && !this.props.borrower_profile.hash.removed?
-                <CssTransitionGroup
-                transitionName="emphasize-background"
-                transitionAppear={true}
-                transitionAppearTimeout={1000}
-                transitionEnterTimeout={400}
-                transitionLeaveTimeout={400}>
-                  {this.showPenaltyPayment(penalty_payment, penalty_payment_index, app_path)}
-                </CssTransitionGroup>
-              : this.showPenaltyPayment(penalty_payment, penalty_payment_index, app_path)}
-            </div>
-          ) : <p>No payments since <strong>{toFormalDate(penalty.date_given)}</strong></p>}
-        </CssTransitionGroup>
+                        <div className="buttons">
+                          <a
+                          className={!penalty_payment.edit.backend.processing? 'default-btn-red' : 'default-btn-red disabled'}
+                          onClick={() => penalty_payment.edit.backend.processing? false : this.props.togglePenaltyPaymentEdit(false, penalty_payment_index, penalty_index, loan_index)}>
+                            Cancel
+                          </a>
+                        </div>
+                      </li>
+                      {penalty_payment.edit.backend.status == 'failed'?
+                        <li>
+                          <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                            <p className="errors">{penalty_payment.edit.backend.message}</p>
+                          </WithIcon>
+                        </li>
+                      : null}
+                    </ul>
+                  : penalty_payment.id == this.props.borrower_profile.hash.value && !this.props.borrower_profile.hash.removed?
+                    <CssTransitionGroup
+                    transitionName="emphasize-background"
+                    transitionAppear={true}
+                    transitionAppearTimeout={1000}
+                    transitionEnterTimeout={400}
+                    transitionLeaveTimeout={400}>
+                      {this.showPenaltyPayment(penalty_payment, penalty_payment_index, app_path)}
+                    </CssTransitionGroup>
+                  : this.showPenaltyPayment(penalty_payment, penalty_payment_index, app_path)}
+                </div>
+              ) : <p>No payments since <strong>{toFormalDate(penalty.date_given)}</strong></p>}
+            </CssTransitionGroup>
+          </div>
+        : null}
       </div>
     );
   }
@@ -1463,7 +1523,6 @@ class BorrowerProfile extends Component {
                       : <div>
                           {this.props.borrower_profile.hash.value == penalty.id && !this.props.borrower_profile.hash.removed?
                             <CssTransitionGroup
-                            key={loan_index}
                             transitionName="emphasize-background"
                             transitionAppear={true}
                             transitionAppearTimeout={1000}
@@ -1488,6 +1547,8 @@ class BorrowerProfile extends Component {
   }
 
   render() {
+    console.log(this.props.borrower_profile);
+
     let app_path = remote.app.getAppPath();
 
     return (
@@ -1607,5 +1668,8 @@ export default connect(store => ({
   changePenaltyPaymentEditDate: borrowerProfileActions.changePenaltyPaymentEditDate,
   changePenaltyPaymentEditYear: borrowerProfileActions.changePenaltyPaymentEditYear,
   changePenaltyPaymentEditSave: borrowerProfileActions.changePenaltyPaymentEditSave,
-  removeHash: borrowerProfileActions.removeHash
+  removeHash: borrowerProfileActions.removeHash,
+  wavePenaltyToggle: borrowerProfileActions.wavePenaltyToggle,
+  wavePenaltyChangeRemarks: borrowerProfileActions.wavePenaltyChangeRemarks,
+  wavePenaltySubmit: borrowerProfileActions.wavePenaltySubmit
 })(BorrowerProfile);

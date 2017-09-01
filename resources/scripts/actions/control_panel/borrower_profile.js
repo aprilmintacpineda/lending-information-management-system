@@ -505,3 +505,30 @@ export function removeHash(value) {
     type: 'BORROWER_PROFILE_HASH_REMOVE'
   }
 }
+
+export function wavePenaltyToggle(penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_WAVE_PENALTY_TOGGLE',
+    penalty_index,
+    loan_index
+  }
+}
+
+export function wavePenaltyChangeRemarks(value, penalty_index, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_WAVE_PENALTY_CHANGE_REMARKS',
+    penalty_index,
+    loan_index,
+    value
+  }
+}
+
+export function wavePenaltySubmit(penalty_id, penalty_index, loan_index, wave_remarks) {
+  return {
+    type: '_BORROWER_PROFILE_WAVE_SUBMIT',
+    penalty_id,
+    penalty_index,
+    loan_index,
+    wave_remarks
+  }
+}

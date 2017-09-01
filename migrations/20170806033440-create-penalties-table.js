@@ -29,6 +29,11 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: null
       },
+      wave_remarks: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        defaultValue: null
+      },
       date_given: {
         type: Sequelize.DATE,
         allowNull: false
