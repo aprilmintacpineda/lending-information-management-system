@@ -20,3 +20,4 @@ import './control_panel/new_penalty_payment';
 import './control_panel/wave_penalty';
 
 import './control_panel/search';
+import './control_panel/dashboard';

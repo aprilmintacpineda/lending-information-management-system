@@ -1,21 +1,5 @@
 export default {
-  past_due_dates: {
-    data: [],
-    backend: {
-      processing: false,
-      status: null,
-      message: null
-    }
-  },
-  future_due_dates: {
-    data: [],
-    backend: {
-      processing: false,
-      status: null,
-      message: null
-    }
-  },
-  yesterdays: {
+  tomorrows: {
     data: [],
     backend: {
       processing: false,
@@ -31,7 +15,15 @@ export default {
       message: null
     }
   },
-  tomorrows: {
+  this_month: {
+    data: [],
+    backend: {
+      processing: false,
+      status: null,
+      message: null
+    }
+  },
+  past_due_dates: {
     data: [],
     backend: {
       processing: false,

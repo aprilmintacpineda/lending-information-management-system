@@ -1,17 +1,23 @@
-export function getTodays() {
+export function getDueDatesTomorrow() {
   return {
-    type: '_DASHBOARD_GET_TODAYS'
+    type: '_DASHBOARD_GET_DUEDATES_TOMORROW'
   }
 }
 
-export function getTomorrows() {
+export function getDueDatesToday() {
   return {
-    type: '_DASHBOARD_GET_TOMORROWS'
+    type: '_DASHBOARD_GET_DUEDATES_TODAY'
   }
 }
 
-export function getYesterdays() {
+export function getDueDatesThisMonth() {
   return {
-    type: '_DASHBOARD_GET_YESTERDAYS'
+    type: '_DASHBOARD_GET_DUEDATES_THISMONTH'
+  }
+}
+
+export function getPastDueDates() {
+  return {
+    type: '_DASHBOARD_GET_PASTDUEDATES'
   }
 }

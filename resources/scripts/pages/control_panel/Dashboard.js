@@ -21,17 +21,88 @@ import * as searchActions from '../../actions/control_panel/search';
 import { putHash } from '../../actions/control_panel/borrower_profile';
 
 class Dashboard extends Component {
+  constructor(props) {
+    super(props);
+
+    this.displayLoanDueDate = this.displayLoanDueDate.bind(this);
+  }
+
   componentWillMount() {
     document.title = 'Dashboard - LIMS';
     
     this.props.searchReset();
-    this.props.getTodays();
-    this.props.getTomorrows();
-    this.props.getYesterdays();
+    this.props.getDueDatesTomorrow();
+    this.props.getDueDatesToday();
+    this.props.getDueDatesThisMonth();
+    this.props.getPastDueDates();
+  }
+
+  displayLoanDueDate(loan, app_path) {
+    return (
+      <div>
+        <div className="row">
+          <WithLabel label="Borrower">
+            <p>{loan.borrower.firstname} {loan.borrower.middlename} {loan.borrower.surname}</p>
+          </WithLabel>
+        </div>
+
+        <div className="row">
+          <WithLabel label="Borrower trace ID">
+            <p>{loan.borrower.id}</p>
+          </WithLabel>
+        </div>
+
+        {loan.due_date?
+          <div className="row">
+            <WithLabel label="Due date">
+              <p>{toFormalDate(loan.due_date)}</p>
+            </WithLabel>
+          </div>
+        : null}
+
+        <div className="row">
+          <WithLabel label="Borrower contact numbers">
+            {loan.borrower.contact_numbers.length?
+              <ul>
+                {loan.borrower.contact_numbers.map((contact_number, contact_number_index) => 
+                  <li key={contact_number_index}>{contact_number}</li>
+                )}
+              </ul>
+            : <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                <p>No contact numbers to show.</p>
+              </WithIcon>}
+          </WithLabel>
+        </div>
+
+        <div className="row">
+          <WithLabel label="Amount to pay">
+            {loan.payment_method == 1?
+              <p>{currency(loan.per_month)} Pesos</p>
+            : loan.payment_coverage == 2?
+              <p>{currency(loan.per_semi_month)} Pesos</p>
+            : <p>{currency(loan.per_day)} Pesos</p>}
+          </WithLabel>
+        </div>
+
+        <div className="row">
+          <WithLabel label="Loan amount">
+            <p>{currency(loan.amount)} Pesos</p>
+          </WithLabel>
+        </div>
+
+        <div className="row">
+          <WithLabel label="Loan trace ID">
+            <p>{loan.id}</p>
+          </WithLabel>
+        </div>
+
+        <Link className="default-btn-blue" to={'/borrowers/'+ loan.borrower.id +'/view'} onClick={() => this.props.putHash(loan.id)}>View loan</Link>
+      </div>
+    );
   }
 
   render() {
-    console.log(this.props.search);
+    console.log(this.props.dashboard);
 
     let app_path = remote.app.getAppPath();
 
@@ -557,27 +628,85 @@ class Dashboard extends Component {
             : null}
           </div>
           <div className="due-dates">
-            <h1 className="title">Due dates</h1>
+            <h1 className="title">Unpaid due dates tomorrow</h1>
+            
+            {this.props.dashboard.tomorrows.backend.processing?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/processing-blue.gif')}>
+                  <p>Loading contents</p>
+                </WithIcon>
+              </div>
+            : !this.props.dashboard.tomorrows.data.length && this.props.dashboard.tomorrows.backend.status == 'successful'?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                  <p>You're all set. No unpaid due dates tomorrow.</p>
+                </WithIcon>
+              </div>
+            : this.props.dashboard.tomorrows.data.map((due_date_tomorrow, due_date_tomorrow_index) => (
+              <div className="data-row" key={due_date_tomorrow_index}>
+                {this.displayLoanDueDate(due_date_tomorrow, app_path)}
+              </div>
+            ))}
 
-            <div className="todays">
-              {this.props.dashboard.todays.backend.processing?
-                <div className="loading-contents">
-                  <img src={path.join(app_path, 'app/images/processing-blue.gif')} />
-                </div>
-              : <p>display info</p>}
-            </div>
+            <h1 className="title">Unpaid due dates today</h1>
+            
+            {this.props.dashboard.todays.backend.processing?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/processing-blue.gif')}>
+                  <p>Loading contents</p>
+                </WithIcon>
+              </div>
+            : !this.props.dashboard.todays.data.length && this.props.dashboard.todays.backend.status == 'successful'?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                  <p>You're all set. No unpaid due dates today.</p>
+                </WithIcon>
+              </div>
+            : this.props.dashboard.todays.data.map((due_date_today, due_date_today_index) =>
+              <div className="data-row" key={due_date_today_index}>
+                {this.displayLoanDueDate(due_date_today, app_path)}
+              </div>
+            )}
 
-            <div className="tomorrows">
-              {this.props.dashboard.tomorrows.backend.processing?
-                <img src={path.join(app_path, 'app/images/processing-blue.gif')} />
-              : <p>display info</p>}
-            </div>
+            <h1 className="title">Unpaid due dates this month after tomorrow</h1>
+            
+            {this.props.dashboard.this_month.backend.processing?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/processing-blue.gif')}>
+                  <p>Loading contents</p>
+                </WithIcon>
+              </div>
+            : !this.props.dashboard.this_month.data.length && this.props.dashboard.this_month.backend.status == 'successful'?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                  <p>You're all set. No unpaid due dates this month after tomorrow.</p>
+                </WithIcon>
+              </div>
+            : this.props.dashboard.this_month.data.map((this_month_due_date, this_month_due_date_index) =>
+              <div className="data-row" key={this_month_due_date_index}>
+                {this.displayLoanDueDate(this_month_due_date, app_path)}
+              </div>
+            )}
 
-            <div className="yesterdays">
-              {this.props.dashboard.yesterdays.backend.processing?
-                <img src={path.join(app_path, 'app/images/processing-blue.gif')} />
-              : <p>display info</p>}
-            </div>
+            <h1 className="title">Past unpaid due dates</h1>
+            
+            {this.props.dashboard.past_due_dates.backend.processing?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/processing-blue.gif')}>
+                  <p>Loading contents</p>
+                </WithIcon>
+              </div>
+            : !this.props.dashboard.past_due_dates.data.length && this.props.dashboard.past_due_dates.backend.status == 'successful'?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                  <p>You're all set. No unpaid past due dates.</p>
+                </WithIcon>
+              </div>
+            : this.props.dashboard.past_due_dates.data.map((past_due_date, past_due_date_index) =>
+              <div className="data-row" key={past_due_date_index}>
+                {this.displayLoanDueDate(past_due_date, app_path)}
+              </div>
+            )}
           </div>
         </div>
       </WithSidebar>
@@ -590,12 +719,15 @@ export default connect(store => ({
   dashboard: {...store.dashboard},
   search: {...store.search}
 }), {
-  getTomorrows: dashboardActions.getTomorrows,
-  getTodays: dashboardActions.getTodays,
-  getYesterdays: dashboardActions.getYesterdays,
+  getDueDatesTomorrow: dashboardActions.getDueDatesTomorrow,
+  getDueDatesToday: dashboardActions.getDueDatesToday,
+  getDueDatesThisMonth: dashboardActions.getDueDatesThisMonth,
+  getPastDueDates: dashboardActions.getPastDueDates,
+
   changeSearchString: searchActions.changeSearchString,
   changeSearchType: searchActions.changeSearchType,
   submit: searchActions.submit,
   searchReset: searchActions.reset,
+
   putHash: putHash
 })(Dashboard);
