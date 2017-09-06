@@ -1,0 +1,40 @@
+.loan-contract-container
+  font-style: verdana
+  @page
+    @top-right
+      display: block
+      position: relative
+      content: counter(page)
+  @media print and (max-width: $large-width)
+    .print-btn
+      display: none
+  p
+    margin-bottom: 25px
+  .centered-text
+    text-align: center
+  .right-aligned-text
+    text-align: right
+  table
+    td:first-child
+      width: 25px
+      vertical-align: top
+  .signatures
+    margin-top: 150px
+    &:after
+      position: relative
+      display: block
+      content: ''
+      clear: both
+    p
+      border-top: 1px solid #000000
+      min-width: 250px
+      text-align: center
+    p:nth-child(2)
+      float: right
+    p:first-child
+      float: left
+  .header
+    text-align: center
+    margin-bottom: 25px
+    h1
+      font-size: 25px

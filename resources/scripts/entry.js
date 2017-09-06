@@ -18,6 +18,7 @@ import BorrowerProfile from './pages/control_panel/BorrowerProfile';
 import BorrowersList from './pages/control_panel/BorrowersList';
 import BorrowerEditProfile from './pages/control_panel/BorrowerEditProfile';
 import BorrowerNewLoan from './pages/control_panel/BorrowerNewLoan';
+import LoanContract from './pages/control_panel/LoanContract';
 import About from './pages/About';
 
 import store from './createStore';
@@ -39,6 +40,7 @@ render(
       <Route path="/borrowers/:id/view" component={BorrowerProfile} />
       <Route path="/borrowers/:id/edit" component={BorrowerEditProfile} />
       <Route path="/borrowers/:id/new-loan" component={BorrowerNewLoan} />
+      <Route path="/borrowers/:id/contract" component={LoanContract} />
 
       <Route path="/login" component={Login} />
       <Route path="*" component={Landing} />

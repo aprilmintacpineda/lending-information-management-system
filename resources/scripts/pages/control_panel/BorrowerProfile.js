@@ -740,11 +740,20 @@ class BorrowerProfile extends Component {
                 <h1>Loan information</h1>
 
                 <div className="row">
-                  <a
-                  className={loan.edit.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
-                  onClick={() => loan.edit.backend.processing? false : this.props.toggleEditLoanInformation(!loan.edit.shown, loan_index)}>
-                    Edit loan information
-                  </a>
+                  <ul>
+                    <li>
+                      <Link className="default-btn-blue" to={'/borrowers/'+ loan.id +'/contract'}>
+                        Generate contract
+                      </Link>
+                    </li>
+                    <li>
+                      <a
+                      className={loan.edit.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
+                      onClick={() => loan.edit.backend.processing? false : this.props.toggleEditLoanInformation(!loan.edit.shown, loan_index)}>
+                        Edit loan information
+                      </a>
+                    </li>
+                  </ul>
                 </div>
 
                 {!loan.edit.backend.processing && loan.edit.backend.status == 'successful'?

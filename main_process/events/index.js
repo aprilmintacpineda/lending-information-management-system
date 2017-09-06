@@ -21,3 +21,4 @@ import './control_panel/wave_penalty';
 
 import './control_panel/search';
 import './control_panel/dashboard';
+import './control_panel/loan_contract';

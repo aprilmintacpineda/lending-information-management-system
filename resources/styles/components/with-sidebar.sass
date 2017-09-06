@@ -1,6 +1,8 @@
 .with-sidebar
   position: relative
   .side-contents
+    @media print and (max-width: $large-width)
+      padding-left: 20px
     padding: 20px
     padding-left: 270px
     background: rgba(242, 242, 242, 0.4)
