@@ -73,17 +73,7 @@ class Dashboard extends Component {
               </WithIcon>}
           </WithLabel>
         </div>
-
-        <div className="row">
-          <WithLabel label="Amount to pay">
-            {loan.payment_method == 1?
-              <p>{currency(loan.per_month)} Pesos</p>
-            : loan.payment_coverage == 2?
-              <p>{currency(loan.per_semi_month)} Pesos</p>
-            : <p>{currency(loan.per_day)} Pesos</p>}
-          </WithLabel>
-        </div>
-
+        
         <div className="row">
           <WithLabel label="Loan amount">
             <p>{currency(loan.amount)} Pesos</p>
@@ -102,8 +92,6 @@ class Dashboard extends Component {
   }
 
   render() {
-    console.log(this.props.dashboard);
-
     let app_path = remote.app.getAppPath();
 
     return (

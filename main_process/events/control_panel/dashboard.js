@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron';
 import models from '../../../models';
+import { getDueDate } from '../../helpers/datetime';
 
 function spreadLoans(loans) {
   return loans.map(loan => ({
@@ -42,16 +43,11 @@ ipcMain.on('DASHBOARD_GET_DUEDATES_TOMORROW', (event, args) => {
     let due_dates_tomorrow = [];
 
     loans.forEach(loan => {
-      let last_date;
       let today = new Date();
+      today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
+      let due_date = getDueDate(loan);
 
-      if(!loan.loan_payments.length) {
-        last_date = new Date(loan.loan_date);
-      } else {
-        last_date = new Date(loan.loan_payments[0].date_paid);
-      }
-
-      if(today.getMonth() - last_date.getMonth() == 1 && last_date.getDate() - today.getDate() == 1) {
+      if((today.getMonth() - due_date.getMonth() == 1 || today.getMonth() - due_date.getMonth() == 0) && due_date.getTime() > today.getTime()) {
         due_dates_tomorrow.push(loan);
       }
     });
@@ -73,16 +69,11 @@ ipcMain.on('DASHBOARD_GET_DUEDATES_TODAY', (event, args) => {
     let due_dates_today = [];
 
     loans.forEach(loan => {
-      let last_date;
       let today = new Date();
+      today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
+      let due_date = getDueDate(loan);
 
-      if(!loan.loan_payments.length) {
-        last_date = new Date(loan.loan_date);
-      } else {
-        last_date = new Date(loan.loan_payments[0].date_paid);
-      }
-
-      if(today.getMonth() - last_date.getMonth() == 1 && last_date.getDate() - today.getDate() == 0) {
+      if(due_date.getTime() == today.getTime()) {
         due_dates_today.push(loan);
       }
     });
@@ -104,20 +95,15 @@ ipcMain.on('DASHBOARD_GET_DUEDATES_THISMONTH', (event, args) => {
     let due_dates_this_month = [];
 
     loans.forEach(loan => {
-      let last_date;
-      let today = new Date();
+      if(loan.payment_method == 1 || loan.payment_method == 2) {
+        // monthly || semi-monthly
+        let today = new Date();
+        today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
+        let due_date = getDueDate(loan);
 
-      if(!loan.loan_payments.length) {
-        last_date = new Date(loan.loan_date);
-      } else {
-        last_date = new Date(loan.loan_payments[0].date_paid);
-      }
-
-      if(today.getMonth() - last_date.getMonth() == 1 && last_date.getDate() - today.getDate() > 1) {
-        due_dates_this_month.push({
-          ...loan,
-          due_date: new Date((last_date.getMonth() + 2) + '-' + last_date.getDate() + '-' + last_date.getFullYear())
-        });
+        if(due_date.getMonth() == today.getMonth() && due_date.getDate() > today.getDate()) {
+          due_dates_this_month.push(loan);
+        }
       }
     });
 
@@ -138,20 +124,12 @@ ipcMain.on('DASHBOARD_GET_PASTDUEDATES', (event, args) => {
     let past_due_dates = [];
 
     loans.forEach(loan => {
-      let last_date;
       let today = new Date();
+      today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
+      let due_date = getDueDate(loan);
 
-      if(!loan.loan_payments.length) {
-        last_date = new Date(loan.loan_date);
-      } else {
-        last_date = new Date(loan.loan_payments[0].date_paid);
-      }
-
-      if(today.getMonth() - last_date.getMonth() < 0 || (today.getMonth() - last_date.getMonth() == 0 && last_date.getDate() - today.getDate() < 0)) {
-        past_due_dates.push({
-          ...loan,
-          due_date: new Date((last_date.getMonth() + 2) + '-' + last_date.getDate() + '-' + last_date.getFullYear())
-        });
+      if(due_date.getTime() < today.getTime()) {
+        past_due_dates.push(loan);
       }
     });
 

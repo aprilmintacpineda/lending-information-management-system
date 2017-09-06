@@ -519,8 +519,6 @@ class BorrowerProfile extends Component {
   }
 
   showLoanInformation(loan, loan_index, app_path) {
-    console.log(this.props.borrower_profile);
-
     return (
       <div>
         <h1 className="loan-date-h1">{toFormalDate(loan.loan_date)}</h1>

@@ -14,21 +14,19 @@ ipcMain.on('BORROWERS_LIST_FETCH', (event, arg) => {
         include: [
           {
             model: models.loan_payments,
-            order: [ 'created_at', 'asc' ]
+            order: [ 'date_paid', 'desc' ]
           },
           {
             model: models.penalties,
-            order: [ 'created_at', 'asc' ],
-            include: [ models.penalty_payments ]
+            order: [ 'created_at', 'desc' ],
+            include: [{
+              model: models.penalty_payments,
+              order: [ 'created_at', 'desc' ]
+            }]
           }
         ],
-        order: [
-          [ models.loan_payments, 'created_at' ]
-        ]
+        order: [ 'loan_date', 'desc' ]
       }
-    ],
-    order: [
-      [ models.loans, 'loan_date', 'desc' ]
     ]
   })
   .then(borrowers => event.sender.send('BORROWERS_LIST_FETCH_SUCCESSFUL', {

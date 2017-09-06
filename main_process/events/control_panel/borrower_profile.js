@@ -6,9 +6,6 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
     where: {
       id: args.id
     },
-    order: [
-      [ models.loans, 'loan_date', 'desc' ]
-    ],
     include: [
       // contact numbers
       {
@@ -18,13 +15,11 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
       // loans
       {
         model: models.loans,
-        order: [
-          [ 'loan_date', 'desc' ]
-        ],
+        order: [ 'loan_date', 'desc' ],
         include: [
           {
             model: models.loan_payments,
-            order: [ 'created_at', 'desc' ]
+            order: [ 'date_paid', 'desc' ]
           },
           // penalties
           {
@@ -50,7 +45,7 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
       })),
       loans: borrower.loans.map(loan => ({
         ...loan.dataValues,
-        loan_payments: loan.loan_payments.map(payment => ({
+        loan_payments: loan.loan_payments.reverse().map(payment => ({
           ...payment.dataValues
         })),
         penalties: loan.penalties.map(penalty => ({

@@ -30,7 +30,7 @@ module.exports = {
         defaultValue: null
       },
       wave_remarks: {
-        type: DataTypes.STRING(255),
+        type: Sequelize.STRING(255),
         allowNull: true,
         defaultValue: null
       },
