@@ -1,6 +1,6 @@
 export function fetch(id) {
   return {
-    type: '_LOANCONTRACT_INITIAL_FETCH',
+    type: '_REPORTS_INITIAL_FETCH',
     id
   }
 }

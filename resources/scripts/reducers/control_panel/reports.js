@@ -1,8 +1,8 @@
-import initial_state from '../initial_states/control_panel/loan_contract';
+import initial_state from '../initial_states/control_panel/reports';
 
-export default function loan_contract(state = initial_state, action) {
+export default function reports(state = initial_state, action) {
   switch(action.type) {
-    case '_LOANCONTRACT_INITIAL_FETCH':
+    case '_REPORTS_INITIAL_FETCH':
       return {
         data: null,
         backend: {
@@ -11,7 +11,7 @@ export default function loan_contract(state = initial_state, action) {
           message: null
         }
       }
-    case 'LOANCONTRACT_INITIAL_FETCH_SUCCESSFUL':
+    case 'REPORTS_INITIAL_FETCH_SUCCESSFUL':
       return {
         data: {...action.data},
         backend: {
@@ -20,7 +20,7 @@ export default function loan_contract(state = initial_state, action) {
           message: null
         }
       }
-    case 'LOANCONTRACT_INITIAL_FETCH_FAILED':
+    case 'REPORTS_INITIAL_FETCH_FAILED':
       return {
         data: null,
         backend: {

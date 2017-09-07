@@ -65,7 +65,7 @@ class Dashboard extends Component {
             {loan.borrower.contact_numbers.length?
               <ul>
                 {loan.borrower.contact_numbers.map((contact_number, contact_number_index) => 
-                  <li key={contact_number_index}>{contact_number}</li>
+                  <li key={contact_number_index}>{contact_number.number}</li>
                 )}
               </ul>
             : <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>

@@ -1,0 +1,41 @@
+.loan-comprehensive-report-container
+  font-style: verdana
+  @media print and (max-width: $large-width)
+    .print-btn
+      display: none
+  .short-table
+    td:nth-child(1)
+      font-weight: bold
+    td:nth-child(2)
+      min-width: 25px
+      text-align: center
+  .header
+    margin-bottom: 30px
+    h1
+      margin-bottom: 30px
+      text-align: center
+      font-size: 25px
+    .borrower-info
+      +clearFloat
+      .left
+        float: left
+      .right
+        float: right
+  .body
+    .long-table
+      border: 1px solid #737373
+      width: 100%
+      th, td
+        border: 1px solid #737373
+        width: 25%
+        text-align: left
+        padding: 5px
+    section
+      margin-bottom: 30px
+      &:last-child
+        margin-bottom: 0
+    h1
+      letter-spacing: 5px
+      color: #737373
+      font-size: 18px
+      margin-bottom: 30px

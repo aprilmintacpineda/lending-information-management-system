@@ -742,7 +742,12 @@ class BorrowerProfile extends Component {
                 <div className="row">
                   <ul>
                     <li>
-                      <Link className="default-btn-blue" to={'/borrowers/'+ loan.id +'/contract'}>
+                      <Link className="default-btn-blue" to={'/loan/' + loan.id + '/comprehensive-report'}>
+                        Comprehensive Report
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="default-btn-blue" to={'/loan/'+ loan.id +'/contract'}>
                         Generate contract
                       </Link>
                     </li>
@@ -1535,8 +1540,8 @@ class BorrowerProfile extends Component {
                   </ul>}
               </section>
 
-              <section>
-                <Link className="default-btn-blue" to={'borrowers/' + this.props.params.id + '/new-loan'}>Add new loan</Link>
+              <section className="action-buttons">
+                <Link className="default-btn-blue buttons" to={'borrowers/' + this.props.params.id + '/new-loan'}>Add loan</Link>
               </section>
 
               {this.props.borrower_profile.data.loans.map((loan, loan_index) => this.props.borrower_profile.hash.value == loan.id && !this.props.borrower_profile.hash.removed?
