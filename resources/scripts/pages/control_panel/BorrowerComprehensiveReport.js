@@ -29,8 +29,6 @@ class BorrowerComprehensiveReport extends Component {
   render() {
     let app_path = remote.app.getAppPath();
 
-    console.log(this.props.borrower);
-
     return (
       <WithSidebar>
         <div className="report-container">

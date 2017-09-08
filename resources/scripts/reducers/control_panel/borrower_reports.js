@@ -44,6 +44,45 @@ function computePenaltiesSummary(loans) {
   }
 }
 
+function computeLoanSummary(loan) {
+  let total_amount_to_pay = loan.amount + loan.profit;
+  let total_amount_paid = 0;
+  let remaining_balance;
+
+  loan.loan_payments.forEach(loan_payment => {
+    total_amount_paid += loan_payment.amount;
+  })
+
+  remaining_balance = loan.amount - total_amount_paid;
+
+  return {
+    total_amount_to_pay,
+    total_amount_paid,
+    remaining_balance
+  }
+}
+
+function computePenaltySummary(loan) {
+  let total_penalties = 0;
+  let total_amount_paid = 0;
+  let remaining_balance;
+
+  loan.penalties.forEach(penalty => {
+    total_penalties += penalty.amount;
+    penalty.penalty_payments.forEach(penalty_payment => {
+      total_amount_paid += penalty_payment.amount;
+    });
+  })
+
+  remaining_balance = total_penalties - total_amount_paid;
+
+  return {
+    total_penalties,
+    total_amount_paid,
+    remaining_balance
+  }
+}
+
 function isFullyPaid(loan) {
   let total_amount_paid = 0;
 
@@ -71,7 +110,9 @@ export default function borrower_reports(state = initial_state, action) {
           ...action.data,
           loans: action.data.loans.map(loan => ({
             ...loan,
-            is_fully_paid: isFullyPaid(loan)
+            is_fully_paid: isFullyPaid(loan),
+            loan_summary: computeLoanSummary(loan),
+            penalties_summary: computePenaltySummary(loan)
           })),
           loans_summary: computeLoansSummary(action.data.loans),
           penalties_summary: computePenaltiesSummary(action.data.loans),
