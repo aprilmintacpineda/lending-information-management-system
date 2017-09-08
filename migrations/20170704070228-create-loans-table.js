@@ -25,7 +25,7 @@ module.exports = {
         allowNull: false
       },
       interest_type: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(20),
         allowNull: false
       },
       profit: {

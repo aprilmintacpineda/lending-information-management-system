@@ -21,4 +21,5 @@ import './control_panel/wave_penalty';
 
 import './control_panel/search';
 import './control_panel/dashboard';
-import './control_panel/reports';
+import './control_panel/loan_reports';
+import './control_panel/borrower_reports';

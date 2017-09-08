@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron';
 import models from '../../../models';
 
-ipcMain.on('REPORTS_INITIAL_FETCH', (event, args) => {
+ipcMain.on('LOANREPORTS_INITIAL_FETCH', (event, args) => {
   models.loans.find({
     where: {
       id: args.id
@@ -28,7 +28,7 @@ ipcMain.on('REPORTS_INITIAL_FETCH', (event, args) => {
       }
     ]
   })
-  .then(loan => event.sender.send('REPORTS_INITIAL_FETCH_SUCCESSFUL', {
+  .then(loan => event.sender.send('LOANREPORTS_INITIAL_FETCH_SUCCESSFUL', {
     data: {
       ...loan.dataValues,
       loan_payments: loan.loan_payments.reverse().map(loan_payment => ({
@@ -48,7 +48,7 @@ ipcMain.on('REPORTS_INITIAL_FETCH', (event, args) => {
       }
     }
   }))
-  .catch(err => event.sender.send('REPORTS_INITIAL_FETCH_FAILED', {
+  .catch(err => event.sender.send('LOANREPORTS_INITIAL_FETCH_FAILED', {
     message: err.message
   }));
 });

@@ -6,7 +6,7 @@ import path from 'path';
 import WithSidebar from '../../components/WithSidebar';
 import WithIcon from '../../components/WithIcon';
 // actions
-import * as reportsAction from '../../actions/control_panel/reports';
+import * as reportsAction from '../../actions/control_panel/loan_reports';
 // helpers
 import { currency } from '../../helpers/Numbers';
 import { getFormalDueDate } from '../../helpers/DateTime';
@@ -222,7 +222,7 @@ class LoanContract extends Component {
 }
 
 export default connect(store => ({
-  loan: {...store.reports}
+  loan: {...store.loan_reports}
 }), {
   fetch: reportsAction.fetch
 })(LoanContract);

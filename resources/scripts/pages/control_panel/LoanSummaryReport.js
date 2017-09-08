@@ -8,10 +8,10 @@ import WithIcon from '../../components/WithIcon';
 // actions
 import * as reportsActions from '../../actions/control_panel/loan_reports';
 // helpers
-import { toFormalDate, monthList } from '../../helpers/DateTime';
 import { currency } from '../../helpers/Numbers';
+import { toFormalDate } from '../../helpers/DateTime';
 
-class LoanComprehensiveReport extends Component {
+class LoanSummaryReport extends Component {
   constructor(props) {
     super(props);
 
@@ -35,7 +35,7 @@ class LoanComprehensiveReport extends Component {
           {this.props.loan.data?
             <div>
               <div className="header">
-                <h1>Loan Comprehensive Report</h1>
+                <h1>Loan Summary Report</h1>
                 <div className="borrower-info">
                   <table className="left short-table">
                     <tbody>
@@ -88,11 +88,6 @@ class LoanComprehensiveReport extends Component {
                         <td>{this.props.loan.data.id}</td>
                       </tr>
                       <tr>
-                        <td>Fully Paid</td>
-                        <td>:</td>
-                        <td>{this.props.loan.data.loan_payments_summary.is_fully_paid? 'Yes' : 'No'}</td>
-                      </tr>
-                      <tr>
                         <td>Date Loan</td>
                         <td>:</td>
                         <td>{toFormalDate(this.props.loan.data.loan_date)}</td>
@@ -123,94 +118,50 @@ class LoanComprehensiveReport extends Component {
                       </tr>
                     </tbody>
                   </table>
-                  <p><strong>Loan Payments</strong></p>
-                  {!this.props.loan.data.loan_payments.length?
-                    <p>No payments made since {toFormalDate(this.props.loan.data.loan_date)}</p>
-                  : <table className="long-table">
-                      <tbody>
-                        <tr>
-                          <th>Payment Trace ID</th>
-                          <th>Date Paid</th>
-                          <th>For the month</th>
-                          <th>Amount</th>
-                        </tr>
-                        {this.props.loan.data.loan_payments.map((loan_payment, loan_payment_index) => (
-                          <tr key={loan_payment_index}>
-                            <td>{loan_payment.id}</td>
-                            <td>{toFormalDate(loan_payment.date_paid)}</td>
-                            <td>{monthList()[new Date(loan_payment.period_paid).getMonth() + 1]}</td>
-                            <td>PHP {currency(loan_payment.amount)}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>}
+                </section>
+                <section>
+                  <h1>Loan Payments</h1>
+                  <table className="short-table">
+                    <tbody>
+                      <tr>
+                        <td>Total Amount Paid</td>
+                        <td>:</td>
+                        <td>PHP {currency(this.props.loan.data.loan_payments_summary.total_amount_paid)}</td>
+                      </tr>
+                      <tr>
+                        <td>Total Amount To Pay</td>
+                        <td>:</td>
+                        <td>PHP {currency(this.props.loan.data.loan_payments_summary.total_amount_to_pay)}</td>
+                      </tr>
+                      <tr>
+                        <td>Remaining Balance</td>
+                        <td>:</td>
+                        <td>PHP {currency(this.props.loan.data.loan_payments_summary.remaining_balance)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </section>
                 <section>
                   <h1>Penalties</h1>
-                  {!this.props.loan.data.penalties.length?
-                      <p>No penalties.</p>
-                  : this.props.loan.data.penalties.map((penalty, penalty_index) => (
-                    <section key={penalty_index}>
-                      <table className="short-table">
-                        <tbody>
-                          <tr>
-                            <td>Penalty Trace ID</td>
-                            <td>:</td>
-                            <td>{penalty.id}</td>
-                          </tr>
-                          <tr>
-                            <td>Date Given</td>
-                            <td>:</td>
-                            <td>{toFormalDate(penalty.date_given)}</td>
-                          </tr>
-                          <tr>
-                            <td>Amount</td>
-                            <td>:</td>
-                            <td>PHP {currency(penalty.amount)}</td>
-                          </tr>
-                          <tr>
-                            <td>Remarks</td>
-                            <td>:</td>
-                            <td>{penalty.remarks}</td>
-                          </tr>
-                          <tr>
-                            <td>Waved</td>
-                            <td>:</td>
-                            <td>{penalty.was_waved? 'Yes' : 'No'}</td>
-                          </tr>
-                          <tr>
-                            <td>Date Waved</td>
-                            <td>:</td>
-                            <td>{penalty.was_waved? toFormalDate(penalty.date_waved) : '------'}</td>
-                          </tr>
-                          <tr>
-                            <td>Wave Remarks</td>
-                            <td>:</td>
-                            <td>{penalty.was_waved? penalty.wave_remarks : '------'}</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                      <p><strong>Penalty Payments</strong></p>
-                      {!penalty.penalty_payments.length?
-                        <p>No payments since {toFormalDate(penalty.date_given)}</p>
-                      : <table className="long-table">
-                          <tbody>
-                            <tr>
-                              <th>Payment Trace ID</th>
-                              <th>Amount</th>
-                              <th>Date Paid</th>
-                            </tr>
-                            {penalty.penalty_payments.map((penalty_payment, penalty_payment_index) => (
-                              <tr key={penalty_payment_index}>
-                                <td>{penalty_payment.id}</td>
-                                <td>PHP {currency(penalty_payment.amount)}</td>
-                                <td>{toFormalDate(penalty_payment.date_paid)}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>}
-                    </section>
-                  ))}
+                  <table className="short-table">
+                    <tbody>
+                      <tr>
+                        <td>Total Penalties</td>
+                        <td>:</td>
+                        <td>PHP {currency(this.props.loan.data.penalties_summary.total_amount_to_pay)}</td>
+                      </tr>
+                      <tr>
+                        <td>Total Amount Paid</td>
+                        <td>:</td>
+                        <td>PHP {currency(this.props.loan.data.penalties_summary.total_amount_paid)}</td>
+                      </tr>
+                      <tr>
+                        <td>Remaining Balance</td>
+                        <td>:</td>
+                        <td>PHP {currency(this.props.loan.data.penalties_summary.remaining_balance)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </section>
                 <a
                   className="default-btn-blue print-btn"
@@ -220,7 +171,7 @@ class LoanComprehensiveReport extends Component {
               </div>
             </div>
           : this.props.loan.backend.status == 'failed'?
-            <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+            <WithIcon icon={path.join(app_path, 'app/images/cross.gif')}>
               <p>{this.props.loan.backend.message}</p>
             </WithIcon>
           : <WithIcon icon={path.join(app_path, 'app/images/processing-blue.gif')}>
@@ -236,4 +187,4 @@ export default connect(store => ({
   loan: {...store.loan_reports}
 }), {
   fetch: reportsActions.fetch
-})(LoanComprehensiveReport);
+})(LoanSummaryReport);

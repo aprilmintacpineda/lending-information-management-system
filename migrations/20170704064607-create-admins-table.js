@@ -9,7 +9,7 @@ module.exports = {
         autoIncrement: false
       },
       password: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(255),
         allowNull: false
       },
       firstname: {

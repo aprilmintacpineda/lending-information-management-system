@@ -11,7 +11,8 @@ import borrowers_list from './control_panel/borrowers_list';
 import borrower_profile from './control_panel/borrower_profile';
 import borrower_new_loan from './control_panel/borrower_new_loan';
 import edit_borrower_profile from './control_panel/edit_borrower_profile';
-import reports from './control_panel/reports';
+import loan_reports from './control_panel/loan_reports';
+import borrower_reports from './control_panel/borrower_reports';
 import search from './control_panel/search';
 
 export default combineReducers({
@@ -25,5 +26,6 @@ export default combineReducers({
   borrower_new_loan,
   edit_borrower_profile,
   search,
-  reports
+  loan_reports,
+  borrower_reports
 });
