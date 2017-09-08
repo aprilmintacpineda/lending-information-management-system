@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
+import { Link } from 'react-router';
 import path from 'path';
 // components
 import WithSidebar from '../../components/WithSidebar';
 import WithIcon from '../../components/WithIcon';
 // actions
 import * as reportsActions from '../../actions/control_panel/loan_reports';
+import { putHash } from '../../actions/control_panel/borrower_profile';
 // helpers
 import { toFormalDate, monthList } from '../../helpers/DateTime';
 import { currency } from '../../helpers/Numbers';
@@ -213,10 +215,16 @@ class LoanComprehensiveReport extends Component {
                   ))}
                 </section>
                 <a
-                  className="default-btn-blue print-btn"
-                  onClick={this.print}>
+                className="default-btn-blue print-btn"
+                onClick={this.print}>
                   Print
                 </a>
+                <Link
+                to={'/borrowers/' + this.props.loan.data.borrower.id + '/view'}
+                className="default-btn-blue print-btn"
+                onClick={() => this.props.putHash(this.props.params.id)}>
+                  Go back
+                </Link>
               </div>
             </div>
           : this.props.loan.backend.status == 'failed'?
@@ -235,5 +243,6 @@ class LoanComprehensiveReport extends Component {
 export default connect(store => ({
   loan: {...store.loan_reports}
 }), {
-  fetch: reportsActions.fetch
+  fetch: reportsActions.fetch,
+  putHash: putHash
 })(LoanComprehensiveReport);

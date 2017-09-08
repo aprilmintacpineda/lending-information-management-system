@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import path from 'path';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
+import { Link } from 'react-router';
 // components
 import WithSidebar from '../../components/WithSidebar';
 import WithIcon from '../../components/WithIcon';
@@ -215,10 +216,15 @@ class BorrowerComprehensiveReport extends Component {
                   )}
                 </section>
                 <a
-                  className="default-btn-blue print-btn"
-                  onClick={this.print}>
+                className="default-btn-blue print-btn"
+                onClick={this.print}>
                   Print
                 </a>
+                <Link
+                to={'/borrowers/' + this.props.params.id + '/view'}
+                className="default-btn-blue print-btn">
+                  Go back
+                </Link>
               </div>
             </div>
           : this.props.borrower.backend.status == 'failed'?
