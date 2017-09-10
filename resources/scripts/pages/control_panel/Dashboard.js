@@ -36,6 +36,7 @@ class Dashboard extends Component {
     this.props.getDueDatesThisMonth();
     this.props.getPastDueDates();
     this.props.fetch();
+    this.props.getOneGives();
   }
 
   displayLoanDueDate(loan, app_path) {
@@ -736,6 +737,26 @@ class Dashboard extends Component {
                 {this.displayLoanDueDate(past_due_date, app_path)}
               </div>
             )}
+
+            <h1 className="title">One Gives</h1>
+
+            {this.props.dashboard.one_gives.backend.processing?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/processing-blue.gif')}>
+                  <p>Loading contents</p>
+                </WithIcon>
+              </div>
+            : !this.props.dashboard.one_gives.data.length && this.props.dashboard.one_gives.backend.status == 'successful'?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
+                  <p>You're all set. No one give loans.</p>
+                </WithIcon>
+              </div>
+            : this.props.dashboard.one_gives.data.map((one_give, one_give_index) =>
+              <div className="data-row" key={one_give_index}>
+                {this.displayLoanDueDate(one_give, app_path)}
+              </div>
+            )}
           </div>
         </div>
       </WithSidebar>
@@ -753,6 +774,7 @@ export default connect(store => ({
   getDueDatesToday: dashboardActions.getDueDatesToday,
   getDueDatesThisMonth: dashboardActions.getDueDatesThisMonth,
   getPastDueDates: dashboardActions.getPastDueDates,
+  getOneGives: dashboardActions.getOneGives,
 
   changeSearchString: searchActions.changeSearchString,
   changeSearchType: searchActions.changeSearchType,

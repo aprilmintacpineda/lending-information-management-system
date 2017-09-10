@@ -21,3 +21,9 @@ export function getPastDueDates() {
     type: '_DASHBOARD_GET_PASTDUEDATES'
   }
 }
+
+export function getOneGives() {
+  return {
+    type: '_DASHBOARD_GET_ONEGIVES'
+  }
+}

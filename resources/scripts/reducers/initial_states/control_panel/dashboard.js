@@ -30,5 +30,13 @@ export default {
       status: null,
       message: null
     }
+  },
+  one_gives: {
+    data: [],
+    backend: {
+      processing: false,
+      status: null,
+      message: null
+    }
   }
 }

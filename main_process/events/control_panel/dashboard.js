@@ -158,7 +158,10 @@ ipcMain.on('DASHBOARD_GET_ONEGIVES', (event, args) => {
         let due_date = new Date(loan.expected_date_of_payment);
 
         if(today.getMonth() - due_date.getMonth() >= 0 && due_date.getDate() - today.getDate() != 1) {
-          one_gives.push(loan);
+          one_gives.push({
+            ...loan,
+            due_date
+          });
         }
       }
     });

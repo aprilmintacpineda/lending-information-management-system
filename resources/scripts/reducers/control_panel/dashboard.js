@@ -146,6 +146,42 @@ export default function dashboard(state = initial_state, action) {
           }
         }
       }
+    case '_DASHBOARD_GET_ONEGIVES':
+      return {
+        ...state,
+        one_gives: {
+          data: [],
+          backend: {
+            processing: true,
+            status: null,
+            message: null
+          }
+        }
+      }
+    case 'DASHBOARD_GET_ONEGIVES_SUCCESSFUL':
+      return {
+        ...state,
+        one_gives: {
+          data: [...action.data],
+          backend: {
+            processing: false,
+            status: 'successful',
+            message: null
+          }
+        }
+      }
+    case 'DASHBOARD_GET_ONEGIVES_FAILED':
+      return {
+        ...state,
+        one_gives: {
+          data: [],
+          backend: {
+            processing: false,
+            status: 'failed',
+            message: action.message
+          }
+        }
+      }
     default:
       return {...state}
   }
