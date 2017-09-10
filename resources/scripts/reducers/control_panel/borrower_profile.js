@@ -171,6 +171,7 @@ function alterPaymentEditFields(loan_payments, target_index, fields) {
 
 function getInitialLoanEditFields(loan) {
   let loan_date = new Date(loan.loan_date);
+  let date_of_payment = loan.expected_date_of_payment? new Date(loan.expected_date_of_payment) : new Date();
 
   return {
     shown: false,
@@ -191,6 +192,11 @@ function getInitialLoanEditFields(loan) {
     payment_method: {
       value: loan.payment_method,
       errors: []
+    },
+    date_of_payment: {
+      month: monthList()[date_of_payment.getMonth()],
+      date: date_of_payment.getDate(),
+      year: date_of_payment.getFullYear(),
     },
     loan_date: {
       month: monthList()[loan_date.getMonth()],
@@ -248,6 +254,12 @@ function alterLoanEditFields(loans, target_index, fields) {
       backend: {
         ...loan.edit.backend,
         ...fields.backend
+      }
+    } : fields.date_of_payment? {
+      ...loan.edit,
+      date_of_payment: {
+        ...loan.edit.date_of_payment,
+        ...fields.date_of_payment
       }
     } : {
       ...loan.edit,
@@ -1246,6 +1258,73 @@ export default function borrower_profile(state = initial_state, action) {
               month: action.value,
               date: 1,
               errors: validateLoanDate(action.value, state.data.loans[action.loan_index].edit.loan_date.date, state.data.loans[action.loan_index].edit.loan_date.year)
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterLoanEditFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowLoanEditSubmit(new_state.data.loans[action.loan_index].edit)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_CHANGE_DOP_MONTH':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            date_of_payment: {
+              month: action.value,
+              date: 1
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterLoanEditFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowLoanEditSubmit(new_state.data.loans[action.loan_index].edit)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_CHANGE_DOP_DATE':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            date_of_payment: {
+              date: action.value
+            }
+          })
+        }
+      }
+
+      return {
+        ...new_state,
+        data: {
+          ...new_state.data,
+          loans: alterLoanEditFields(new_state.data.loans, action.loan_index, {
+            allow_submit: allowLoanEditSubmit(new_state.data.loans[action.loan_index].edit)
+          })
+        }
+      }
+    case 'BORROWER_PROFILE_CHANGE_DOP_YEAR':
+      new_state = {
+        ...state,
+        data: {
+          ...state.data,
+          loans: alterLoanEditFields(state.data.loans, action.loan_index, {
+            date_of_payment: {
+              year: action.value
             }
           })
         }

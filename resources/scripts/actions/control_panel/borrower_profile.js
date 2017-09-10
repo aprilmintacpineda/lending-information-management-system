@@ -524,3 +524,27 @@ export function wavePenaltySubmit(penalty_id, penalty_index, loan_index, wave_re
     wave_remarks
   }
 }
+
+export function editLoanInformationDateOfPaymentMonth(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_CHANGE_DOP_MONTH',
+    value,
+    loan_index
+  }
+}
+
+export function editLoanInformationDateOfPaymentDate(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_CHANGE_DOP_DATE',
+    value,
+    loan_index
+  }
+}
+
+export function editLoanInformationDateOfPaymentYear(value, loan_index) {
+  return {
+    type: 'BORROWER_PROFILE_CHANGE_DOP_YEAR',
+    value,
+    loan_index
+  }
+}

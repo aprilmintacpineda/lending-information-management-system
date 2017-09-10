@@ -6,10 +6,19 @@ import * as calculator from '../../helpers/calculator';
 ipcMain.on('BORROWER_PROFILE_ELI_SEND', (event, args) => {
   let interest_percentage = calculator.computeInterestPercentage(args.interest_rate, args.interest_type);
   let interest = calculator.computeInterest(args.amount, interest_percentage, args.interest_type, args.interest_rate);
-  let profit = calculator.computeProfit(interest, args.months_to_pay);
-  let per_month = calculator.computePerMonth(args.condition_applied, args.amount, args.months_to_pay, profit);
-  let per_semi_month = calculator.computePerHalfMonth(per_month);
-  let per_day = calculator.computePerDay(per_month);
+  let profit = 0;
+  let per_month = 0;
+  let per_semi_month = 0;
+  let per_day = 0;
+
+  if(args.payment_method == 4) {
+    profit = calculator.computeProfit(interest_percentage, args.amount);
+  } else {
+    profit = calculator.computeProfit(interest, args.months_to_pay);
+    per_month = calculator.computePerMonth(args.condition_applied, args.amount, args.months_to_pay, profit);
+    per_semi_month = calculator.computePerHalfMonth(per_month);
+    per_day = calculator.computePerDay(per_month);
+  }
 
   models.loans.update({
     amount: args.amount,
@@ -18,6 +27,7 @@ ipcMain.on('BORROWER_PROFILE_ELI_SEND', (event, args) => {
     interest_rate: args.interest_rate,
     interest_type: args.interest_type,
     months_to_pay: args.months_to_pay,
+    expected_date_of_payment: args.date_of_payment,
     payment_method: args.payment_method,
     profit,
     interest,

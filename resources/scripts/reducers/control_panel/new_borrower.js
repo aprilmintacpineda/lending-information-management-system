@@ -455,7 +455,8 @@ export default function new_borrower(state = initial_state, action) {
         ...state,
         date_of_payment: {
           ...state.date_of_payment,
-          month: action.value
+          month: action.value,
+          date: 1
         }
       }
     case 'NEWBORROWER_CEDOPD':

@@ -677,12 +677,20 @@ class BorrowerProfile extends Component {
                   <li>
                     Months to pay
                     <InputText
-                    value={loan.edit.amount_loan.condition == 'due-date-only' || loan.edit.amount_loan.condition == 'due-date-and-interest'? loan.edit.months_to_pay.value : 'N/A'}
+                    value={(loan.edit.amount_loan.condition == 'due-date-only'
+                    || loan.edit.amount_loan.condition == 'due-date-and-interest')
+                    && loan.edit.payment_method.value != 4?
+                      loan.edit.months_to_pay.value
+                    : loan.edit.payment_method.value == 4?
+                      'N/A'
+                    : !loan.edit.months_to_pay.value?
+                      ''
+                    : loan.edit.months_to_pay.value}
                     numberOnly={true}
                     placeholder="Months to pay..."
                     onChange={value => this.props.editLoanInformationMonthsToPay(value, loan_index)}
                     errors={loan.edit.months_to_pay.errors}
-                    disabled={loan.loan_payments.length || loan.edit.backend.processing? true : (loan.edit.amount_loan.condition == 'due-date-only' || loan.edit.amount_loan.condition == 'due-date-and-interest') && !loan.edit.backend.processing? false : true} />
+                    disabled={loan.loan_payments.length || loan.edit.backend.processing || loan.edit.payment_method.value == 4? true : (loan.edit.amount_loan.condition == 'due-date-only' || loan.edit.amount_loan.condition == 'due-date-and-interest') && !loan.edit.backend.processing? false : true} />
                   </li>
                   <li>
                     Payment Method
@@ -696,6 +704,56 @@ class BorrowerProfile extends Component {
                       <option value="1">Monthly</option>
                       <option value="2">Semi-monthly</option>
                       <option value="3">Daily</option>
+                      <option value="4">One Give</option>
+                    </InputSelect>
+                  </li>
+                  <li className="clear-floats">
+                    Expected date of payment (One Give)
+                    <InputSelect
+                    className="date-loan"
+                    onChange={value => this.props.editLoanInformationDateOfPaymentMonth(value, loan_index)}
+                    value={loan.edit.date_of_payment.month}
+                    disabled={(loan.edit.amount_loan.condition == 'due-date-and-interest' || loan.edit.amount_loan.condition == 'due-date-only') && !loan.edit.backend.processing && loan.edit.payment_method.value == 4? false : true}
+                    errors={[]}>
+                      {(() => monthList().map((month, index) => <option key={index}>{month}</option>))()}
+                    </InputSelect>
+
+                    <InputSelect
+                    className="date-loan"
+                    onChange={value => this.props.editLoanInformationDateOfPaymentDate(value, loan_index)}
+                    value={loan.edit.date_of_payment.date}
+                    disabled={(loan.edit.amount_loan.condition == 'due-date-and-interest' || loan.edit.amount_loan.condition == 'due-date-only') && !loan.edit.backend.processing && loan.edit.payment_method.value == 4? false : true}
+                    errors={[]}>
+                      {(() => {
+                        let date = new Date;
+                        let max_days_in_month = monthMaxdays(loan.edit.date_of_payment.month, loan.edit.date_of_payment.year);
+                        let dates = [];
+
+                        for(let a = 1; a <= max_days_in_month; a++) {
+                          dates.push(<option key={a}>{a}</option>);
+                        }
+
+                        return dates;
+                      })()}
+                    </InputSelect>
+
+                    <InputSelect
+                    className="date-loan"
+                    onChange={value => this.props.editLoanInformationDateOfPaymentYear(value, loan_index)}
+                    value={loan.edit.date_of_payment.year}
+                    disabled={(loan.edit.amount_loan.condition == 'due-date-and-interest' || loan.edit.amount_loan.condition == 'due-date-only') && !loan.edit.backend.processing && loan.edit.payment_method.value == 4? false : true}
+                    errors={[]}>
+                      {(() => {
+                        let min_year = new Date().getFullYear();
+                        let max_year = min_year + 25;
+                        let years = [];
+
+                        for(let a = min_year; a <= max_year; a++) {
+                          years.push(<option key={a}>{a}</option>);
+                        }
+
+                        return years;
+                      })()}
                     </InputSelect>
                   </li>
                 </ul>
@@ -711,6 +769,7 @@ class BorrowerProfile extends Component {
                       interest_type: loan.edit.interest_rate.type,
                       months_to_pay: loan.edit.months_to_pay.value,
                       date_loan: new Date(loan.edit.loan_date.month + ' ' + loan.edit.loan_date.date + ', ' + loan.edit.loan_date.year).toISOString(),
+                      date_of_payment: loan.edit.payment_method.value == 4? new Date(loan.edit.date_of_payment.month + ' ' + loan.edit.date_of_payment.date + ', ' + loan.edit.date_of_payment.year).toISOString() : null,
                       payment_method: loan.edit.payment_method.value,
                       id: loan.id
                     }, loan_index)}
@@ -1617,6 +1676,9 @@ export default connect(store => ({
   editLoanInformationDateLoanDate: borrowerProfileActions.editLoanInformationDateLoanDate,
   editLoanInformationDateLoanYear: borrowerProfileActions.editLoanInformationDateLoanYear,
   editLoanInformatioPaymentMethod: borrowerProfileActions.editLoanInformatioPaymentMethod,
+  editLoanInformationDateOfPaymentMonth: borrowerProfileActions.editLoanInformationDateOfPaymentMonth,
+  editLoanInformationDateOfPaymentDate: borrowerProfileActions.editLoanInformationDateOfPaymentDate,
+  editLoanInformationDateOfPaymentYear: borrowerProfileActions.editLoanInformationDateOfPaymentYear,
   editLoanInformatioSend: borrowerProfileActions.editLoanInformatioSend,
   togglePenaltyForm: borrowerProfileActions.togglePenaltyForm,
   changePenaltyFormAmount: borrowerProfileActions.changePenaltyFormAmount,

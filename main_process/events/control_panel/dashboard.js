@@ -143,3 +143,31 @@ ipcMain.on('DASHBOARD_GET_PASTDUEDATES', (event, args) => {
     message: err.message
   }));
 });
+
+ipcMain.on('DASHBOARD_GET_ONEGIVES', (event, args) => {
+  getLoans()
+  .then(loans => {
+    loans = spreadLoans(loans);
+
+    let one_gives = [];
+
+    loans.forEach(loan => {
+      if(loan.payment_method == 4) {
+        let today = new Date();
+        today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
+        let due_date = new Date(loan.expected_date_of_payment);
+
+        if(today.getMonth() - due_date.getMonth() >= 0 && due_date.getDate() - today.getDate() != 1) {
+          one_gives.push(loan);
+        }
+      }
+    });
+
+    event.sender.send('DASHBOARD_GET_ONEGIVES_SUCCESSFUL', {
+      data: [...one_gives]
+    });
+  })
+  .catch(err => event.sender.send('DASHBOARD_GET_ONEGIVES_FAILED', {
+    message: err.message
+  }));
+});
