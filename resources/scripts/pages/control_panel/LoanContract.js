@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
+import { Link } from 'react-router';
 import path from 'path';
 // components
 import WithSidebar from '../../components/WithSidebar';
 import WithIcon from '../../components/WithIcon';
 // actions
 import * as reportsAction from '../../actions/control_panel/loan_reports';
+import { putHash } from '../../actions/control_panel/borrower_profile';
 // helpers
 import { currency } from '../../helpers/Numbers';
 import { getFormalDueDate, toFormalDate } from '../../helpers/DateTime';
@@ -207,9 +209,17 @@ class LoanContract extends Component {
               <p>Katherine Manalo Singson</p>
               <p>{this.props.loan.data.borrower.firstname} {this.props.loan.data.borrower.middlename} {this.props.loan.data.borrower.surname}</p>
             </div>
-            <a className="default-btn-blue print-btn" onClick={this.print}>
+            <a
+            className="default-btn-blue print-btn"
+            onClick={this.print}>
               Print
             </a>
+            <Link
+            to={'/borrowers/' + this.props.loan.data.borrower.id + '/view'}
+            className="default-btn-blue print-btn"
+            onClick={() => this.props.putHash(this.props.params.id)}>
+              Go back
+            </Link>
           </div>
         : this.props.loan.backend.status == 'failed'?
           <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
@@ -226,5 +236,6 @@ class LoanContract extends Component {
 export default connect(store => ({
   loan: {...store.loan_reports}
 }), {
-  fetch: reportsAction.fetch
+  fetch: reportsAction.fetch,
+  putHash: putHash
 })(LoanContract);
