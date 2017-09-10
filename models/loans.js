@@ -39,6 +39,9 @@ export default (sequelize, DataTypes) => {
     payment_method: {
       type: DataTypes.INTEGER
     },
+    expected_date_of_payment: {
+      type: DataTypes.DATE
+    },
     per_month: {
       type: DataTypes.INTEGER,
       allowNull: false

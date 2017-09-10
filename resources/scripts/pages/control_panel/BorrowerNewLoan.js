@@ -37,6 +37,7 @@ class BorrowerNewLoan extends Component {
       amount_loan: this.props.new_loan.amount_loan.value,
       payment_method: this.props.new_loan.apply_interest_only || this.props.new_loan.no_due_date_no_interest? null : this.props.new_loan.payment_method.value,
       months_to_pay: this.props.new_loan.amount_loan.condition == 'due-date-and-interest' || this.props.new_loan.amount_loan.condition == 'due-date-only'? this.props.new_loan.months_to_pay.value : null,
+      expected_date_of_payment: (this.props.new_loan.amount_loan.condition == 'due-date-and-interest' || this.props.new_loan.amount_loan.condition == 'due-date-only') && this.props.new_loan.payment_method.value == 4? new Date(this.props.new_loan.date_of_payment.month + ' ' + this.props.new_loan.date_of_payment.date + ', ' + this.props.new_loan.date_of_payment.year).toISOString() : null,
       condition_applied: this.props.new_loan.amount_loan.condition,
       date_loan: new Date(this.props.new_loan.date_loan.month + ' ' + this.props.new_loan.date_loan.date + ', ' + this.props.new_loan.date_loan.year).toISOString(),
       interest_type: this.props.new_loan.interest_rate.type,
@@ -46,6 +47,9 @@ class BorrowerNewLoan extends Component {
   }
 
   render() {
+
+    console.log(this.props.new_loan);
+
     return (
       <WithSidebar>
         <div className="borrower-new-loan-wrapper">
@@ -205,6 +209,7 @@ class BorrowerNewLoan extends Component {
                   <option value="1">Monthly</option>
                   <option value="2">Semi-monthly</option>
                   <option value="3">Daily</option>
+                  <option value="4">One Give</option>
                 </InputSelect>
               </li>
               <li>
@@ -213,10 +218,59 @@ class BorrowerNewLoan extends Component {
                 placeholder='Months to pay...'
                 numberOnly={true}
                 onChange={this.props.changeMonthsToPay}
-                value={this.props.new_loan.amount_loan.condition == 'due-date-only' || this.props.new_loan.amount_loan.condition == 'due-date-and-interest'? this.props.new_loan.months_to_pay.value : 'N/A'}
+                value={(this.props.new_loan.amount_loan.condition == 'due-date-only' || this.props.new_loan.amount_loan.condition == 'due-date-and-interest') && this.props.new_loan.payment_method.value != 4? this.props.new_loan.months_to_pay.value : 'N/A'}
                 errors={this.props.new_loan.months_to_pay.errors}
-                disabled={(this.props.new_loan.amount_loan.condition == 'due-date-only' || this.props.new_loan.amount_loan.condition == 'due-date-and-interest') && !this.props.new_loan.backend.processing? false : true}
+                disabled={(this.props.new_loan.amount_loan.condition == 'due-date-only' || this.props.new_loan.amount_loan.condition == 'due-date-and-interest') && !this.props.new_loan.backend.processing && this.props.new_loan.payment_method.value != 4? false : true}
                 maxlength={50} />
+              </li>
+              <li className="clear-floats">
+                Expected date of payment (One Give)
+                <InputSelect
+                className="date-loan"
+                onChange={this.props.changeDateOfPaymentMonth}
+                value={this.props.new_loan.date_of_payment.month}
+                disabled={(this.props.new_loan.amount_loan.condition == 'due-date-and-interest' || this.props.new_loan.amount_loan.condition == 'due-date-only') && !this.props.new_loan.backend.processing && this.props.new_loan.payment_method.value == 4? false : true}
+                errors={[]}>
+                  {(() => monthList().map((month, index) => <option key={index}>{month}</option>))()}
+                </InputSelect>
+
+                <InputSelect
+                className="date-loan"
+                onChange={this.props.changeDateOfPaymentDate}
+                value={this.props.new_loan.date_of_payment.date}
+                disabled={(this.props.new_loan.amount_loan.condition == 'due-date-and-interest' || this.props.new_loan.amount_loan.condition == 'due-date-only') && !this.props.new_loan.backend.processing && this.props.new_loan.payment_method.value == 4? false : true}
+                errors={[]}>
+                  {(() => {
+                    let date = new Date;
+                    let max_days_in_month = monthMaxdays(this.props.new_loan.date_of_payment.month, this.props.new_loan.date_of_payment.year);
+                    let dates = [];
+
+                    for(let a = 1; a <= max_days_in_month; a++) {
+                      dates.push(<option key={a}>{a}</option>);
+                    }
+
+                    return dates;
+                  })()}
+                </InputSelect>
+
+                <InputSelect
+                className="date-loan"
+                onChange={this.props.changeDateOfPaymentYear}
+                value={this.props.new_loan.date_of_payment.year}
+                disabled={(this.props.new_loan.amount_loan.condition == 'due-date-and-interest' || this.props.new_loan.amount_loan.condition == 'due-date-only') && !this.props.new_loan.backend.processing && this.props.new_loan.payment_method.value == 4? false : true}
+                errors={[]}>
+                  {(() => {
+                    let min_year = new Date().getFullYear();
+                    let max_year = min_year + 25;
+                    let years = [];
+
+                    for(let a = min_year; a <= max_year; a++) {
+                      years.push(<option key={a}>{a}</option>);
+                    }
+
+                    return years;
+                  })()}
+                </InputSelect>
               </li>
             </ul>
           </div>
@@ -231,7 +285,7 @@ class BorrowerNewLoan extends Component {
               </li>
               <li>
                 <p>Profit per month</p>
-                <DisplayTextBox value={currency(this.props.new_loan.calculated_values.computed_interest) + ' Pesos'} />
+                <DisplayTextBox value={this.props.new_loan.payment_method.value == 4? '0.00 Pesos' : currency(this.props.new_loan.calculated_values.computed_interest) + ' Pesos'} />
               </li>
               <li>
                 <p>Total profit</p>
@@ -285,5 +339,8 @@ export default connect(store => ({
   changeDateLoanMonth: borrowerNewLoanActions.changeDateLoanMonth,
   changeDateLoanDate: borrowerNewLoanActions.changeDateLoanDate,
   changeDateLoanYear: borrowerNewLoanActions.changeDateLoanYear,
+  changeDateOfPaymentMonth: borrowerNewLoanActions.changeDateOfPaymentMonth,
+  changeDateOfPaymentDate: borrowerNewLoanActions.changeDateOfPaymentDate,
+  changeDateOfPaymentYear: borrowerNewLoanActions.changeDateOfPaymentYear,
   submit: borrowerNewLoanActions.submit
 })(BorrowerNewLoan);

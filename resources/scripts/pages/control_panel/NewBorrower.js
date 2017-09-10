@@ -52,6 +52,7 @@ class NewBorrower extends Component {
       amount_loan: this.props.new_borrower.amount_loan.value,
       payment_method: this.props.new_borrower.apply_interest_only || this.props.new_borrower.no_due_date_no_interest? null : this.props.new_borrower.payment_method.value,
       months_to_pay: this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'due-date-only'? this.props.new_borrower.months_to_pay.value : null,
+      expected_date_of_payment: this.props.new_borrower.payment_method.value == 4 && (this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'due-date-only')? this.props.new_borrower.date_of_payment.month + ' ' + this.props.new_borrower.date_of_payment.date + ', ' + this.props.new_borrower.date_of_payment.year : null,
       condition_applied: this.props.new_borrower.amount_loan.condition,
       loan_date: this.props.new_borrower.loan_date.month + ' ' + this.props.new_borrower.loan_date.date + ', ' + this.props.new_borrower.loan_date.year,
       interest_type: this.props.new_borrower.interest_rate.type,
@@ -61,6 +62,8 @@ class NewBorrower extends Component {
   }
 
   render() {
+    console.log(this.props.new_borrower);
+
     let app_path = remote.app.getAppPath();
 
     return (
@@ -306,6 +309,7 @@ class NewBorrower extends Component {
                     <option value="1">Monthly</option>
                     <option value="2">Semi-monthly</option>
                     <option value="3">Daily</option>
+                    <option value="4">One Give</option>
                   </InputSelect>
                 </li>
                 <li>
@@ -314,10 +318,59 @@ class NewBorrower extends Component {
                   placeholder='Months to pay...'
                   numberOnly={true}
                   onChange={this.props.changeMonthsToPay}
-                  value={this.props.new_borrower.amount_loan.condition == 'due-date-only' || this.props.new_borrower.amount_loan.condition == 'due-date-and-interest'? this.props.new_borrower.months_to_pay.value : 'N/A'}
+                  value={(this.props.new_borrower.amount_loan.condition == 'due-date-only' || this.props.new_borrower.amount_loan.condition == 'due-date-and-interest') && this.props.new_borrower.payment_method.value != 4? this.props.new_borrower.months_to_pay.value : 'N/A'}
                   errors={this.props.new_borrower.months_to_pay.errors}
-                  disabled={(this.props.new_borrower.amount_loan.condition == 'due-date-only' || this.props.new_borrower.amount_loan.condition == 'due-date-and-interest') && !this.props.new_borrower.backend.processing? false : true}
+                  disabled={(this.props.new_borrower.amount_loan.condition == 'due-date-only' || this.props.new_borrower.amount_loan.condition == 'due-date-and-interest') && !this.props.new_borrower.backend.processing && this.props.new_borrower.payment_method.value != 4? false : true}
                   maxlength={50} />
+                </li>
+                <li className="clear-floats">
+                  Expected date of payment (One Give)
+                  <InputSelect
+                  className="date-loan"
+                  onChange={this.props.changeDateOfPaymentMonth}
+                  value={this.props.new_borrower.date_of_payment.month}
+                  disabled={(this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'due-date-only') && !this.props.new_borrower.backend.processing && this.props.new_borrower.payment_method.value == 4? false : true}
+                  errors={[]}>
+                    {(() => monthList().map((month, index) => <option key={index}>{month}</option>))()}
+                  </InputSelect>
+
+                  <InputSelect
+                  className="date-loan"
+                  onChange={this.props.changeDateOfPaymentDate}
+                  value={this.props.new_borrower.date_of_payment.date}
+                  disabled={(this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'due-date-only') && !this.props.new_borrower.backend.processing && this.props.new_borrower.payment_method.value == 4? false : true}
+                  errors={[]}>
+                    {(() => {
+                      let date = new Date;
+                      let max_days_in_month = monthMaxdays(this.props.new_borrower.date_of_payment.month, this.props.new_borrower.date_of_payment.year);
+                      let dates = [];
+
+                      for(let a = 1; a <= max_days_in_month; a++) {
+                        dates.push(<option key={a}>{a}</option>);
+                      }
+
+                      return dates;
+                    })()}
+                  </InputSelect>
+
+                  <InputSelect
+                  className="date-loan"
+                  onChange={this.props.changeDateOfPaymentYear}
+                  value={this.props.new_borrower.date_of_payment.year}
+                  disabled={(this.props.new_borrower.amount_loan.condition == 'due-date-and-interest' || this.props.new_borrower.amount_loan.condition == 'due-date-only') && !this.props.new_borrower.backend.processing && this.props.new_borrower.payment_method.value == 4? false : true}
+                  errors={[]}>
+                    {(() => {
+                      let min_year = new Date().getFullYear();
+                      let max_year = min_year + 25;
+                      let years = [];
+
+                      for(let a = min_year; a <= max_year; a++) {
+                        years.push(<option key={a}>{a}</option>);
+                      }
+
+                      return years;
+                    })()}
+                  </InputSelect>
                 </li>
               </ul>
 
@@ -331,7 +384,7 @@ class NewBorrower extends Component {
                 </li>
                 <li>
                   <p>Profit per month</p>
-                  <DisplayTextBox value={currency(this.props.new_borrower.calculated_values.computed_interest) + ' Pesos'} />
+                  <DisplayTextBox value={this.props.new_borrower.payment_method.value == 4? '0.00 Pesos': currency(this.props.new_borrower.calculated_values.computed_interest) + ' Pesos'} />
                 </li>
                 <li>
                   <p>Total profit</p>
@@ -406,6 +459,9 @@ export default connect(store => ({
   removeContactNumber: newBorrowerActions.removeContactNumber,
   changeContactNumber: newBorrowerActions.changeContactNumber,
   changePaymentMethod: newBorrowerActions.changePaymentMethod,
+  changeDateOfPaymentMonth: newBorrowerActions.changeDateOfPaymentMonth,
+  changeDateOfPaymentDate: newBorrowerActions.changeDateOfPaymentDate,
+  changeDateOfPaymentYear: newBorrowerActions.changeDateOfPaymentYear,
   reset: newBorrowerActions.reset,
   submit: newBorrowerActions.submit
 })(NewBorrower);

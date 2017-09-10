@@ -42,6 +42,9 @@ module.exports = {
       payment_method: {
         type: Sequelize.INTEGER
       },
+      expected_date_of_payment: {
+        type: Sequelize.DATE
+      },
       per_month: {
         type: Sequelize.FLOAT,
         allowNull: false

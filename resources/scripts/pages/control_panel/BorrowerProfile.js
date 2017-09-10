@@ -790,10 +790,16 @@ class BorrowerProfile extends Component {
                     </WithIcon>}
                 </div>
 
-                {!loan.fully_paid?
+                {!loan.fully_paid && loan.payment_method != 4?
                   <div className="row">
                     <WithLabel label="Next due date">
                       <p>{getFormalDueDate(loan)}</p>
+                    </WithLabel>
+                  </div>
+                : loan.payment_method == 4?
+                  <div className="row">
+                    <WithLabel label="Due date">
+                      <p>{toFormalDate(loan.expected_date_of_payment)}</p>
                     </WithLabel>
                   </div>
                 : null}
@@ -834,7 +840,7 @@ class BorrowerProfile extends Component {
 
                 <div className="row">
                   <WithLabel label="Months to pay">
-                    <p>{loan.months_to_pay + (loan.months_to_pay > 1? ' Months' : ' Month')}</p>
+                    <p>{loan.payment_method != 4? loan.months_to_pay + (loan.months_to_pay > 1? ' Months' : ' Month') : 'N/A'}</p>
                   </WithLabel>
                 </div>
 
@@ -842,7 +848,8 @@ class BorrowerProfile extends Component {
                   <WithLabel label="Payment method">
                     {loan.payment_method == 1? <p>Monthly</p>
                     : loan.payment_method == 2? <p>Semi-monthly</p>
-                    : <p>Daily</p>}
+                    : loan.payment_method == 3? <p>Daily</p>
+                    : <p>One Give</p>}
                   </WithLabel>
                 </div>
 
@@ -906,7 +913,9 @@ class BorrowerProfile extends Component {
 
                 <div className="row">
                   <WithLabel label="Remaining months">
-                    {loan.summary.months_left == 0?
+                    {loan.payment_method == 4?
+                      <p>N/A</p>
+                    : loan.summary.months_left == 0?
                       <p>None</p>
                     : loan.summary.months_left > 1?
                       <p>{Math.ceil(loan.summary.months_left)} Months</p>

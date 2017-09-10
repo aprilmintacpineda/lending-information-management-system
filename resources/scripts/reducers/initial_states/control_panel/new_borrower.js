@@ -44,6 +44,11 @@ export default {
     year: current_year,
     errors: []
   },
+  date_of_payment: {
+    month: monthList()[current_date.getMonth()],
+    date: current_date.getDate(),
+    year: current_year
+  },
   calculated_values: {
     computed_interest: 0,
     computed_profit: 0,

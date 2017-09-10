@@ -27,6 +27,11 @@ export default {
     value: '1',
     errors: []
   },
+  date_of_payment: {
+    month: monthList()[current_date.getMonth()],
+    date: current_date.getDate(),
+    year: current_date.getFullYear()
+  },
   allow_submit: false,
   calculated_values: {
     computed_interest: 0,

@@ -122,3 +122,24 @@ export function changeInterestType(value) {
     value
   }
 }
+
+export function changeDateOfPaymentMonth(value) {
+  return {
+    type: 'NEWBORROWER_CEDOPM',
+    value
+  }
+}
+
+export function changeDateOfPaymentDate(value) {
+  return {
+    type: 'NEWBORROWER_CEDOPD',
+    value
+  }
+}
+
+export function changeDateOfPaymentYear(value) {
+  return {
+    type: 'NEWBORROWER_CEDOPY',
+    value
+  }
+}

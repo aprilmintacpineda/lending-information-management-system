@@ -95,8 +95,6 @@ class Dashboard extends Component {
   render() {
     let app_path = remote.app.getAppPath();
 
-    console.log(this.props.borrowers);
-
     return (
       <WithSidebar onLink="dashboard">
         <div className="dashboard">
@@ -618,6 +616,46 @@ class Dashboard extends Component {
               <p className="errors">{this.props.search.backend.message}</p>
             : null}
           </div>
+          <div className="report-container">
+            <h1 className="title">Income Expense Report</h1>
+
+            <div className="data-row">
+              {this.props.borrowers.data?
+                <div>
+                  <table className="short-table">
+                    <tbody>
+                      <tr>
+                        <td>Total Money Out</td>
+                        <td>:</td>
+                        <td>PHP {currency(this.props.borrowers.data.money_out)}</td>
+                      </tr>
+                      <tr>
+                        <td>Total Money In</td>
+                        <td>:</td>
+                        <td>PHP {currency(this.props.borrowers.data.money_in)}</td>
+                      </tr>
+                      <tr>
+                        <td>Total Borrowers</td>
+                        <td>:</td>
+                        <td>{comma(this.props.borrowers.data.total_borrowers)}</td>
+                      </tr>
+                      <tr>
+                        <td>Borrowers with unpaid loans</td>
+                        <td>:</td>
+                        <td>{comma(this.props.borrowers.data.active_borrowers)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              : this.props.borrowers.backend.status == 'failed'?
+                <WithIcon icon={path.join(app_path, 'app/images/cross.gif')}>
+                  <p>{this.props.borrowers.backend.message}</p>
+                </WithIcon>
+              : <WithIcon icon={path.join(app_path, 'app/images/processing-blue.gif')}>
+                  <p>Loading contents</p>
+                </WithIcon>}
+            </div>
+          </div>
           <div className="due-dates">
             <h1 className="title">Unpaid due dates tomorrow</h1>
             
@@ -698,46 +736,6 @@ class Dashboard extends Component {
                 {this.displayLoanDueDate(past_due_date, app_path)}
               </div>
             )}
-          </div>
-          <div className="report-container">
-            <h1 className="title">Income Expense Report</h1>
-
-            <div className="data-row">
-              {this.props.borrowers.data?
-                <div>
-                  <table className="short-table">
-                    <tbody>
-                      <tr>
-                        <td>Total Money Out</td>
-                        <td>:</td>
-                        <td>PHP {currency(this.props.borrowers.data.money_out)}</td>
-                      </tr>
-                      <tr>
-                        <td>Total Money In</td>
-                        <td>:</td>
-                        <td>PHP {currency(this.props.borrowers.data.money_in)}</td>
-                      </tr>
-                      <tr>
-                        <td>Total Borrowers</td>
-                        <td>:</td>
-                        <td>{comma(this.props.borrowers.data.total_borrowers)}</td>
-                      </tr>
-                      <tr>
-                        <td>Borrowers with unpaid loans</td>
-                        <td>:</td>
-                        <td>{comma(this.props.borrowers.data.active_borrowers)}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              : this.props.borrowers.backend.status == 'failed'?
-                <WithIcon icon={path.join(app_path, 'app/images/cross.gif')}>
-                  <p>{this.props.borrowers.backend.message}</p>
-                </WithIcon>
-              : <WithIcon icon={path.join(app_path, 'app/images/processing-blue.gif')}>
-                  <p>Loading contents</p>
-                </WithIcon>}
-            </div>
           </div>
         </div>
       </WithSidebar>

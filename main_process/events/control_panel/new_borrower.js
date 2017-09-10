@@ -31,6 +31,7 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
     interest_type: arg.interest_type,
     months_to_pay: Number(arg.months_to_pay),
     payment_method: arg.payment_method,
+    expected_date_of_payment: new Date(arg.expected_date_of_payment).toISOString(),
     per_month: Math.ceil(arg.monthly),
     per_day: Math.ceil(arg.daily),
     per_semi_month: Math.ceil(arg.semi_monthly),

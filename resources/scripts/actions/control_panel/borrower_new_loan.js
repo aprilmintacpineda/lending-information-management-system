@@ -26,6 +26,27 @@ export function changePaymentMethod(value) {
   }
 }
 
+export function changeDateOfPaymentMonth(value) {
+  return {
+    type: 'BORROWERNEWLOAN_CHANGE_DOP_MONTH',
+    value
+  }
+}
+
+export function changeDateOfPaymentDate(value) {
+  return {
+    type: 'BORROWERNEWLOAN_CHANGE_DOP_DATE',
+    value
+  }
+}
+
+export function changeDateOfPaymentYear(value) {
+  return {
+    type: 'BORROWERNEWLOAN_CHANGE_DOP_YEAR',
+    value
+  }
+}
+
 export function changeMonthsToPay(value) {
   return {
     type: 'BORROWERNEWLOAN_CHANGE_MONTHS_TO_PAY',

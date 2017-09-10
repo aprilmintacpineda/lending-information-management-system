@@ -66,7 +66,7 @@ export function validatePhoneNumber(phone_number) {
 export function validatePaymentMethod(value) {
   let errors = [];
 
-  if(value < 1 || value > 3) {
+  if(value < 1 || value > 4) {
     errors.push('Invalid payment method.');
   }
 
@@ -97,7 +97,7 @@ export function validateMonthsToPay(value) {
   let errors = [];
 
   if(isNaN(value) || Number(value) <= 0) {
-    errors.push('Invalid times to pay.');
+    errors.push('Invalid months to pay.');
   }
 
   return errors;

@@ -17,6 +17,7 @@ ipcMain.on('BORROWERNEWLOAN_SUBMIT', (event, args) => {
     interest_rate: Number(args.interest_rate),
     interest_type: args.interest_type,
     months_to_pay: Number(args.months_to_pay),
+    expected_date_of_payment: args.expected_date_of_payment,
     payment_method: args.payment_method,
     per_month: Math.ceil(args.monthly),
     per_day: Math.ceil(args.daily),

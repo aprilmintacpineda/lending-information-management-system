@@ -26,8 +26,7 @@ function allowSubmit(new_state) {
       || new_state.amount_loan.errors.length
       || new_state.gender.errors.length
       || new_state.loan_date.errors.length
-      || !new_state.months_to_pay.value.length
-      || new_state.months_to_pay.errors.length? false : true;
+      || ((!new_state.months_to_pay.value.length && new_state.months_to_pay.errors.length) || new_state.payment_method == 4)? false : true;
   } else if(new_state.amount_loan.condition == 'interest-only') {
     return new_state.backend.processing
       || !new_state.firstname.value.length
@@ -69,8 +68,7 @@ function allowSubmit(new_state) {
     || new_state.loan_date.errors.length
     || !new_state.interest_rate.value.length
     || new_state.interest_rate.errors.length
-    || !new_state.months_to_pay.value.length
-    || new_state.months_to_pay.errors.length? false : true;
+    || ((!new_state.months_to_pay.value.length && new_state.months_to_pay.errors.length) || new_state.payment_method == 4)? false : true;
 }
 
 function calculatedValues(new_state) {
@@ -91,26 +89,34 @@ function calculatedValues(new_state) {
      */
     interest_percentage = calculator.computeInterestPercentage(new_state.interest_rate.value, new_state.interest_rate.type);
     computed_interest = calculator.computeInterest(new_state.amount_loan.value, interest_percentage, new_state.interest_rate.type, new_state.interest_rate.value);
-    computed_profit = calculator.computeProfit(computed_interest, new_state.months_to_pay.value);
+    
+    if(new_state.payment_method == 4) {
+      computed_profit = computed_interest;
+    } else {
+      computed_profit = calculator.computeProfit(computed_interest, new_state.months_to_pay.value);
+    }
+
   } else if(new_state.amount_loan.condition == 'due-date-only'
   && new_state.amount_loan.value.length
-  && new_state.months_to_pay.value.length
-  && !new_state.amount_loan.errors.length
-  && !new_state.months_to_pay.errors.length) {
+  && ((new_state.months_to_pay.value.length && !new_state.months_to_pay.errors.length)
+    || (new_state.payment_method.value == 4))
+  && !new_state.amount_loan.errors.length) {
     /**
      * applying of due date only
      * will compute the monthly, half monthly and daily payment
      * but will not compute for the interest
      */
     
-    monthly = calculator.computePerMonth(new_state.amount_loan.condition, new_state.amount_loan.value, new_state.months_to_pay.value, computed_profit);
-    semi_monthly = calculator.computePerHalfMonth(monthly);
-    daily = calculator.computePerDay(monthly);
+    if(new_state.payment_method.value != 4) {
+      monthly = calculator.computePerMonth(new_state.amount_loan.condition, new_state.amount_loan.value, new_state.months_to_pay.value, computed_profit);
+      semi_monthly = calculator.computePerHalfMonth(monthly);
+      daily = calculator.computePerDay(monthly);
+    }
   } else if(new_state.amount_loan.condition == 'due-date-and-interest'
   && new_state.amount_loan.value.length
   && !new_state.amount_loan.errors.length
-  && new_state.months_to_pay.value.length
-  && !new_state.months_to_pay.errors.length
+  && ((new_state.months_to_pay.value.length && !new_state.months_to_pay.errors.length)
+    || (new_state.payment_method.value == 4))
   && new_state.interest_rate.value.length
   && !new_state.interest_rate.errors.length) {
     /**
@@ -121,10 +127,15 @@ function calculatedValues(new_state) {
     
     interest_percentage = calculator.computeInterestPercentage(new_state.interest_rate.value, new_state.interest_rate.type);
     computed_interest = calculator.computeInterest(new_state.amount_loan.value, interest_percentage, new_state.interest_rate.type, new_state.interest_rate.value);
-    computed_profit = calculator.computeProfit(computed_interest, new_state.months_to_pay.value);
-    monthly = calculator.computePerMonth(new_state.amount_loan.condition, new_state.amount_loan.value, new_state.months_to_pay.value, computed_profit);
-    semi_monthly = calculator.computePerHalfMonth(monthly);
-    daily = calculator.computePerDay(monthly);
+
+    if(new_state.payment_method.value == 4) {
+      computed_profit = calculator.computeProfit(interest_percentage, new_state.amount_loan.value);
+    } else {
+      computed_profit = calculator.computeProfit(computed_interest, new_state.months_to_pay.value);
+      monthly = calculator.computePerMonth(new_state.amount_loan.condition, new_state.amount_loan.value, new_state.months_to_pay.value, computed_profit);
+      semi_monthly = calculator.computePerHalfMonth(monthly);
+      daily = calculator.computePerDay(monthly);
+    }
   }
   
   return {
@@ -281,6 +292,13 @@ export default function new_borrower(state = initial_state, action) {
         amount_loan: {
           ...state.amount_loan,
           condition: action.value
+        },
+        interest_rate: action.value == 'due-date-only' || action.value == 'no-due-date-and-interest'? {
+          ...state.interest_rate,
+          value: '',
+          errors: []
+        } : {
+          ...state.interest_rate
         }
       }
 
@@ -410,15 +428,51 @@ export default function new_borrower(state = initial_state, action) {
         payment_method: {
           value: action.value,
           errors: validatePaymentMethod(action.value)
+        },
+        months_to_pay: action.value == 4? {
+          ...state.months_to_pay,
+          errors: [],
+          value: ''
+        } : {
+          ...state.months_to_pay
+        },
+        interest_rate: {
+          ...state.interest_rate,
+          errors: validateInterestRate(state.interest_rate.value),
         }
       }
 
       return {
         ...new_state,
+        calculated_values: calculatedValues(new_state),
         backend: {
           ...new_state.backend,
           allow_submit: allowSubmit(new_state)
         },
+      }
+    case 'NEWBORROWER_CEDOPM':
+      return {
+        ...state,
+        date_of_payment: {
+          ...state.date_of_payment,
+          month: action.value
+        }
+      }
+    case 'NEWBORROWER_CEDOPD':
+      return {
+        ...state,
+        date_of_payment: {
+          ...state.date_of_payment,
+          date: action.value
+        }
+      }
+    case 'NEWBORROWER_CEDOPY':
+      return {
+        ...state,
+        date_of_payment: {
+          ...state.date_of_payment,
+          year: action.value
+        }
       }
     case '_NEWBORROWER_SUBMIT':
       return {
