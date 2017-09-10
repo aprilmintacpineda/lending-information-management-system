@@ -43,12 +43,14 @@ ipcMain.on('DASHBOARD_GET_DUEDATES_TOMORROW', (event, args) => {
     let due_dates_tomorrow = [];
 
     loans.forEach(loan => {
-      let today = new Date();
-      today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
-      let due_date = getDueDate(loan);
+      if(loan.payment_method != 4) {
+        let today = new Date();
+        today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
+        let due_date = getDueDate(loan);
 
-      if(today.getMonth() - due_date.getMonth() == 0 && due_date.getDate() - today.getDate() == 1) {
-        due_dates_tomorrow.push(loan);
+        if(today.getMonth() - due_date.getMonth() == 0 && due_date.getDate() - today.getDate() == 1) {
+          due_dates_tomorrow.push(loan);
+        }
       }
     });
 
