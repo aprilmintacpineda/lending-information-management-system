@@ -108,7 +108,12 @@ class BorrowerSummaryReport extends Component {
                           <tr>
                             <td>Interest</td>
                             <td>:</td>
-                            <td>{loan.interest_type == 'percentage'? loan.interest_rate + ' Percent' : 'PHP ' + loan.interest_rate}</td>
+                            <td>{loan.interest_type == 'percentage'? currency(loan.interest_rate) + ' Percent' : 'PHP ' + currency(loan.interest_rate)}</td>
+                          </tr>
+                          <tr>
+                            <td>Total Amount To Pay</td>
+                            <td>:</td>
+                            <td>PHP {currency(loan.amount + loan.profit)}</td>
                           </tr>
                           <tr>
                             <td>Payment</td>
@@ -116,13 +121,20 @@ class BorrowerSummaryReport extends Component {
                             <td>
                               {loan.payment_method == 1? 'Monthly installments of PHP ' + currency(loan.per_month)
                               : loan.payment_method == 2? 'Semi-monthly installments of PHP ' + currency(loan.per_month)
+                              : loan.payment_method == 4? 'One give of PHP ' + currency(loan.amount + loan.profit) + ' on ' + toFormalDate(loan.expected_date_of_payment)
                               : 'Daily installments of PHP ' + currency(loan.per_month)}
                             </td>
                           </tr>
                           <tr>
                             <td>Months To Pay</td>
                             <td>:</td>
-                            <td>{loan.months_to_pay > 1? loan.months_to_pay + ' months' : loan.months_to_pay + ' month'}</td>
+                            <td>
+                              {loan.payment_method == 4?
+                                'N/A'
+                              : loan.months_to_pay > 1?
+                                loan.months_to_pay + ' months'
+                              : loan.months_to_pay + ' month'}
+                            </td>
                           </tr>
                         </tbody>
                       </table>

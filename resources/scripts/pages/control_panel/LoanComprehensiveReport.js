@@ -110,18 +110,28 @@ class LoanComprehensiveReport extends Component {
                         <td>{this.props.loan.data.interest_type == 'percentage'? this.props.loan.data.interest_rate + ' Percent' : 'PHP ' + this.props.loan.data.interest_rate}</td>
                       </tr>
                       <tr>
+                        <td>Total Amount To Pay</td>
+                        <td>:</td>
+                        <td>PHP {currency(this.props.loan.data.amount + this.props.loan.data.profit)}</td>
+                      </tr>
+                      <tr>
                         <td>Payment</td>
                         <td>:</td>
                         <td>
                           {this.props.loan.data.payment_method == 1? 'Monthly installments of PHP ' + currency(this.props.loan.data.per_month)
                           : this.props.loan.data.payment_method == 2? 'Semi-monthly installments of PHP ' + currency(this.props.loan.data.per_month)
+                          : this.props.loan.data.payment_method == 4? 'One give of PHP ' + currency(this.props.loan.data.amount + this.props.loan.data.profit) + ' on ' + toFormalDate(this.props.loan.data.expected_date_of_payment)
                           : 'Daily installments of PHP ' + currency(this.props.loan.data.per_month)}
                         </td>
                       </tr>
                       <tr>
                         <td>Months To Pay</td>
                         <td>:</td>
-                        <td>{this.props.loan.data.months_to_pay > 1? this.props.loan.data.months_to_pay + ' months' : this.props.loan.data.months_to_pay + ' month'}</td>
+                        <td>
+                          {this.props.loan.data.payment_method == 4? 'N/A'
+                          : this.props.loan.data.months_to_pay > 1? this.props.loan.data.months_to_pay + ' months'
+                          : this.props.loan.data.months_to_pay + ' month'}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
