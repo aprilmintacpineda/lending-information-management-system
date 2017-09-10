@@ -9,7 +9,7 @@ import WithIcon from '../../components/WithIcon';
 import * as reportsAction from '../../actions/control_panel/loan_reports';
 // helpers
 import { currency } from '../../helpers/Numbers';
-import { getFormalDueDate } from '../../helpers/DateTime';
+import { getFormalDueDate, toFormalDate } from '../../helpers/DateTime';
 
 class LoanContract extends Component {
   constructor(props) {
@@ -68,9 +68,9 @@ class LoanContract extends Component {
                   <td>
                     <p>
                       The Lender promises to lend
-                      PHP {currency(this.props.loan.data.amount)}
-                      to the Borrower and the Borrower promises to repay this principal amount to the Lender, with interest payable on the principal at the rate of
-                      {this.props.loan.data.interest_type == 'percentage'? ' ' + this.props.loan.data.interest_rate + ' Percent' : ' PHP ' + this.props.loan.data.interest_rate} derived from the monthly payment,
+                      PHP {currency(this.props.loan.data.amount)} to the Borrower and the Borrower promises to repay this principal amount to the Lender, with interest payable on the principal at the rate of
+                      {this.props.loan.data.interest_type == 'percentage'? ' ' + currency(this.props.loan.data.interest_rate) + ' Percent' : ' PHP ' + currency(this.props.loan.data.interest_rate)} derived from
+                      {this.props.loan.data.payment_method == 4? ' the principal amount' : ' the monthly payment'},
                       the Borrower will pay a total amount of PHP {currency(this.props.loan.data.amount + this.props.loan.data.profit)}.
                     </p>
                   </td>
@@ -99,10 +99,12 @@ class LoanContract extends Component {
                           : loan_date == 31?
                             '31st'
                           : loan_date + 'th'
-                        ) + ' of the month'
+                        ) + ' of the month commencing on ' + getFormalDueDate(this.props.loan.data) + '.'
                       : this.props.loan.data.payment_method == 2?
-                        ' semi-monthly installments of the principal together with the interest every 15 days from the last payment date'
-                      : ' daily installments'} commencing on { getFormalDueDate(this.props.loan.data) }
+                        ' semi-monthly installments of the principal together with the interest every 15 days from the last payment date commencing on ' + getFormalDueDate(this.props.loan.data) + '.'
+                      : this.props.loan.data.payment_method == 4?
+                        ' one give on ' + toFormalDate(this.props.loan.data.expected_date_of_payment) + '.'
+                      : ' daily installments commencing on ' + getFormalDueDate(this.props.loan.data) + '.'}
                     </p>
                   </td>
                 </tr>
