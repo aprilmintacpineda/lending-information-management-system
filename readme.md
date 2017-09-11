@@ -9,3 +9,4 @@ Powered by
 - [ReactJS](https://github.com/facebook/react)
 - [Redux](https://github.com/reactjs/react-redux)
 - [Sequelize](https://github.com/sequelize/sequelize)
+- [ChartJS](http://www.chartjs.org/docs/latest/)

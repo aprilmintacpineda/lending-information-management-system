@@ -236,6 +236,7 @@ class StatusReport extends Component {
                   <WithLabel label="Description">
                     <p>The chart below shows you how many new borrowers registered this month and the past 5 months.</p>
                   </WithLabel>
+
                   <canvas ref={el => this['borrower_increase_chart'] = el} />
                 </section>
 
@@ -243,6 +244,7 @@ class StatusReport extends Component {
                   <WithLabel label="Description">
                     <p>The chart below shows you the total amount of loans this month and the past 5 months.</p>
                   </WithLabel>
+
                   <canvas ref={el => this['loan_increase_chart'] = el} />
                 </section>
 
@@ -250,6 +252,7 @@ class StatusReport extends Component {
                   <WithLabel label="Description">
                     <p>The chart below shows you the total amount of payments this month and the past 5 months.</p>
                   </WithLabel>
+                  
                   <canvas ref={el => this['payment_increase_chart'] = el} />
                 </section>
 
