@@ -15,6 +15,7 @@ import loan_reports from './control_panel/loan_reports';
 import borrower_reports from './control_panel/borrower_reports';
 import search from './control_panel/search';
 import income_expense_report from './control_panel/income_expense_report';
+import status_report from './control_panel/status_report';
 
 export default combineReducers({
   session,
@@ -29,5 +30,6 @@ export default combineReducers({
   search,
   loan_reports,
   borrower_reports,
-  income_expense_report
+  income_expense_report,
+  status_report
 });

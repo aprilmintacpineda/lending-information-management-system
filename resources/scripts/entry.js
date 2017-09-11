@@ -23,6 +23,7 @@ import LoanComprehensiveReport from './pages/control_panel/LoanComprehensiveRepo
 import LoanSummaryReport from './pages/control_panel/LoanSummaryReport';
 import BorrowerComprehensiveReport from './pages/control_panel/BorrowerComprehensiveReport';
 import BorrowerSummaryReport from './pages/control_panel/BorrowerSummaryReport';
+import StatusReport from './pages/control_panel/StatusReport';
 import About from './pages/About';
 
 import store from './createStore';
@@ -51,6 +52,7 @@ render(
       <Route path="/loan/:id/comprehensive-report" component={LoanComprehensiveReport} />
       <Route path="/loan/:id/summary-report" component={LoanSummaryReport} />
 
+      <Route path="/status-report" component={StatusReport} />
       <Route path="/login" component={Login} />
       <Route path="*" component={Landing} />
     </Router>

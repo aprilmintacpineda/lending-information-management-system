@@ -42,11 +42,40 @@ module.exports = [
       __dirname: true
     },
     target: 'electron-renderer',
-    name: 'javascript',
+    name: 'javascript Front',
     entry: path.join(__dirname, '/resources/scripts/entry.js'),
     output: {
       filename: 'app.js',
       path: path.join(__dirname, '/app/scripts')
+    },
+    module: {
+      loaders: [
+        {
+          test: /\.js/,
+          loader: 'babel-loader',
+          exclude: /node_modules/,
+          query: {
+            presets: ['react', 'es2017', 'es2016', 'es2015'],
+            plugins: ['babel-plugin-transform-object-rest-spread', 'babel-plugin-transform-class-properties']
+          }
+        }
+      ]
+    },
+    plugins: uglifyJsPlugin
+  },
+
+  {
+    externals: node_modules,
+    node: {
+      __filename: true,
+      __dirname: true
+    },
+    target: 'electron-main',
+    name: 'javascript Back',
+    entry: path.join(__dirname, '/main_process/entry.js'),
+    output: {
+      filename: 'app.js',
+      path: path.join(__dirname, '/main_process/')
     },
     module: {
       loaders: [

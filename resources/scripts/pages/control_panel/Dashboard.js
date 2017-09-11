@@ -647,6 +647,7 @@ class Dashboard extends Component {
                       </tr>
                     </tbody>
                   </table>
+                  <Link className="default-btn-blue" to="/status-report">See status report</Link>
                 </div>
               : this.props.borrowers.backend.status == 'failed'?
                 <WithIcon icon={path.join(app_path, 'app/images/cross.gif')}>

@@ -24,3 +24,4 @@ import './control_panel/dashboard';
 import './control_panel/loan_reports';
 import './control_panel/borrower_reports';
 import './control_panel/income_expense_report';
+import './control_panel/status_report';

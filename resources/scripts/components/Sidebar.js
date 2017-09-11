@@ -15,6 +15,7 @@ class Sidebar extends Component {
             <li><Link className={this.props.onLink == 'dashboard'? 'on-link': false} to="/dashboard">Dashboard</Link></li>
             <li><Link className={this.props.onLink == 'borrowers-list'? 'on-link': false} to="/borrowers">List of borrowers</Link></li>
             <li><Link className={this.props.onLink == 'new-borrower'? 'on-link': false} to="/new-borrower">Register new borrower</Link></li>
+            <li><Link className={this.props.onLink == 'status-report'? 'on-link': false} to="/status-report">Status Report</Link></li>
             <li><Link to="/logout">Logout</Link></li>
             <li><Link className={this.props.onLink == 'about'? 'on-link': false} to="/about">About</Link></li>
           </ul>

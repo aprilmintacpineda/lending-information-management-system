@@ -2,7 +2,7 @@
   "name": "1-lendingInfoSys",
   "version": "1.0.0",
   "description": "Lending Information System",
-  "main": "main_process/bootstrap.js",
+  "main": "main_process/entry.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node node_modules/webpack/bin/webpack.js",
@@ -17,12 +17,14 @@
     "release": "build"
   },
   "build": {
-    "appId": "com.lendingInfoSys",
+    "appId": "com.aprilmintacpineda.lims",
+    "productName": "Lending Information Management System",
+    "buildVersion": "1.0.83",
+    "allowToChangeInstallationDirectory": "true",
     "files": [
-      "resources/**/*",
       "app/**/*",
-      "node_modules/**/*",
-      "package.json"
+      "main_process/**/*",
+      "node_modules/**/*"
     ]
   },
   "keywords": [
@@ -32,6 +34,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "babel-polyfill": "^6.23.0",
+    "chart.js": "^2.7.0",
     "password-hash": "^1.2.2",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
