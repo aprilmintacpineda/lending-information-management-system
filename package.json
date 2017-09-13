@@ -1,8 +1,8 @@
 {
-  "name": "1-lendingInfoSys",
-  "version": "1.0.0",
-  "description": "Lending Information System",
-  "main": "main_process/entry.js",
+  "name": "lending-information-manayage-system",
+  "version": "1.0.86.1",
+  "description": "A desktop-based computerized system that will make your lending experience a lot easier.",
+  "main": "app/scripts/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node node_modules/webpack/bin/webpack.js",
@@ -17,21 +17,39 @@
     "release": "build"
   },
   "build": {
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true,
+      "createDesktopShortcut": true,
+      "installerIcon": "app/images/icon.ico",
+      "uninstallerIcon": "app/images/icon.ico",
+      "license": "EULA"
+    },
+    "target": "nsis",
     "appId": "com.aprilmintacpineda.lims",
-    "productName": "Lending Information Management System",
-    "buildVersion": "1.0.83",
-    "allowToChangeInstallationDirectory": "true",
+    "productName": "Lending Information Management System (LIMS)",
+    "buildVersion": "1.0.86.1",
+    "copyright": "April Mintac Pineda 2017",
     "files": [
       "app/**/*",
-      "main_process/**/*",
-      "node_modules/**/*"
+      "models/**/*"
+    ],
+    "extraFiles": [
+      "database/main.sqlite"
     ]
   },
   "keywords": [
     "lending information system"
   ],
-  "author": "April Mintac Pineda <aprilmintacpineda@gmail.com>",
-  "license": "UNLICENSED",
+  "author": {
+    "name": "April Mintac Pineda",
+    "email": "aprilmintacpineda@gmail.com"
+  },
+  "repository": "https://gitlab.com/aprilpineda/lending-information-system",
+  "license": "SEE LICENSE IN EULA",
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "chart.js": "^2.7.0",
@@ -57,7 +75,7 @@
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.1",
     "electron": "^1.4.10",
-    "electron-builder": "^10.8.1",
+    "electron-builder": "^19.27.7",
     "extract-text-webpack-plugin": "^2.1.0",
     "node-sass": "^4.5.2",
     "optimize-css-assets-webpack-plugin": "^1.3.1",

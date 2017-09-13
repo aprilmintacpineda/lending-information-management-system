@@ -1,4 +1,5 @@
 node_modules
 database/main.sqlite
-app/scripts/*
-app/styles/*
+app/scripts/main.js
+app/styles/app.css
+dist

@@ -8,6 +8,7 @@ import Database from './Database';
 let mainScreen = null;
 let mainScreenShown = false;
 let splashScreen = null;
+let app_path = app.getAppPath();
 
 function createSplashScreen() {
   // create the splash screen
@@ -15,11 +16,11 @@ function createSplashScreen() {
     width: 400,
     height: 300,
     frame: false,
-    icon: path.join(__dirname, '../app/images/icon.png')
+    icon: path.join(app_path, 'app/images/icon.ico')
   });
 
   splashScreen.loadURL(url.format({
-    pathname: path.join(__dirname, '../app/splash.html'),
+    pathname: path.join(app_path, 'app/splash.html'),
     slashes: true,
     protocol: 'file'
   }));
@@ -39,12 +40,12 @@ function createMainScreen() {
     minWidth: 1000,
     minHeight: 600,
     show: false,
-    icon: path.join(__dirname, '../app/images/icon.png')
+    icon: path.join(app_path, 'app/images/icon.ico')
   });
 
   // load the main.html
   mainScreen.loadURL(url.format({
-    pathname: path.join(__dirname, '../app/main.html'),
+    pathname: path.join(app_path, 'app/main.html'),
     protocol: 'file',
     slashes: true
   }));
@@ -60,7 +61,7 @@ function createMainScreen() {
     mainScreen.show();
 
     // open devtools on startup
-    mainScreen.webContents.openDevTools();
+    // mainScreen.webContents.openDevTools();
   });
 }
 

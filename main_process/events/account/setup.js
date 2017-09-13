@@ -1,5 +1,4 @@
 import { ipcMain } from 'electron';
-import path from 'path';
 import PasswordHash from 'password-hash';
 import { uniqueId } from '../../helpers/generators';
 import { ucfirst } from '../../helpers/strings';

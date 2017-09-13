@@ -41,8 +41,8 @@ module.exports = [
       __filename: true,
       __dirname: true
     },
-    target: 'electron-renderer',
-    name: 'javascript Front',
+    target: 'node',
+    name: 'react-stuff',
     entry: path.join(__dirname, '/resources/scripts/entry.js'),
     output: {
       filename: 'app.js',
@@ -70,12 +70,13 @@ module.exports = [
       __filename: true,
       __dirname: true
     },
-    target: 'electron-main',
-    name: 'javascript Back',
+    target: 'node',
+    name: 'electron main',
     entry: path.join(__dirname, '/main_process/entry.js'),
     output: {
-      filename: 'app.js',
-      path: path.join(__dirname, '/main_process/')
+      pathinfo: true,
+      filename: 'main.js',
+      path: path.join(__dirname, '/app/scripts')
     },
     module: {
       loaders: [
