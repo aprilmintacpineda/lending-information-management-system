@@ -53,7 +53,7 @@ function computeLoanSummary(loan) {
     total_amount_paid += loan_payment.amount;
   })
 
-  remaining_balance = loan.amount - total_amount_paid;
+  remaining_balance = total_amount_to_pay - total_amount_paid;
 
   return {
     total_amount_to_pay,
