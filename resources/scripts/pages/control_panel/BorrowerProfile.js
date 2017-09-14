@@ -815,13 +815,15 @@ class BorrowerProfile extends Component {
                         Generate contract
                       </Link>
                     </li>
-                    <li>
-                      <a
-                      className={loan.edit.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
-                      onClick={() => loan.edit.backend.processing? false : this.props.toggleEditLoanInformation(!loan.edit.shown, loan_index)}>
-                        Edit loan information
-                      </a>
-                    </li>
+                    {loan.summary.remaining_balance > 0?
+                      <li>
+                        <a
+                        className={loan.edit.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
+                        onClick={() => loan.edit.backend.processing? false : this.props.toggleEditLoanInformation(!loan.edit.shown, loan_index)}>
+                          Edit loan information
+                        </a>
+                      </li>
+                    : null}
                   </ul>
                 </div>
 

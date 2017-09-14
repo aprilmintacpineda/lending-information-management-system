@@ -6423,7 +6423,7 @@ var BorrowerProfile = function (_Component) {
                       'Generate contract'
                     )
                   ),
-                  _react2.default.createElement(
+                  loan.summary.remaining_balance > 0 ? _react2.default.createElement(
                     'li',
                     null,
                     _react2.default.createElement(
@@ -6435,7 +6435,7 @@ var BorrowerProfile = function (_Component) {
                         } },
                       'Edit loan information'
                     )
-                  )
+                  ) : null
                 )
               ),
               !loan.edit.backend.processing && loan.edit.backend.status == 'successful' ? _react2.default.createElement(
