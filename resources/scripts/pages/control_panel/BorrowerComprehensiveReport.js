@@ -93,7 +93,7 @@ class BorrowerComprehensiveReport extends Component {
                           <tr>
                             <td>Fully paid</td>
                             <td>:</td>
-                            <td>{loan.is_fully_paid? 'Yes' : 'No'}</td>
+                            <td>{loan.loan_summary.remaining_balance > 0? 'No' : 'Yes'}</td>
                           </tr>
                           <tr>
                             <td>Date Loan</td>

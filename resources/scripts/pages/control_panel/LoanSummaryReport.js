@@ -90,6 +90,11 @@ class LoanSummaryReport extends Component {
                         <td>{this.props.loan.data.id}</td>
                       </tr>
                       <tr>
+                        <td>Fully Paid</td>
+                        <td>:</td>
+                        <td>{this.props.loan.data.loan_payments_summary.remaining_balance > 0? 'No' : 'Yes'}</td>
+                      </tr>
+                      <tr>
                         <td>Date Loan</td>
                         <td>:</td>
                         <td>{toFormalDate(this.props.loan.data.loan_date)}</td>

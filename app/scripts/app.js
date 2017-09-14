@@ -3572,7 +3572,7 @@ var BorrowerComprehensiveReport = function (_Component) {
                           _react2.default.createElement(
                             'td',
                             null,
-                            loan.is_fully_paid ? 'Yes' : 'No'
+                            loan.loan_summary.remaining_balance > 0 ? 'No' : 'Yes'
                           )
                         ),
                         _react2.default.createElement(
@@ -12264,6 +12264,25 @@ var LoanSummaryReport = function (_Component) {
                         'td',
                         null,
                         this.props.loan.data.id
+                      )
+                    ),
+                    _react2.default.createElement(
+                      'tr',
+                      null,
+                      _react2.default.createElement(
+                        'td',
+                        null,
+                        'Fully Paid'
+                      ),
+                      _react2.default.createElement(
+                        'td',
+                        null,
+                        ':'
+                      ),
+                      _react2.default.createElement(
+                        'td',
+                        null,
+                        this.props.loan.data.loan_payments_summary.remaining_balance > 0 ? 'No' : 'Yes'
                       )
                     ),
                     _react2.default.createElement(
