@@ -43,7 +43,7 @@ ipcMain.on('BORROWER_PROFILE_FETCH', (event, args) => {
       contact_numbers: borrower.contact_numbers.map(contact_number => ({
         ...contact_number.dataValues
       })),
-      loans: borrower.loans.map(loan => ({
+      loans: borrower.loans.reverse().map(loan => ({
         ...loan.dataValues,
         loan_payments: loan.loan_payments.reverse().map(payment => ({
           ...payment.dataValues
