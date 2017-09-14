@@ -13542,7 +13542,7 @@ var StatusReport = function (_Component) {
       var stepSize = highest_value <= 1000 ? 100 : highest_value <= 10000 ? 1000 : highest_value <= 100000 ? 10000 : 100000;
 
       var myChart = new _chart2.default(canvas, {
-        type: 'bar',
+        type: 'line',
         data: {
           labels: Object.keys(this.props.report.data.loan_increase).map(function (index) {
             return (0, _DateTime.monthList)()[index];
@@ -13594,7 +13594,7 @@ var StatusReport = function (_Component) {
       var stepSize = highest_value <= 1000 ? 100 : highest_value <= 10000 ? 1000 : highest_value <= 100000 ? 10000 : 100000;
 
       var myChart = new _chart2.default(canvas, {
-        type: 'bar',
+        type: 'line',
         data: {
           labels: Object.keys(this.props.report.data.payment_increase).map(function (index) {
             return (0, _DateTime.monthList)()[index];
@@ -13645,7 +13645,7 @@ var StatusReport = function (_Component) {
       var stepSize = highest_value >= 5 ? 5 : 1;
 
       var myChart = new _chart2.default(canvas, {
-        type: 'bar',
+        type: 'line',
         data: {
           labels: Object.keys(this.props.report.data.borrower_increase).map(function (index) {
             return (0, _DateTime.monthList)()[index];

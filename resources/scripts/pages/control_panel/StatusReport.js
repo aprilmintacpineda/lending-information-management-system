@@ -58,7 +58,7 @@ class StatusReport extends Component {
       : 100000;
 
     let myChart = new Chart(canvas, {
-      type: 'bar',
+      type: 'line',
       data: {
         labels: Object.keys(this.props.report.data.loan_increase).map(index => monthList()[index]),
         datasets: [{
@@ -121,7 +121,7 @@ class StatusReport extends Component {
       : 100000;
 
     let myChart = new Chart(canvas, {
-      type: 'bar',
+      type: 'line',
       data: {
         labels: Object.keys(this.props.report.data.payment_increase).map(index => monthList()[index]),
         datasets: [{
@@ -177,7 +177,7 @@ class StatusReport extends Component {
     let stepSize = highest_value >= 5? 5: 1;
 
     let myChart = new Chart(canvas, {
-      type: 'bar',
+      type: 'line',
       data: {
         labels: Object.keys(this.props.report.data.borrower_increase).map(index => monthList()[index]),
         datasets: [{
