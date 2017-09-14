@@ -45,13 +45,13 @@ class StatusReport extends Component {
       return accumulator;
     }))();
 
-    let max = highest_value + 1000;
+    let max = highest_value + (0.25 * (highest_value * 2));
 
-    let stepSize = highest_value < 1000?
+    let stepSize = highest_value <= 1000?
         100
-      : highest_value < 10000?
+      : highest_value <= 10000?
         1000
-      : highest_value < 100000?
+      : highest_value <= 100000?
         10000
       : 100000;
 
@@ -108,13 +108,13 @@ class StatusReport extends Component {
       return accumulator;
     }))();
 
-    let max = highest_value + 1000;
+    let max = highest_value + (0.25 * (highest_value * 2));
 
-    let stepSize = highest_value < 1000?
+    let stepSize = highest_value <= 1000?
         100
-      : highest_value < 10000?
+      : highest_value <= 10000?
         1000
-      : highest_value < 100000?
+      : highest_value <= 100000?
         10000
       : 100000;
 
@@ -172,7 +172,7 @@ class StatusReport extends Component {
     }))();
 
     let max = highest_value + 5;
-    let stepSize = highest_value > 5? 5: 1;
+    let stepSize = highest_value >= 5? 5: 1;
 
     let myChart = new Chart(canvas, {
       type: 'bar',
