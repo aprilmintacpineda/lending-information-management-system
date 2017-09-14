@@ -83,16 +83,6 @@ function computePenaltySummary(loan) {
   }
 }
 
-function isFullyPaid(loan) {
-  let total_amount_paid = 0;
-
-  loan.loan_payments.forEach(loan_payment => {
-    total_amount_paid += loan_payment.amount;
-  });
-
-  return loan.amount - total_amount_paid == 0? true: false;
-}
-
 export default function borrower_reports(state = initial_state, action) {
   switch(action.type) {
     case '_BORROWERREPORTS_INITIAL_FETCH':
@@ -110,7 +100,6 @@ export default function borrower_reports(state = initial_state, action) {
           ...action.data,
           loans: action.data.loans.map(loan => ({
             ...loan,
-            is_fully_paid: isFullyPaid(loan),
             loan_summary: computeLoanSummary(loan),
             penalties_summary: computePenaltySummary(loan)
           })),

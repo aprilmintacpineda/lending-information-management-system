@@ -8279,7 +8279,7 @@ var BorrowerSummaryReport = function (_Component) {
                           _react2.default.createElement(
                             'td',
                             null,
-                            loan.is_fully_paid ? 'Yes' : 'No'
+                            loan.loan_summary.remaining_balance == 0 ? 'Yes' : 'No'
                           )
                         ),
                         _react2.default.createElement(
@@ -17638,16 +17638,6 @@ function computePenaltySummary(loan) {
   };
 }
 
-function isFullyPaid(loan) {
-  var total_amount_paid = 0;
-
-  loan.loan_payments.forEach(function (loan_payment) {
-    total_amount_paid += loan_payment.amount;
-  });
-
-  return loan.amount - total_amount_paid == 0 ? true : false;
-}
-
 function borrower_reports() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _reports2.default;
   var action = arguments[1];
@@ -17667,7 +17657,6 @@ function borrower_reports() {
         data: _extends({}, action.data, {
           loans: action.data.loans.map(function (loan) {
             return _extends({}, loan, {
-              is_fully_paid: isFullyPaid(loan),
               loan_summary: computeLoanSummary(loan),
               penalties_summary: computePenaltySummary(loan)
             });
