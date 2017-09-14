@@ -247,20 +247,24 @@ class BorrowerProfile extends Component {
             </ul>
           : !penalty.penalty_payment_fields.shown && !penalty.was_waved?
             <ul className="actions">
-              <li>
-                <a
-                className={!penalty.edit.backend.processing? 'default-btn-blue' : 'default-btn-blue disabled'}
-                onClick={() => penalty.edit.backend.processing? false : this.props.togglePenaltyEdit(true, penalty_index, loan_index)}>
-                  Edit penalty information
-                </a>
-              </li>
-              <li>
-                <a
-                className={!penalty.penalty_payment_fields.backend.processing? 'default-btn-blue' : 'default-btn-blue disabled'}
-                onClick={() => penalty.penalty_payment_fields.backend.processing? false : this.props.togglePenaltyPaymentForm(true, penalty_index, loan_index)}>
-                  Add new payment
-                </a>
-              </li>
+              {penalty.summary.remaining_balance > 0?
+                <li>
+                  <a
+                  className={!penalty.edit.backend.processing? 'default-btn-blue' : 'default-btn-blue disabled'}
+                  onClick={() => penalty.edit.backend.processing? false : this.props.togglePenaltyEdit(true, penalty_index, loan_index)}>
+                    Edit penalty information
+                  </a>
+                </li>
+              : null}
+              {penalty.summary.remaining_balance > 0?
+                <li>
+                  <a
+                  className={!penalty.penalty_payment_fields.backend.processing? 'default-btn-blue' : 'default-btn-blue disabled'}
+                  onClick={() => penalty.penalty_payment_fields.backend.processing? false : this.props.togglePenaltyPaymentForm(true, penalty_index, loan_index)}>
+                    Add new payment
+                  </a>
+                </li>
+              : null}
               {!penalty.penalty_payments.length?
                 <li>
                   <a

@@ -5481,7 +5481,7 @@ var BorrowerProfile = function (_Component) {
           ) : !penalty.penalty_payment_fields.shown && !penalty.was_waved ? _react2.default.createElement(
             'ul',
             { className: 'actions' },
-            _react2.default.createElement(
+            penalty.summary.remaining_balance > 0 ? _react2.default.createElement(
               'li',
               null,
               _react2.default.createElement(
@@ -5493,8 +5493,8 @@ var BorrowerProfile = function (_Component) {
                   } },
                 'Edit penalty information'
               )
-            ),
-            _react2.default.createElement(
+            ) : null,
+            penalty.summary.remaining_balance > 0 ? _react2.default.createElement(
               'li',
               null,
               _react2.default.createElement(
@@ -5506,7 +5506,7 @@ var BorrowerProfile = function (_Component) {
                   } },
                 'Add new payment'
               )
-            ),
+            ) : null,
             !penalty.penalty_payments.length ? _react2.default.createElement(
               'li',
               null,
