@@ -1636,7 +1636,7 @@ export default function borrower_profile(state = initial_state, action) {
                 shown: false,
                 backend: {
                   processing: false,
-                  status: 'successful',
+                  status: null,
                   message: null,
                   allow_submit: false
                 }

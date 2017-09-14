@@ -398,7 +398,7 @@ class BorrowerProfile extends Component {
             transitionName="emphasize-entry"
             transitionEnterTimeout={400}
             transitionLeaveTimeout={400}>
-              {penalty.penalty_payments.length? penalty.penalty_payments.map((penalty_payment, penalty_payment_index) =>
+              {penalty.penalty_payments.length? penalty.penalty_payments.filter((penalty_payment, index) => index < 3).map((penalty_payment, penalty_payment_index) =>
                 <div ref={element => this['penalty_payment_id_' + penalty_payment.id] = element} className="payment-container" key={penalty.penalty_payments.length - penalty_payment_index}>
                   {penalty_payment.edit.shown?
                     <ul className="penalty-form">

@@ -5738,7 +5738,9 @@ var BorrowerProfile = function (_Component) {
               transitionName: 'emphasize-entry',
               transitionEnterTimeout: 400,
               transitionLeaveTimeout: 400 },
-            penalty.penalty_payments.length ? penalty.penalty_payments.map(function (penalty_payment, penalty_payment_index) {
+            penalty.penalty_payments.length ? penalty.penalty_payments.filter(function (penalty_payment, index) {
+              return index < 3;
+            }).map(function (penalty_payment, penalty_payment_index) {
               return _react2.default.createElement(
                 'div',
                 { ref: function ref(element) {
@@ -16692,7 +16694,7 @@ function borrower_profile() {
                     shown: false,
                     backend: {
                       processing: false,
-                      status: 'successful',
+                      status: null,
                       message: null,
                       allow_submit: false
                     }
