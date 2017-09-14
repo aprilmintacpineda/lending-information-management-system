@@ -13474,6 +13474,8 @@ var _WithLabel2 = _interopRequireDefault(_WithLabel);
 
 var _status_report = __webpack_require__(57);
 
+var _Numbers = __webpack_require__(8);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -13484,6 +13486,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 // components
 
 // actions
+
+// helpers
 
 
 var StatusReport = function (_Component) {
@@ -13711,9 +13715,13 @@ var StatusReport = function (_Component) {
                   _WithLabel2.default,
                   { label: 'Description' },
                   _react2.default.createElement(
-                    'p',
+                    'div',
                     null,
-                    'The chart below shows you how many new borrowers registered this month and the past 5 months.'
+                    _react2.default.createElement(
+                      'p',
+                      null,
+                      'The chart below shows you how many new borrowers registered this month and the past 5 months.'
+                    )
                   )
                 ),
                 _react2.default.createElement('canvas', { ref: function ref(el) {

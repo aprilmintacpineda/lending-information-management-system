@@ -10,6 +10,8 @@ import WithIcon from '../../components/WithIcon';
 import WithLabel from '../../components/WithLabel';
 // actions
 import { fetch } from '../../actions/control_panel/status_report';
+// helpers
+import { comma } from '../../helpers/Numbers';
 
 class StatusReport extends Component {
   constructor(props) {
@@ -234,7 +236,9 @@ class StatusReport extends Component {
               <div className="body">
                 <section>
                   <WithLabel label="Description">
-                    <p>The chart below shows you how many new borrowers registered this month and the past 5 months.</p>
+                    <div>
+                      <p>The chart below shows you how many new borrowers registered this month and the past 5 months.</p>
+                    </div>
                   </WithLabel>
 
                   <canvas ref={el => this['borrower_increase_chart'] = el} />
