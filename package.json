@@ -1,6 +1,6 @@
 {
   "name": "lending-information-manayage-system",
-  "version": "1.0.86.7",
+  "version": "1.0.98.8",
   "description": "A desktop-based computerized system that will make your lending experience a lot easier.",
   "main": "app/scripts/main.js",
   "scripts": {
@@ -36,7 +36,7 @@
     },
     "appId": "com.aprilmintacpineda.lims",
     "productName": "Lending Information Management System (LIMS)",
-    "buildVersion": "1.0.86.7",
+    "buildVersion": "1.0.98.8",
     "copyright": "April Mintac Pineda 2017",
     "files": [
       "app/**/*",
