@@ -57,7 +57,13 @@ ipcMain.on('DASHBOARD_GET_DUEDATES_TOMORROW', (event, args) => {
       if(loan.payment_method != 4) {
         let today = new Date();
         today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
-        let due_date = getDueDate(loan);
+        let due_date;
+
+        if(loan.payment_method == 4) {
+          due_date = new Date(loan.expected_date_of_payment);
+        } else {
+          due_date = getDueDate(loan);
+        }
 
         if(today.getMonth() - due_date.getMonth() == 0 && due_date.getDate() - today.getDate() == 1 && getRemainingBalance(loan) > 0) {
           due_dates_tomorrow.push(loan);
@@ -84,7 +90,13 @@ ipcMain.on('DASHBOARD_GET_DUEDATES_TODAY', (event, args) => {
     loans.forEach(loan => {
       let today = new Date();
       today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
-      let due_date = getDueDate(loan);
+      let due_date;
+
+      if(loan.payment_method == 4) {
+        due_date = new Date(loan.expected_date_of_payment);
+      } else {
+        due_date = getDueDate(loan);
+      }
 
       if(due_date.getTime() == today.getTime() && getRemainingBalance(loan) > 0) {
         due_dates_today.push(loan);
@@ -112,7 +124,13 @@ ipcMain.on('DASHBOARD_GET_DUEDATES_THISMONTH', (event, args) => {
         // monthly || semi-monthly
         let today = new Date();
         today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
-        let due_date = getDueDate(loan);
+        let due_date;
+
+        if(loan.payment_method == 4) {
+          due_date = new Date(loan.expected_date_of_payment);
+        } else {
+          due_date = getDueDate(loan);
+        }
 
         if(due_date.getMonth() == today.getMonth() && due_date.getDate() > today.getDate() + 1 && getRemainingBalance(loan) > 0) {
           due_dates_this_month.push(loan);
@@ -139,7 +157,13 @@ ipcMain.on('DASHBOARD_GET_PASTDUEDATES', (event, args) => {
     loans.forEach(loan => {
       let today = new Date();
       today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
-      let due_date = getDueDate(loan);
+      let due_date;
+
+      if(loan.payment_method == 4) {
+        due_date = new Date(loan.expected_date_of_payment);
+      } else {
+        due_date = getDueDate(loan);
+      }
 
       if(due_date.getTime() < today.getTime() && getRemainingBalance(loan) > 0) {
         past_due_dates.push(loan);
