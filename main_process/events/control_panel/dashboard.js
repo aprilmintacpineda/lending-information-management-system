@@ -35,6 +35,17 @@ function getLoans() {
   });
 }
 
+function getRemainingBalance(loan) {
+  let total_amount_to_pay = loan.amount + loan.profit;
+  let total_amount_paid = 0;
+
+  loan.loan_payments.forEach(loan_payment => {
+    total_amount_paid += loan_payment.amount;
+  });
+
+  return total_amount_to_pay - total_amount_paid;
+}
+
 ipcMain.on('DASHBOARD_GET_DUEDATES_TOMORROW', (event, args) => {
   getLoans()
   .then(loans => {
@@ -48,7 +59,7 @@ ipcMain.on('DASHBOARD_GET_DUEDATES_TOMORROW', (event, args) => {
         today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
         let due_date = getDueDate(loan);
 
-        if(today.getMonth() - due_date.getMonth() == 0 && due_date.getDate() - today.getDate() == 1) {
+        if(today.getMonth() - due_date.getMonth() == 0 && due_date.getDate() - today.getDate() == 1 && getRemainingBalance(loan) > 0) {
           due_dates_tomorrow.push(loan);
         }
       }
@@ -75,7 +86,7 @@ ipcMain.on('DASHBOARD_GET_DUEDATES_TODAY', (event, args) => {
       today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
       let due_date = getDueDate(loan);
 
-      if(due_date.getTime() == today.getTime()) {
+      if(due_date.getTime() == today.getTime() && getRemainingBalance(loan) > 0) {
         due_dates_today.push(loan);
       }
     });
@@ -103,7 +114,7 @@ ipcMain.on('DASHBOARD_GET_DUEDATES_THISMONTH', (event, args) => {
         today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
         let due_date = getDueDate(loan);
 
-        if(due_date.getMonth() == today.getMonth() && due_date.getDate() > today.getDate() + 1) {
+        if(due_date.getMonth() == today.getMonth() && due_date.getDate() > today.getDate() + 1 && getRemainingBalance(loan) > 0) {
           due_dates_this_month.push(loan);
         }
       }
@@ -130,7 +141,7 @@ ipcMain.on('DASHBOARD_GET_PASTDUEDATES', (event, args) => {
       today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
       let due_date = getDueDate(loan);
 
-      if(due_date.getTime() < today.getTime()) {
+      if(due_date.getTime() < today.getTime() && getRemainingBalance(loan) > 0) {
         past_due_dates.push(loan);
       }
     });
@@ -157,7 +168,7 @@ ipcMain.on('DASHBOARD_GET_ONEGIVES', (event, args) => {
         today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
         let due_date = new Date(loan.expected_date_of_payment);
 
-        if(today.getMonth() - due_date.getMonth() >= 0 && due_date.getDate() - today.getDate() != 1) {
+        if(today.getMonth() - due_date.getMonth() >= 0 && due_date.getDate() - today.getDate() != 1 && getRemainingBalance(loan) > 0) {
           one_gives.push({
             ...loan,
             due_date
