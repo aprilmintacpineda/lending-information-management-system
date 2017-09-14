@@ -103,7 +103,7 @@ ipcMain.on('DASHBOARD_GET_DUEDATES_THISMONTH', (event, args) => {
         today = new Date((today.getMonth() + 1) + '-' + today.getDate() + '-' + today.getFullYear());
         let due_date = getDueDate(loan);
 
-        if(due_date.getMonth() == today.getMonth() && due_date.getDate() > today.getDate()) {
+        if(due_date.getMonth() == today.getMonth() && due_date.getDate() > today.getDate() + 1) {
           due_dates_this_month.push(loan);
         }
       }

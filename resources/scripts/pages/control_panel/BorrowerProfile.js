@@ -112,11 +112,7 @@ class BorrowerProfile extends Component {
 
         <div className="row">
           <WithLabel label="Amount">
-            {loan_payment.payment_coverage == 'period-only'?
-              <p>Payment of <strong>{currency(loan_payment.amount)}</strong> Pesos <strong>for the period only</strong>.</p>
-            : loan_payment.payment_coverage == 'partial-only'?
-              <p><strong>Partial payment</strong> of <strong>{currency(loan_payment.amount)} Pesos</strong> for the period only.</p>
-            : <p><strong>Full payment</strong> of <strong>{currency(loan_payment.amount)} Pesos</strong> for this loan.</p>}
+            <p>{currency(loan_payment.amount)} Pesos</p>
           </WithLabel>
         </div>
 
@@ -1179,7 +1175,7 @@ class BorrowerProfile extends Component {
                   transitionName="emphasize-entry"
                   transitionEnterTimeout={400}
                   transitionLeaveTimeout={400}>
-                    {loan.loan_payments.length? loan.loan_payments.map((loan_payment, loan_payment_index) =>
+                    {loan.loan_payments.length? loan.loan_payments.filter((loan_payments, index) => index < 4).map((loan_payment, loan_payment_index) =>
                       <div ref={element => this['loan_payment_id_' + loan_payment.id] = element} className="payment-container" key={loan.loan_payments.length - loan_payment_index}>
                         {loan_payment.edit.shown?
                           <ul className="payment-edit-fields">
