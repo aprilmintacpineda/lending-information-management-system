@@ -4463,8 +4463,6 @@ var BorrowerNewLoan = function (_Component) {
     value: function render() {
       var _this2 = this;
 
-      console.log(this.props.new_loan);
-
       return _react2.default.createElement(
         _WithSidebar2.default,
         null,
@@ -11479,7 +11477,11 @@ var LoanContract = function (_Component) {
           _react2.default.createElement(
             'p',
             { className: 'centered-text' },
-            'Katherine Manalo Singson',
+            this.props.session.user_data.firstname,
+            ' ',
+            this.props.session.user_data.middlename,
+            ' ',
+            this.props.session.user_data.surname,
             _react2.default.createElement('br', null),
             '(the "Lender")'
           ),
@@ -12007,7 +12009,8 @@ var LoanContract = function (_Component) {
 
 exports.default = (0, _reactRedux.connect)(function (store) {
   return {
-    loan: _extends({}, store.loan_reports)
+    loan: _extends({}, store.loan_reports),
+    session: _extends({}, store.session)
   };
 }, {
   fetch: reportsAction.fetch,
@@ -12748,8 +12751,6 @@ var NewBorrower = function (_Component) {
     key: 'render',
     value: function render() {
       var _this2 = this;
-
-      console.log(this.props.new_borrower);
 
       var app_path = _electron.remote.app.getAppPath();
 
@@ -13684,8 +13685,6 @@ var StatusReport = function (_Component) {
       var _this5 = this;
 
       var app_path = _electron.remote.app.getAppPath();
-
-      console.log(this.props.report);
 
       return _react2.default.createElement(
         _WithSidebar2.default,

@@ -1,5 +1,5 @@
 {
-  "name": "lending-information-manayage-system",
+  "name": "lending-information-management-system",
   "version": "1.0.105.9",
   "description": "A desktop-based computerized system that will make your lending experience a lot easier.",
   "main": "app/scripts/main.js",
@@ -26,7 +26,7 @@
       "createDesktopShortcut": true,
       "installerIcon": "build/icon.ico",
       "uninstallerIcon": "build/icon.ico",
-      "uninstallDisplayName": "Uninstall LIMS",
+      "uninstallDisplayName": "Lending Information Management System",
       "license": "EULA"
     },
     "win":{

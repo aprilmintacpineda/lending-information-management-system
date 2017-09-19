@@ -223,8 +223,6 @@ class StatusReport extends Component {
   render() {
     let app_path = remote.app.getAppPath();
 
-    console.log(this.props.report);
-
     return (
       <WithSidebar onLink="status-report">
         <div>

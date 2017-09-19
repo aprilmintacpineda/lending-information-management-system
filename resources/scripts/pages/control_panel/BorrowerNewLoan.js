@@ -47,9 +47,6 @@ class BorrowerNewLoan extends Component {
   }
 
   render() {
-
-    console.log(this.props.new_loan);
-
     return (
       <WithSidebar>
         <div className="borrower-new-loan-wrapper">

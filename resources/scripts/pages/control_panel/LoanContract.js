@@ -46,7 +46,7 @@ class LoanContract extends Component {
             <p><strong>THIS LOAN AGREEMENT (this "Agreement") dated this _____ day of _______________, 20___.</strong></p>
             <p><strong>BETWEEN</strong></p>
             <p className="centered-text">
-              Katherine Manalo Singson<br/>
+              {this.props.session.user_data.firstname} {this.props.session.user_data.middlename} {this.props.session.user_data.surname}<br/>
               (the "Lender")
             </p>
             <p className="right-aligned-text"><strong>OF THE FIRST PART</strong></p>
@@ -234,7 +234,8 @@ class LoanContract extends Component {
 }
 
 export default connect(store => ({
-  loan: {...store.loan_reports}
+  loan: {...store.loan_reports},
+  session: {...store.session}
 }), {
   fetch: reportsAction.fetch,
   putHash: putHash

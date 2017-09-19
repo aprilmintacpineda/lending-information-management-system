@@ -62,8 +62,6 @@ class NewBorrower extends Component {
   }
 
   render() {
-    console.log(this.props.new_borrower);
-
     let app_path = remote.app.getAppPath();
 
     return (
