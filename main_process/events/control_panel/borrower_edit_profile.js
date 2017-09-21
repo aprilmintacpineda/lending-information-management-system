@@ -64,6 +64,7 @@ ipcMain.on('EDITBORRWOERPROFILE_SEND', (event, arg) => {
           })
           .then(() => resolve());
         } else {
+          let updated_at = new Date().toISOString();
           ids_found.push(contact_number.id);
 
           models.contact_numbers.update({

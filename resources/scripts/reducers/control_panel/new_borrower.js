@@ -16,7 +16,8 @@ import {
 
 function allowSubmit(new_state) {
   if(new_state.amount_loan.condition == 'due-date-only') {
-    return new_state.backend.processing
+    return !new_state.contact_numbers.filter(contact_number => contact_number.value.length).length
+      || new_state.backend.processing
       || !new_state.address.value.length
       || new_state.address.errors.length
       || !new_state.firstname.value.length
@@ -31,7 +32,8 @@ function allowSubmit(new_state) {
       || new_state.loan_date.errors.length
       || ((!new_state.months_to_pay.value.length && new_state.months_to_pay.errors.length) || new_state.payment_method == 4)? false : true;
   } else if(new_state.amount_loan.condition == 'interest-only') {
-    return new_state.backend.processing
+    return !new_state.contact_numbers.filter(contact_number => contact_number.value.length).length
+      || new_state.backend.processing
       || !new_state.address.value.length
       || new_state.address.errors.length
       || !new_state.firstname.value.length
@@ -47,7 +49,8 @@ function allowSubmit(new_state) {
       || !new_state.interest_rate.value.length
       || new_state.interest_rate.errors.length? false : true;
   } else if(new_state.amount_loan.condition == 'no-due-date-and-interest') {
-    return new_state.backend.processing
+    return !new_state.contact_numbers.filter(contact_number => contact_number.value.length).length
+      || new_state.backend.processing
       || !new_state.address.value.length
       || new_state.address.errors.length
       || !new_state.firstname.value.length
@@ -62,7 +65,8 @@ function allowSubmit(new_state) {
       || new_state.loan_date.errors.length? false : true;
   }
 
-  return new_state.backend.processing
+  return !new_state.contact_numbers.filter(contact_number => contact_number.value.length).length
+    || new_state.backend.processing
     || !new_state.address.value.length
     || new_state.address.errors.length
     || !new_state.firstname.value.length

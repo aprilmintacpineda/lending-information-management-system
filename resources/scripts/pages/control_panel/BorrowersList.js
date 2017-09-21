@@ -37,11 +37,7 @@ class BorrowersList extends Component {
 
           <div className="row">
             <WithLabel label="Contact numbers">
-              <p>
-                {borrower.contact_numbers.length > 0?
-                  borrower.contact_numbers.map((contact_number, index) => contact_number.number + (index + 1 < borrower.contact_numbers.length? ', ': ''))
-                : 'No contact numbers to show.'}
-              </p>
+              <p>{borrower.contact_numbers.map((contact_number, index) => contact_number.number + (index + 1 < borrower.contact_numbers.length? ', ': ''))}</p>
             </WithLabel>
           </div>
 

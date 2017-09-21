@@ -9,7 +9,21 @@ import {
 
 import { ucwords } from '../../helpers/Strings';
 
+function allowSubmit(newState) {
+  return !newState.edit.address.value.length
+      || newState.edit.address.errors.length
+      || !newState.edit.firstname.value.length
+      || newState.edit.firstname.errors.length
+      || !newState.edit.middlename.value.length
+      || newState.edit.middlename.errors.length
+      || !newState.edit.surname.value.length
+      || newState.edit.surname.errors.length
+      || !newState.edit.contact_numbers.filter(contact_number => contact_number.value.length).length? false : true;
+}
+
 export default function edit_borrower_profile(state = initial_state, action) {
+  let new_state;
+
   switch(action.type) {
     case '_EDITBORROWERPROFILE_FETCH':
       return {
@@ -80,7 +94,7 @@ export default function edit_borrower_profile(state = initial_state, action) {
         }
       }
     case 'EDITBORRWOERPROFILE_EDIT_ADDRESS':
-      return {
+      new_state = {
         ...state,
         edit: {
           ...state.edit,
@@ -90,14 +104,36 @@ export default function edit_borrower_profile(state = initial_state, action) {
           }
         }
       }
-    case 'EDITBORRWOERPROFILE_EDIT_FIRSTNAME':
+
       return {
+        ...new_state,
+        edit: {
+          ...new_state.edit,
+          backend: {
+            ...new_state.edit.backend,
+            allow_submit: allowSubmit(new_state)
+          }
+        }
+      }
+    case 'EDITBORRWOERPROFILE_EDIT_FIRSTNAME':
+      new_state = {
         ...state,
         edit: {
           ...state.edit,
           firstname: {
             value: ucwords(action.value),
             errors: validateName('Firstname', action.value)
+          }
+        }
+      }
+
+      return {
+        ...new_state,
+        edit: {
+          ...new_state.edit,
+          backend: {
+            ...new_state.edit.backend,
+            allow_submit: allowSubmit(new_state)
           }
         }
       }
@@ -113,7 +149,7 @@ export default function edit_borrower_profile(state = initial_state, action) {
         }
       }
     case 'EDITBORRWOERPROFILE_EDIT_SURNAME':
-      return {
+      new_state = {
         ...state,
         edit: {
           ...state.edit,
@@ -123,8 +159,19 @@ export default function edit_borrower_profile(state = initial_state, action) {
           }
         }
       }
-    case 'EDITBORRWOERPROFILE_EDIT_GENDER':
+
       return {
+        ...new_state,
+        edit: {
+          ...new_state.edit,
+          backend: {
+            ...new_state.edit.backend,
+            allow_submit: allowSubmit(new_state)
+          }
+        }
+      }
+    case 'EDITBORRWOERPROFILE_EDIT_GENDER':
+      new_state = {
         ...state,
         edit: {
           ...state.edit,
@@ -134,8 +181,19 @@ export default function edit_borrower_profile(state = initial_state, action) {
           }
         }
       }
-    case 'EDITBORRWOERPROFILE_EDIT_CONTACT_NUMBER':
+
       return {
+        ...new_state,
+        edit: {
+          ...new_state.edit,
+          backend: {
+            ...new_state.edit.backend,
+            allow_submit: allowSubmit(new_state)
+          }
+        }
+      }
+    case 'EDITBORRWOERPROFILE_EDIT_CONTACT_NUMBER':
+      new_state = {
         ...state,
         edit: {
           ...state.edit,
@@ -144,6 +202,17 @@ export default function edit_borrower_profile(state = initial_state, action) {
               value: action.value,
               errors: validatePhoneNumber(action.value)
             }): contact_number)
+        }
+      }
+
+      return {
+        ...new_state,
+        edit: {
+          ...new_state.edit,
+          backend: {
+            ...new_state.edit.backend,
+            allow_submit: allowSubmit(new_state)
+          }
         }
       }
     case 'EDITBORRWOERPROFILE_ADD_CONTACT_NUMBER':
@@ -161,7 +230,7 @@ export default function edit_borrower_profile(state = initial_state, action) {
     case 'EDITBORRWOERPROFILE_REMOVE_CONTACT_NUMBER':
       let contact_numbers = state.edit.contact_numbers.filter((contact_number, index) => index != action.index);
 
-      return {
+      new_state = {
         ...state,
         edit: {
           ...state.edit,
@@ -170,6 +239,17 @@ export default function edit_borrower_profile(state = initial_state, action) {
             value: '',
             errors: []
           }]
+        }
+      }
+
+      return {
+        ...new_state,
+        edit: {
+          ...new_state.edit,
+          backend: {
+            ...new_state.edit.backend,
+            allow_submit: allowSubmit(new_state)
+          }
         }
       }
     case '_EDITBORRWOERPROFILE_SEND':
@@ -204,6 +284,10 @@ export default function edit_borrower_profile(state = initial_state, action) {
             value: action.data.gender,
             errors: []
           },
+          address: {
+            value: action.data.address,
+            errors: []
+          },
           contact_numbers: action.data.contact_numbers.length? action.data.contact_numbers.map(contact_number => ({
             id: contact_number.id,
             value: contact_number.number,
@@ -226,6 +310,7 @@ export default function edit_borrower_profile(state = initial_state, action) {
         edit: {
           ...state.edit,
           backend: {
+            ...state.edit.backend,
             processing: false,
             status: 'failed',
             message: action.message

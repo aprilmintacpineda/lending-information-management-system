@@ -115,13 +115,14 @@ class BorrowerEditProfile extends Component {
                 <li>
                   <InputButton
                   value="Save changes"
-                  disabled={this.props.edit_borrower_profile.edit.backend.processing}
+                  disabled={this.props.edit_borrower_profile.edit.backend.allow_submit && !this.props.edit_borrower_profile.edit.backend.processing? false: true}
                   sending={this.props.edit_borrower_profile.edit.backend.processing}
                   onClick={() => this.props.send({
                     firstname: this.props.edit_borrower_profile.edit.firstname.value,
                     middlename: this.props.edit_borrower_profile.edit.middlename.value,
                     surname: this.props.edit_borrower_profile.edit.surname.value,
                     gender: this.props.edit_borrower_profile.edit.gender.value,
+                    address: this.props.edit_borrower_profile.edit.address.value,
                     contact_numbers: this.props.edit_borrower_profile.edit.contact_numbers,
                     id: this.props.params.id
                   })}

@@ -4297,7 +4297,7 @@ var BorrowerEditProfile = function (_Component) {
                 null,
                 _react2.default.createElement(_InputButton2.default, {
                   value: 'Save changes',
-                  disabled: this.props.edit_borrower_profile.edit.backend.processing,
+                  disabled: this.props.edit_borrower_profile.edit.backend.allow_submit && !this.props.edit_borrower_profile.edit.backend.processing ? false : true,
                   sending: this.props.edit_borrower_profile.edit.backend.processing,
                   onClick: function onClick() {
                     return _this2.props.send({
@@ -4305,6 +4305,7 @@ var BorrowerEditProfile = function (_Component) {
                       middlename: _this2.props.edit_borrower_profile.edit.middlename.value,
                       surname: _this2.props.edit_borrower_profile.edit.surname.value,
                       gender: _this2.props.edit_borrower_profile.edit.gender.value,
+                      address: _this2.props.edit_borrower_profile.edit.address.value,
                       contact_numbers: _this2.props.edit_borrower_profile.edit.contact_numbers,
                       id: _this2.props.params.id
                     });
@@ -7897,11 +7898,7 @@ var BorrowerProfile = function (_Component) {
                 null,
                 'Contact information'
               ),
-              !this.props.borrower_profile.data.contact_numbers.length ? _react2.default.createElement(
-                'p',
-                null,
-                'No contact information to show.'
-              ) : _react2.default.createElement(
+              _react2.default.createElement(
                 'ul',
                 null,
                 this.props.borrower_profile.data.contact_numbers.map(function (contact_number, index) {
@@ -8757,9 +8754,9 @@ var BorrowersList = function (_Component) {
                 _react2.default.createElement(
                   'p',
                   null,
-                  borrower.contact_numbers.length > 0 ? borrower.contact_numbers.map(function (contact_number, index) {
+                  borrower.contact_numbers.map(function (contact_number, index) {
                     return contact_number.number + (index + 1 < borrower.contact_numbers.length ? ', ' : '');
-                  }) : 'No contact numbers to show.'
+                  })
                 )
               )
             ),
@@ -18085,9 +18082,17 @@ var _Strings = __webpack_require__(15);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function allowSubmit(newState) {
+  return !newState.edit.address.value.length || newState.edit.address.errors.length || !newState.edit.firstname.value.length || newState.edit.firstname.errors.length || !newState.edit.middlename.value.length || newState.edit.middlename.errors.length || !newState.edit.surname.value.length || newState.edit.surname.errors.length || !newState.edit.contact_numbers.filter(function (contact_number) {
+    return contact_number.value.length;
+  }).length ? false : true;
+}
+
 function edit_borrower_profile() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _edit_borrower_profile2.default;
   var action = arguments[1];
+
+  var new_state = void 0;
 
   switch (action.type) {
     case '_EDITBORROWERPROFILE_FETCH':
@@ -18154,7 +18159,7 @@ function edit_borrower_profile() {
         })
       });
     case 'EDITBORRWOERPROFILE_EDIT_ADDRESS':
-      return _extends({}, state, {
+      new_state = _extends({}, state, {
         edit: _extends({}, state.edit, {
           address: {
             value: action.value,
@@ -18162,13 +18167,29 @@ function edit_borrower_profile() {
           }
         })
       });
+
+      return _extends({}, new_state, {
+        edit: _extends({}, new_state.edit, {
+          backend: _extends({}, new_state.edit.backend, {
+            allow_submit: allowSubmit(new_state)
+          })
+        })
+      });
     case 'EDITBORRWOERPROFILE_EDIT_FIRSTNAME':
-      return _extends({}, state, {
+      new_state = _extends({}, state, {
         edit: _extends({}, state.edit, {
           firstname: {
             value: (0, _Strings.ucwords)(action.value),
             errors: (0, _Validator.validateName)('Firstname', action.value)
           }
+        })
+      });
+
+      return _extends({}, new_state, {
+        edit: _extends({}, new_state.edit, {
+          backend: _extends({}, new_state.edit.backend, {
+            allow_submit: allowSubmit(new_state)
+          })
         })
       });
     case 'EDITBORRWOERPROFILE_EDIT_MIDDLENAME':
@@ -18181,7 +18202,7 @@ function edit_borrower_profile() {
         })
       });
     case 'EDITBORRWOERPROFILE_EDIT_SURNAME':
-      return _extends({}, state, {
+      new_state = _extends({}, state, {
         edit: _extends({}, state.edit, {
           surname: {
             value: (0, _Strings.ucwords)(action.value),
@@ -18189,8 +18210,16 @@ function edit_borrower_profile() {
           }
         })
       });
+
+      return _extends({}, new_state, {
+        edit: _extends({}, new_state.edit, {
+          backend: _extends({}, new_state.edit.backend, {
+            allow_submit: allowSubmit(new_state)
+          })
+        })
+      });
     case 'EDITBORRWOERPROFILE_EDIT_GENDER':
-      return _extends({}, state, {
+      new_state = _extends({}, state, {
         edit: _extends({}, state.edit, {
           gender: {
             value: action.value,
@@ -18198,14 +18227,30 @@ function edit_borrower_profile() {
           }
         })
       });
+
+      return _extends({}, new_state, {
+        edit: _extends({}, new_state.edit, {
+          backend: _extends({}, new_state.edit.backend, {
+            allow_submit: allowSubmit(new_state)
+          })
+        })
+      });
     case 'EDITBORRWOERPROFILE_EDIT_CONTACT_NUMBER':
-      return _extends({}, state, {
+      new_state = _extends({}, state, {
         edit: _extends({}, state.edit, {
           contact_numbers: state.edit.contact_numbers.map(function (contact_number, index) {
             return index == action.index ? _extends({}, contact_number, {
               value: action.value,
               errors: (0, _Validator.validatePhoneNumber)(action.value)
             }) : contact_number;
+          })
+        })
+      });
+
+      return _extends({}, new_state, {
+        edit: _extends({}, new_state.edit, {
+          backend: _extends({}, new_state.edit.backend, {
+            allow_submit: allowSubmit(new_state)
           })
         })
       });
@@ -18224,13 +18269,21 @@ function edit_borrower_profile() {
         return index != action.index;
       });
 
-      return _extends({}, state, {
+      new_state = _extends({}, state, {
         edit: _extends({}, state.edit, {
           contact_numbers: contact_numbers.length ? contact_numbers : [{
             id: null,
             value: '',
             errors: []
           }]
+        })
+      });
+
+      return _extends({}, new_state, {
+        edit: _extends({}, new_state.edit, {
+          backend: _extends({}, new_state.edit.backend, {
+            allow_submit: allowSubmit(new_state)
+          })
         })
       });
     case '_EDITBORRWOERPROFILE_SEND':
@@ -18262,6 +18315,10 @@ function edit_borrower_profile() {
             value: action.data.gender,
             errors: []
           },
+          address: {
+            value: action.data.address,
+            errors: []
+          },
           contact_numbers: action.data.contact_numbers.length ? action.data.contact_numbers.map(function (contact_number) {
             return {
               id: contact_number.id,
@@ -18283,11 +18340,11 @@ function edit_borrower_profile() {
     case 'EDITBORRWOERPROFILE_SEND_FAILED':
       return _extends({}, state, {
         edit: _extends({}, state.edit, {
-          backend: {
+          backend: _extends({}, state.edit.backend, {
             processing: false,
             status: 'failed',
             message: action.message
-          }
+          })
         })
       });
     case 'EDITBORRWOERPROFILE_RESET':
@@ -18538,14 +18595,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function allowSubmit(new_state) {
   if (new_state.amount_loan.condition == 'due-date-only') {
-    return new_state.backend.processing || !new_state.address.value.length || new_state.address.errors.length || !new_state.firstname.value.length || new_state.firstname.errors.length || !new_state.middlename.value.length || new_state.middlename.errors.length || !new_state.surname.value.length || new_state.surname.errors.length || !new_state.amount_loan.value.length || new_state.amount_loan.errors.length || new_state.gender.errors.length || new_state.loan_date.errors.length || !new_state.months_to_pay.value.length && new_state.months_to_pay.errors.length || new_state.payment_method == 4 ? false : true;
+    return !new_state.contact_numbers.filter(function (contact_number) {
+      return contact_number.value.length;
+    }).length || new_state.backend.processing || !new_state.address.value.length || new_state.address.errors.length || !new_state.firstname.value.length || new_state.firstname.errors.length || !new_state.middlename.value.length || new_state.middlename.errors.length || !new_state.surname.value.length || new_state.surname.errors.length || !new_state.amount_loan.value.length || new_state.amount_loan.errors.length || new_state.gender.errors.length || new_state.loan_date.errors.length || !new_state.months_to_pay.value.length && new_state.months_to_pay.errors.length || new_state.payment_method == 4 ? false : true;
   } else if (new_state.amount_loan.condition == 'interest-only') {
-    return new_state.backend.processing || !new_state.address.value.length || new_state.address.errors.length || !new_state.firstname.value.length || new_state.firstname.errors.length || !new_state.middlename.value.length || new_state.middlename.errors.length || !new_state.surname.value.length || new_state.surname.errors.length || !new_state.amount_loan.value.length || new_state.amount_loan.errors.length || new_state.gender.errors.length || new_state.loan_date.errors.length || !new_state.interest_rate.value.length || new_state.interest_rate.errors.length ? false : true;
+    return !new_state.contact_numbers.filter(function (contact_number) {
+      return contact_number.value.length;
+    }).length || new_state.backend.processing || !new_state.address.value.length || new_state.address.errors.length || !new_state.firstname.value.length || new_state.firstname.errors.length || !new_state.middlename.value.length || new_state.middlename.errors.length || !new_state.surname.value.length || new_state.surname.errors.length || !new_state.amount_loan.value.length || new_state.amount_loan.errors.length || new_state.gender.errors.length || new_state.loan_date.errors.length || !new_state.interest_rate.value.length || new_state.interest_rate.errors.length ? false : true;
   } else if (new_state.amount_loan.condition == 'no-due-date-and-interest') {
-    return new_state.backend.processing || !new_state.address.value.length || new_state.address.errors.length || !new_state.firstname.value.length || new_state.firstname.errors.length || !new_state.middlename.value.length || new_state.middlename.errors.length || !new_state.surname.value.length || new_state.surname.errors.length || !new_state.amount_loan.value.length || new_state.amount_loan.errors.length || new_state.gender.errors.length || new_state.loan_date.errors.length ? false : true;
+    return !new_state.contact_numbers.filter(function (contact_number) {
+      return contact_number.value.length;
+    }).length || new_state.backend.processing || !new_state.address.value.length || new_state.address.errors.length || !new_state.firstname.value.length || new_state.firstname.errors.length || !new_state.middlename.value.length || new_state.middlename.errors.length || !new_state.surname.value.length || new_state.surname.errors.length || !new_state.amount_loan.value.length || new_state.amount_loan.errors.length || new_state.gender.errors.length || new_state.loan_date.errors.length ? false : true;
   }
 
-  return new_state.backend.processing || !new_state.address.value.length || new_state.address.errors.length || !new_state.firstname.value.length || new_state.firstname.errors.length || !new_state.middlename.value.length || new_state.middlename.errors.length || !new_state.surname.value.length || new_state.surname.errors.length || !new_state.amount_loan.value.length || new_state.amount_loan.errors.length || new_state.gender.errors.length || new_state.loan_date.errors.length || !new_state.interest_rate.value.length || new_state.interest_rate.errors.length || !new_state.months_to_pay.value.length && new_state.months_to_pay.errors.length || new_state.payment_method == 4 ? false : true;
+  return !new_state.contact_numbers.filter(function (contact_number) {
+    return contact_number.value.length;
+  }).length || new_state.backend.processing || !new_state.address.value.length || new_state.address.errors.length || !new_state.firstname.value.length || new_state.firstname.errors.length || !new_state.middlename.value.length || new_state.middlename.errors.length || !new_state.surname.value.length || new_state.surname.errors.length || !new_state.amount_loan.value.length || new_state.amount_loan.errors.length || new_state.gender.errors.length || new_state.loan_date.errors.length || !new_state.interest_rate.value.length || new_state.interest_rate.errors.length || !new_state.months_to_pay.value.length && new_state.months_to_pay.errors.length || new_state.payment_method == 4 ? false : true;
 }
 
 function calculatedValues(new_state) {
@@ -19605,7 +19670,8 @@ exports.default = {
     backend: {
       processing: false,
       status: null,
-      message: null
+      message: null,
+      allow_submit: true
     }
   },
   data: {

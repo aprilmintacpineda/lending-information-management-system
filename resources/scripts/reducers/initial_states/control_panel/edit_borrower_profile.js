@@ -3,7 +3,8 @@ export default {
     backend: {
       processing: false,
       status: null,
-      message: null
+      message: null,
+      allow_submit: true
     }
   },
   data: {

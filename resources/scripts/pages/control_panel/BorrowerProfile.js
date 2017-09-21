@@ -1607,13 +1607,11 @@ class BorrowerProfile extends Component {
 
               <section>
                 <h1>Contact information</h1>
-                {!this.props.borrower_profile.data.contact_numbers.length?
-                  <p>No contact information to show.</p> :
-                  <ul>
-                    {this.props.borrower_profile.data.contact_numbers.map((contact_number, index) =>
-                      <li key={index}>{contact_number.number}</li>
-                    )}
-                  </ul>}
+                <ul>
+                  {this.props.borrower_profile.data.contact_numbers.map((contact_number, index) =>
+                    <li key={index}>{contact_number.number}</li>
+                  )}
+                </ul>
               </section>
 
               <section className="action-buttons">
