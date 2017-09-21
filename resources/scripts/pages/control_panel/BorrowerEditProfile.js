@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { remote } from 'electron';
+import CssTransitionGroup from 'react-addons-css-transition-group';
 import path from 'path';
 
 // components
@@ -40,21 +41,28 @@ class BorrowerEditProfile extends Component {
                 <li>
                   <p>This information is optional.</p>
                 </li>
-                {this.props.edit_borrower_profile.edit.contact_numbers.map((contact_number, index) =>
-                  <li className="closable-field" key={index}>
-                    <InputText
-                    className={contact_number.value.length || index > 0? 'closable-input' : ''}
-                    numberOnly={true}
-                    placeholder="Borrower's contact number..."
-                    onChange={value => this.props.editContactNumber(value, index)}
-                    disabled={this.props.edit_borrower_profile.edit.backend.processing}
-                    errors={contact_number.errors}
-                    value={contact_number.value} />
-                    {contact_number.value.length || index > 0?
-                      <span onClick={() => this.props.edit_borrower_profile.edit.backend.processing? false : this.props.removeContactNumber(index )} className="remove-contact-field">X</span>
-                    : null}
-                  </li>
-                )}
+                <li>
+                  <CssTransitionGroup
+                  transitionName="emphasize-entry"
+                  transitionEnterTimeout={400}
+                  transitionLeaveTimeout={400}>
+                  {this.props.edit_borrower_profile.edit.contact_numbers.map((contact_number, index) =>
+                    <div className="closable-field" key={contact_number.id? contact_number.id : contact_number.key}>
+                      <InputText
+                      className={contact_number.value.length || index > 0? 'closable-input' : ''}
+                      numberOnly={true}
+                      placeholder="Borrower's contact number..."
+                      onChange={value => this.props.editContactNumber(value, index)}
+                      disabled={this.props.edit_borrower_profile.edit.backend.processing}
+                      errors={contact_number.errors}
+                      value={contact_number.value} />
+                      {index > 0?
+                        <span onClick={() => this.props.edit_borrower_profile.edit.backend.processing? false : this.props.removeContactNumber(index )} className="remove-contact-field">X</span>
+                      : null}
+                    </div>
+                  )}
+                  </CssTransitionGroup>
+                </li>
                 <li>
                   <a className={this.props.edit_borrower_profile.edit.backend.processing? 'default-btn-blue disabled' : 'default-btn-blue'}
                   onClick={() => this.props.edit_borrower_profile.edit.backend.processing? false : this.props.addMoreContactNumbers()}>

@@ -4079,6 +4079,10 @@ var _reactRedux = __webpack_require__(1);
 
 var _electron = __webpack_require__(2);
 
+var _reactAddonsCssTransitionGroup = __webpack_require__(19);
+
+var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
+
 var _path = __webpack_require__(4);
 
 var _path2 = _interopRequireDefault(_path);
@@ -4182,29 +4186,40 @@ var BorrowerEditProfile = function (_Component) {
                   'This information is optional.'
                 )
               ),
-              this.props.edit_borrower_profile.edit.contact_numbers.map(function (contact_number, index) {
-                return _react2.default.createElement(
-                  'li',
-                  { className: 'closable-field', key: index },
-                  _react2.default.createElement(_InputText2.default, {
-                    className: contact_number.value.length || index > 0 ? 'closable-input' : '',
-                    numberOnly: true,
-                    placeholder: 'Borrower\'s contact number...',
-                    onChange: function onChange(value) {
-                      return _this2.props.editContactNumber(value, index);
-                    },
-                    disabled: _this2.props.edit_borrower_profile.edit.backend.processing,
-                    errors: contact_number.errors,
-                    value: contact_number.value }),
-                  contact_number.value.length || index > 0 ? _react2.default.createElement(
-                    'span',
-                    { onClick: function onClick() {
-                        return _this2.props.edit_borrower_profile.edit.backend.processing ? false : _this2.props.removeContactNumber(index);
-                      }, className: 'remove-contact-field' },
-                    'X'
-                  ) : null
-                );
-              }),
+              _react2.default.createElement(
+                'li',
+                null,
+                _react2.default.createElement(
+                  _reactAddonsCssTransitionGroup2.default,
+                  {
+                    transitionName: 'emphasize-entry',
+                    transitionEnterTimeout: 400,
+                    transitionLeaveTimeout: 400 },
+                  this.props.edit_borrower_profile.edit.contact_numbers.map(function (contact_number, index) {
+                    return _react2.default.createElement(
+                      'div',
+                      { className: 'closable-field', key: contact_number.id ? contact_number.id : contact_number.key },
+                      _react2.default.createElement(_InputText2.default, {
+                        className: contact_number.value.length || index > 0 ? 'closable-input' : '',
+                        numberOnly: true,
+                        placeholder: 'Borrower\'s contact number...',
+                        onChange: function onChange(value) {
+                          return _this2.props.editContactNumber(value, index);
+                        },
+                        disabled: _this2.props.edit_borrower_profile.edit.backend.processing,
+                        errors: contact_number.errors,
+                        value: contact_number.value }),
+                      index > 0 ? _react2.default.createElement(
+                        'span',
+                        { onClick: function onClick() {
+                            return _this2.props.edit_borrower_profile.edit.backend.processing ? false : _this2.props.removeContactNumber(index);
+                          }, className: 'remove-contact-field' },
+                        'X'
+                      ) : null
+                    );
+                  })
+                )
+              ),
               _react2.default.createElement(
                 'li',
                 null,
@@ -18260,7 +18275,8 @@ function edit_borrower_profile() {
           contact_numbers: state.edit.contact_numbers.concat({
             id: null,
             value: '',
-            errors: []
+            errors: [],
+            key: new Date().getTime()
           })
         })
       });

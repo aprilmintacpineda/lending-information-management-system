@@ -223,7 +223,8 @@ export default function edit_borrower_profile(state = initial_state, action) {
           contact_numbers: state.edit.contact_numbers.concat({
             id: null,
             value: '',
-            errors: []
+            errors: [],
+            key: new Date().getTime()
           })
         }
       }
