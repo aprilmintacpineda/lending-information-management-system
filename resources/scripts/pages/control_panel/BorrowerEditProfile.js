@@ -104,6 +104,15 @@ class BorrowerEditProfile extends Component {
                   </InputSelect>
                 </li>
                 <li>
+                  <InputText
+                  placeholder="Borrower's address..."
+                  onChange={this.props.editAddress}
+                  disabled={this.props.edit_borrower_profile.edit.backend.processing}
+                  errors={this.props.edit_borrower_profile.edit.address.errors}
+                  value={this.props.edit_borrower_profile.edit.address.value}>
+                  </InputText>
+                </li>
+                <li>
                   <InputButton
                   value="Save changes"
                   disabled={this.props.edit_borrower_profile.edit.backend.processing}
@@ -146,6 +155,7 @@ export default connect(store => ({
   edit_borrower_profile: {...store.edit_borrower_profile}
 }), {
   fetch: editProfileActions.fetch,
+  editAddress: editProfileActions.editAddress,
   editFirstname: editProfileActions.editFirstname,
   editMiddlename: editProfileActions.editMiddlename,
   editSurname: editProfileActions.editSurname,

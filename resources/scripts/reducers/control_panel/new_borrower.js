@@ -10,12 +10,15 @@ import {
   validateInterestRate,
   validateLoanDate,
   validatePaymentMethod,
-  validatePhoneNumber
+  validatePhoneNumber,
+  validateAddress
 } from '../../helpers/Validator';
 
 function allowSubmit(new_state) {
   if(new_state.amount_loan.condition == 'due-date-only') {
     return new_state.backend.processing
+      || !new_state.address.value.length
+      || new_state.address.errors.length
       || !new_state.firstname.value.length
       || new_state.firstname.errors.length
       || !new_state.middlename.value.length
@@ -29,6 +32,8 @@ function allowSubmit(new_state) {
       || ((!new_state.months_to_pay.value.length && new_state.months_to_pay.errors.length) || new_state.payment_method == 4)? false : true;
   } else if(new_state.amount_loan.condition == 'interest-only') {
     return new_state.backend.processing
+      || !new_state.address.value.length
+      || new_state.address.errors.length
       || !new_state.firstname.value.length
       || new_state.firstname.errors.length
       || !new_state.middlename.value.length
@@ -43,6 +48,8 @@ function allowSubmit(new_state) {
       || new_state.interest_rate.errors.length? false : true;
   } else if(new_state.amount_loan.condition == 'no-due-date-and-interest') {
     return new_state.backend.processing
+      || !new_state.address.value.length
+      || new_state.address.errors.length
       || !new_state.firstname.value.length
       || new_state.firstname.errors.length
       || !new_state.middlename.value.length
@@ -56,6 +63,8 @@ function allowSubmit(new_state) {
   }
 
   return new_state.backend.processing
+    || !new_state.address.value.length
+    || new_state.address.errors.length
     || !new_state.firstname.value.length
     || new_state.firstname.errors.length
     || !new_state.middlename.value.length
@@ -151,6 +160,22 @@ export default function new_borrower(state = initial_state, action) {
   let new_state;
 
   switch(action.type) {
+    case 'NEWBORROWER_CAV':
+      new_state = {
+        ...state,
+        address: {
+          errors: validateAddress(action.value),
+          value: action.value
+        }
+      }
+
+      return {
+        ...new_state,
+        backend: {
+          ...new_state.backend,
+          allow_submit: allowSubmit(new_state)
+        },
+      }
     case 'NEWBORROWER_CFN':
       new_state = {
         ...state,

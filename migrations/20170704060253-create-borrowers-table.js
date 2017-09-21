@@ -24,6 +24,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false
       },
+      address: {
+        type: Sequelize.STRING(255),
+        defaultValue: null
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false

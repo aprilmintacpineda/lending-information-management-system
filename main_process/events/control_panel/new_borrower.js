@@ -17,6 +17,7 @@ ipcMain.on('NEWBORROWER_SUBMIT', (event, arg) => {
     middlename: arg.middlename,
     surname: arg.surname,
     gender: arg.gender,
+    address: arg.address,
     created_at,
     updated_at
   })

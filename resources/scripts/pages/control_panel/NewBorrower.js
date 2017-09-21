@@ -48,6 +48,7 @@ class NewBorrower extends Component {
       middlename: this.props.new_borrower.middlename.value,
       surname: this.props.new_borrower.surname.value,
       gender: this.props.new_borrower.gender.value,
+      address: this.props.new_borrower.address.value,
       contact_numbers: this.props.new_borrower.contact_numbers,
       amount_loan: this.props.new_borrower.amount_loan.value,
       payment_method: this.props.new_borrower.apply_interest_only || this.props.new_borrower.no_due_date_no_interest? null : this.props.new_borrower.payment_method.value,
@@ -112,10 +113,19 @@ class NewBorrower extends Component {
                   </InputSelect>
                 </li>
                 <li>
+                  Address
+                  <InputText
+                  value={this.props.new_borrower.address.value}
+                  placeholder="Borrower's address..."
+                  onChange={value => this.props.changeAddress(value)}
+                  errors={this.props.new_borrower.address.errors}
+                  disabled={this.props.new_borrower.backend.processing} />
+                </li>
+                <li>
                   <h1>Contact information</h1>
                 </li>
                 <li>
-                  <p>This information is optional.</p>
+                  <p>At least one contact number is required.</p>
                 </li>
                 <li>
                   <CssTransitionGroup
@@ -437,6 +447,7 @@ class NewBorrower extends Component {
 export default connect(store => ({
   new_borrower: {...store.new_borrower}
 }), {
+  changeAddress: newBorrowerActions.changeAddress,
   changeFirstname: newBorrowerActions.changeFirstname,
   changeMiddlename: newBorrowerActions.changeMiddlename,
   changeSurname: newBorrowerActions.changeSurname,

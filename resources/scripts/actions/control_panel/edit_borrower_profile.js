@@ -5,6 +5,13 @@ export function fetch(id) {
   }
 }
 
+export function editAddress(value) {
+  return {
+    type: 'EDITBORRWOERPROFILE_EDIT_ADDRESS',
+    value
+  }
+}
+
 export function editFirstname(value) {
   return {
     type: 'EDITBORRWOERPROFILE_EDIT_FIRSTNAME',

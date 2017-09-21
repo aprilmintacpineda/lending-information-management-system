@@ -1,6 +1,20 @@
 import { monthMaxdays, monthList, maxYear, minYear } from './DateTime';
 
 /**
+ * valdiates address
+ */
+
+export function validateAddress(value) {
+  let errors = [];
+
+  if(!value.length) {
+    errors.push('Address is required.');
+  }
+
+  return errors;
+}
+
+/**
  * validates the amount
  */
 export function validateAmount(value, payment_type) {

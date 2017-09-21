@@ -3,7 +3,8 @@ import initial_state from '../initial_states/control_panel/edit_borrower_profile
 import {
   validateName,
   validateGender,
-  validatePhoneNumber
+  validatePhoneNumber,
+  validateAddress
 } from '../../helpers/Validator';
 
 import { ucwords } from '../../helpers/Strings';
@@ -43,6 +44,10 @@ export default function edit_borrower_profile(state = initial_state, action) {
             value: action.data.gender,
             errors: []
           },
+          address: {
+            value: action.data.address,
+            errors: []
+          },
           contact_numbers: action.data.contact_numbers.length? action.data.contact_numbers.map(contact_number => ({
             id: contact_number.id,
             value: contact_number.number,
@@ -71,6 +76,17 @@ export default function edit_borrower_profile(state = initial_state, action) {
             processing: false,
             status: 'failed',
             message: action.message
+          }
+        }
+      }
+    case 'EDITBORRWOERPROFILE_EDIT_ADDRESS':
+      return {
+        ...state,
+        edit: {
+          ...state.edit,
+          address: {
+            value: action.value,
+            errors: validateAddress(action.value)
           }
         }
       }

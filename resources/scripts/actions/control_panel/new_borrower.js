@@ -1,3 +1,10 @@
+export function changeAddress(value) {
+  return {
+    type: 'NEWBORROWER_CAV',
+    value
+  }
+}
+
 export function changeFirstname(value) {
   return {
     type: 'NEWBORROWER_CFN',

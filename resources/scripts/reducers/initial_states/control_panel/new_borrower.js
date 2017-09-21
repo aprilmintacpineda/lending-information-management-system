@@ -20,6 +20,10 @@ export default {
     value: 1,
     errors: []
   },
+  address: {
+    value: '',
+    errors: []
+  },
   amount_loan: {
     condition: 'due-date-and-interest',
     value: '',

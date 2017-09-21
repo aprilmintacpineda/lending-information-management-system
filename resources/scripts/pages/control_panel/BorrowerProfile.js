@@ -1602,6 +1602,7 @@ class BorrowerProfile extends Component {
                 <h1>Personal information</h1>
                 <p>{this.props.borrower_profile.data.firstname} {this.props.borrower_profile.data.middlename} {this.props.borrower_profile.data.surname}</p>
                 <p>{this.props.borrower_profile.data.gender? 'Male' : 'Female'}</p>
+                <p>{this.props.borrower_profile.data.address}</p>
               </section>
 
               <section>
