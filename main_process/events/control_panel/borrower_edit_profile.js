@@ -28,6 +28,7 @@ ipcMain.on('EDITBORRWOERPROFILE_SEND', (event, arg) => {
     middlename: arg.middlename,
     surname: arg.surname,
     gender: arg.gender,
+    address: arg.address,
     updated_at: new Date().toISOString()
   }, {
     where: {
