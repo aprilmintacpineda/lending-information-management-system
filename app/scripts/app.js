@@ -7930,6 +7930,11 @@ var BorrowerProfile = function (_Component) {
               { className: 'action-buttons' },
               _react2.default.createElement(
                 _reactRouter.Link,
+                { className: 'default-btn-blue buttons', to: '/borrowers/' + this.props.params.id + '/edit' },
+                'Edit borrower information'
+              ),
+              _react2.default.createElement(
+                _reactRouter.Link,
                 { className: 'default-btn-blue buttons', to: '/borrowers/' + this.props.params.id + '/new-loan' },
                 'Add loan'
               ),

@@ -1615,6 +1615,7 @@ class BorrowerProfile extends Component {
               </section>
 
               <section className="action-buttons">
+                <Link className="default-btn-blue buttons" to={'/borrowers/' + this.props.params.id + '/edit'}>Edit borrower information</Link>
                 <Link className="default-btn-blue buttons" to={'/borrowers/' + this.props.params.id + '/new-loan'}>Add loan</Link>
                 <Link className="default-btn-blue buttons" to={'/borrowers/' + this.props.params.id + '/comprehensive-report'}>Comprehensive Report</Link>
                 <Link className="default-btn-blue buttons" to={'/borrowers/' + this.props.params.id + '/summary-report'}>Summary Report</Link>
