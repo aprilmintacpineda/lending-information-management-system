@@ -13602,6 +13602,7 @@ var StatusReport = function (_Component) {
       }();
 
       var max = highest_value + 0.25 * (highest_value * 2);
+      max = max > 0 ? max : 1000;
 
       var stepSize = highest_value <= 1000 ? 100 : highest_value <= 10000 ? 1000 : highest_value <= 100000 ? 10000 : 100000;
 
@@ -13654,6 +13655,7 @@ var StatusReport = function (_Component) {
       }();
 
       var max = highest_value + 0.25 * (highest_value * 2);
+      max = max > 0 ? max : 100;
 
       var stepSize = highest_value <= 1000 ? 100 : highest_value <= 10000 ? 1000 : highest_value <= 100000 ? 10000 : 100000;
 

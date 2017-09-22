@@ -48,6 +48,7 @@ class StatusReport extends Component {
     }))();
 
     let max = highest_value + (0.25 * (highest_value * 2));
+    max = max > 0? max : 1000;
 
     let stepSize = highest_value <= 1000?
         100
@@ -111,6 +112,7 @@ class StatusReport extends Component {
     }))();
 
     let max = highest_value + (0.25 * (highest_value * 2));
+    max = max > 0? max : 100;
 
     let stepSize = highest_value <= 1000?
         100
