@@ -29,10 +29,11 @@
       "uninstallDisplayName": "Lending Information Management System",
       "license": "EULA"
     },
-    "win":{
+    "win": {
       "target": "nsis",
       "icon": "build/icon.ico",
-      "publisherName": "April Mintac Pineda"
+      "publisherName": "April Mintac Pineda",
+      "arch": ["x64", "ia32"]
     },
     "appId": "com.aprilmintacpineda.lims",
     "productName": "Lending Information Management System (LIMS)",

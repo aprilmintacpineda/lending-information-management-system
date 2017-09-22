@@ -1,6 +1,2 @@
 node_modules
-database/main.sqlite
-app/scripts/main.js
-app/scripts/app.js
-app/styles/app.css
 dist
