@@ -138,13 +138,24 @@ export default function edit_borrower_profile(state = initial_state, action) {
         }
       }
     case 'EDITBORRWOERPROFILE_EDIT_MIDDLENAME':
-      return {
+      new_state = {
         ...state,
         edit: {
           ...state.edit,
           middlename: {
             value: ucwords(action.value),
             errors: validateName('Middlename', action.value)
+          }
+        }
+      }
+
+      return {
+        ...new_state,
+        edit: {
+          ...new_state.edit,
+          backend: {
+            ...new_state.edit.backend,
+            allow_submit: allowSubmit(new_state)
           }
         }
       }
@@ -301,7 +312,8 @@ export default function edit_borrower_profile(state = initial_state, action) {
           backend: {
             processing: false,
             status: 'successful',
-            message: null
+            message: null,
+            allow_submit: true
           }
         }
       }
@@ -314,7 +326,8 @@ export default function edit_borrower_profile(state = initial_state, action) {
             ...state.edit.backend,
             processing: false,
             status: 'failed',
-            message: action.message
+            message: action.message,
+            allow_submit: true
           }
         }
       }

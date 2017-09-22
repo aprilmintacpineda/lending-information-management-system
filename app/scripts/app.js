@@ -208,7 +208,7 @@ var _propTypes = __webpack_require__(9);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _reactAddonsCssTransitionGroup = __webpack_require__(19);
+var _reactAddonsCssTransitionGroup = __webpack_require__(16);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
@@ -1704,6 +1704,12 @@ function ucwords(value) {
 
 /***/ }),
 /* 16 */
+/***/ (function(module, exports) {
+
+module.exports = require("react-addons-css-transition-group");
+
+/***/ }),
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1742,7 +1748,7 @@ function getUserData() {
 }
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1805,7 +1811,7 @@ WithLabel.propTypes = {
 exports.default = WithLabel;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1822,12 +1828,6 @@ exports.default = {
     message: null
   }
 };
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports) {
-
-module.exports = require("react-addons-css-transition-group");
 
 /***/ }),
 /* 20 */
@@ -2441,7 +2441,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(1);
 
-var _session = __webpack_require__(16);
+var _session = __webpack_require__(17);
 
 var actions = _interopRequireWildcard(_session);
 
@@ -2540,7 +2540,7 @@ var _login = __webpack_require__(48);
 
 var loginActions = _interopRequireWildcard(_login);
 
-var _session = __webpack_require__(16);
+var _session = __webpack_require__(17);
 
 var _InputText = __webpack_require__(11);
 
@@ -2697,7 +2697,7 @@ var _path2 = _interopRequireDefault(_path);
 
 var _app = __webpack_require__(49);
 
-var _session = __webpack_require__(16);
+var _session = __webpack_require__(17);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3171,7 +3171,7 @@ var _setup = __webpack_require__(21);
 
 var setupActions = _interopRequireWildcard(_setup);
 
-var _session = __webpack_require__(16);
+var _session = __webpack_require__(17);
 
 var _InputText = __webpack_require__(11);
 
@@ -4079,7 +4079,7 @@ var _reactRedux = __webpack_require__(1);
 
 var _electron = __webpack_require__(2);
 
-var _reactAddonsCssTransitionGroup = __webpack_require__(19);
+var _reactAddonsCssTransitionGroup = __webpack_require__(16);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
@@ -5029,7 +5029,7 @@ var _path = __webpack_require__(4);
 
 var _path2 = _interopRequireDefault(_path);
 
-var _reactAddonsCssTransitionGroup = __webpack_require__(19);
+var _reactAddonsCssTransitionGroup = __webpack_require__(16);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
@@ -5037,7 +5037,7 @@ var _WithSidebar = __webpack_require__(6);
 
 var _WithSidebar2 = _interopRequireDefault(_WithSidebar);
 
-var _WithLabel = __webpack_require__(17);
+var _WithLabel = __webpack_require__(18);
 
 var _WithLabel2 = _interopRequireDefault(_WithLabel);
 
@@ -8684,7 +8684,7 @@ var _WithSidebar = __webpack_require__(6);
 
 var _WithSidebar2 = _interopRequireDefault(_WithSidebar);
 
-var _WithLabel = __webpack_require__(17);
+var _WithLabel = __webpack_require__(18);
 
 var _WithLabel2 = _interopRequireDefault(_WithLabel);
 
@@ -8954,7 +8954,7 @@ var _WithSidebar = __webpack_require__(6);
 
 var _WithSidebar2 = _interopRequireDefault(_WithSidebar);
 
-var _WithLabel = __webpack_require__(17);
+var _WithLabel = __webpack_require__(18);
 
 var _WithLabel2 = _interopRequireDefault(_WithLabel);
 
@@ -12688,7 +12688,7 @@ var _path = __webpack_require__(4);
 
 var _path2 = _interopRequireDefault(_path);
 
-var _reactAddonsCssTransitionGroup = __webpack_require__(19);
+var _reactAddonsCssTransitionGroup = __webpack_require__(16);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
@@ -13532,7 +13532,7 @@ var _WithIcon = __webpack_require__(7);
 
 var _WithIcon2 = _interopRequireDefault(_WithIcon);
 
-var _WithLabel = __webpack_require__(17);
+var _WithLabel = __webpack_require__(18);
 
 var _WithLabel2 = _interopRequireDefault(_WithLabel);
 
@@ -14575,7 +14575,7 @@ var _propTypes = __webpack_require__(9);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _reactAddonsCssTransitionGroup = __webpack_require__(19);
+var _reactAddonsCssTransitionGroup = __webpack_require__(16);
 
 var _reactAddonsCssTransitionGroup2 = _interopRequireDefault(_reactAddonsCssTransitionGroup);
 
@@ -17654,7 +17654,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.default = borrower_reports;
 
-var _reports = __webpack_require__(18);
+var _reports = __webpack_require__(19);
 
 var _reports2 = _interopRequireDefault(_reports);
 
@@ -18213,12 +18213,20 @@ function edit_borrower_profile() {
         })
       });
     case 'EDITBORRWOERPROFILE_EDIT_MIDDLENAME':
-      return _extends({}, state, {
+      new_state = _extends({}, state, {
         edit: _extends({}, state.edit, {
           middlename: {
             value: (0, _Strings.ucwords)(action.value),
             errors: (0, _Validator.validateName)('Middlename', action.value)
           }
+        })
+      });
+
+      return _extends({}, new_state, {
+        edit: _extends({}, new_state.edit, {
+          backend: _extends({}, new_state.edit.backend, {
+            allow_submit: allowSubmit(new_state)
+          })
         })
       });
     case 'EDITBORRWOERPROFILE_EDIT_SURNAME':
@@ -18354,7 +18362,8 @@ function edit_borrower_profile() {
           backend: {
             processing: false,
             status: 'successful',
-            message: null
+            message: null,
+            allow_submit: true
           }
         }
       });
@@ -18364,7 +18373,8 @@ function edit_borrower_profile() {
           backend: _extends({}, state.edit.backend, {
             processing: false,
             status: 'failed',
-            message: action.message
+            message: action.message,
+            allow_submit: true
           })
         })
       });
@@ -18390,7 +18400,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.default = income_expense_report;
 
-var _reports = __webpack_require__(18);
+var _reports = __webpack_require__(19);
 
 var _reports2 = _interopRequireDefault(_reports);
 
@@ -18508,7 +18518,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.default = loan_reports;
 
-var _reports = __webpack_require__(18);
+var _reports = __webpack_require__(19);
 
 var _reports2 = _interopRequireDefault(_reports);
 
@@ -19214,7 +19224,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 exports.default = status_report;
 
-var _reports = __webpack_require__(18);
+var _reports = __webpack_require__(19);
 
 var _reports2 = _interopRequireDefault(_reports);
 
