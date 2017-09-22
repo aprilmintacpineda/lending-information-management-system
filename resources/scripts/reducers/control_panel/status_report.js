@@ -71,25 +71,37 @@ function getPaymentIncrease(borrowers) {
   }
 
   borrowers.forEach(borrower => {
-    let date_registered = new Date(borrower.loans[0].loan_date);
-    let time = date_registered.getTime();
+    borrower.loans.forEach(loan => {
+      loan.loan_payments.forEach(loan_payment => {
+        let date_paid = new Date(loan_payment.date_paid);
+        let time = date_paid.getTime();
+        
+        if(time >= min_date.getTime() && time <= max_date.getTime()) {
+          let total_payments = loan_payment.amount;
 
-    if(time >= min_date.getTime() && time <= max_date.getTime()) {
-      let total_payments = 0;
-
-      borrower.loans.forEach(loan => {
-        total_payments += loan.loan_payments.sum('amount');
-
-        loan.penalties.forEach(penalty => {
-          total_payments += penalty.penalty_payments.sum('amount');
-        });
+          payment_increase[date_paid.getMonth()] = {
+            ...payment_increase[date_paid.getMonth()],
+            count: payment_increase[date_paid.getMonth()].count + total_payments
+          }
+        }
       });
 
-      payment_increase[date_registered.getMonth()] = {
-        ...payment_increase[date_registered.getMonth()],
-        count: payment_increase[date_registered.getMonth()].count + total_payments
-      }
-    }
+      loan.penalties.forEach(penalty => {
+        penalty.penalty_payments.forEach(penalty_payment => {
+          let date_paid = new Date(penalty_payment.date_paid);
+          let time = date_paid.getTime();
+          
+          if(time >= min_date.getTime() && time <= max_date.getTime()) {
+            let total_payments = penalty_payment.amount;
+
+            payment_increase[date_paid.getMonth()] = {
+              ...payment_increase[date_paid.getMonth()],
+              count: payment_increase[date_paid.getMonth()].count + total_payments
+            }
+          }
+        });
+      });
+    });
   });
 
   return payment_increase;
