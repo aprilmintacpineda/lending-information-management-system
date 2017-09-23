@@ -1739,7 +1739,8 @@ export default function borrower_profile(state = initial_state, action) {
             ...loan,
             penalties: alterPenaltyPaymentFields(loan.penalties, action.penalty_index, {
               date_paid: {
-                month: action.value
+                month: action.value,
+                date: 1
               }
             })
           }): {...loan})

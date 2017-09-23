@@ -8,6 +8,12 @@ function spreadLoans(loans) {
     loan_payments: loan.loan_payments.map(loan_payment => ({
       ...loan_payment.dataValues
     })),
+    penalties: loan.penalties.map(penalty => ({
+      ...penalty.dataValues,
+      penalty_payments: penalty.penalty_payments.map(penalty_payment => ({
+        ...penalty_payment.dataValues
+      }))
+    })),
     borrower: {
       ...loan.borrower.dataValues,
       contact_numbers: loan.borrower.contact_numbers.map(contact_number => ({
@@ -23,6 +29,14 @@ function getLoans() {
       {
         model: models.loan_payments,
         order: [ 'date_paid', 'desc' ]
+      },
+      {
+        model: models.penalties,
+        order: [ 'date_given', 'desc' ],
+        include: [{
+          model: models.penalty_payments,
+          order: [ 'date_paid', 'desc' ]
+        }]
       },
       {
         model: models.borrowers,
@@ -74,10 +88,7 @@ ipcMain.on('DASHBOARD_GET_DUEDATES_TOMORROW', (event, args) => {
     event.sender.send('DASHBOARD_GET_DUEDATES_TOMORROW_SUCCESSFUL', {
       data: [...due_dates_tomorrow]
     });
-  })
-  .catch(err => event.sender.send('DASHBOARD_GET_DUEDATES_TOMORROW_FAILED', {
-    message: err.message
-  }));
+  });
 });
 
 ipcMain.on('DASHBOARD_GET_DUEDATES_TODAY', (event, args) => {

@@ -673,6 +673,15 @@ class Dashboard extends Component {
                   <p>You're all set. No unpaid due dates tomorrow.</p>
                 </WithIcon>
               </div>
+            : !this.props.dashboard.tomorrows.data.length?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                  <div>
+                    <p>An unexpected error occured: {this.props.dashboard.tomorrows.backend.message}</p>
+                    <p>Please contact the developer about this.</p>
+                  </div>
+                </WithIcon>
+              </div>
             : this.props.dashboard.tomorrows.data.map((due_date_tomorrow, due_date_tomorrow_index) => (
               <div className="data-row" key={due_date_tomorrow_index}>
                 {this.displayLoanDueDate(due_date_tomorrow, app_path)}
@@ -691,6 +700,15 @@ class Dashboard extends Component {
               <div className="data-row">
                 <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
                   <p>You're all set. No unpaid due dates today.</p>
+                </WithIcon>
+              </div>
+            : !this.props.dashboard.todays.data.length?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                  <div>
+                    <p>An unexpected error occured: {this.props.dashboard.todays.backend.message}</p>
+                    <p>Please contact the developer about this.</p>
+                  </div>
                 </WithIcon>
               </div>
             : this.props.dashboard.todays.data.map((due_date_today, due_date_today_index) =>
@@ -713,6 +731,15 @@ class Dashboard extends Component {
                   <p>You're all set. No unpaid due dates this month after tomorrow.</p>
                 </WithIcon>
               </div>
+            : !this.props.dashboard.this_month.data.length?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                  <div>
+                    <p>An unexpected error occured: {this.props.dashboard.this_month.backend.message}</p>
+                    <p>Please contact the developer about this.</p>
+                  </div>
+                </WithIcon>
+              </div>
             : this.props.dashboard.this_month.data.map((this_month_due_date, this_month_due_date_index) =>
               <div className="data-row" key={this_month_due_date_index}>
                 {this.displayLoanDueDate(this_month_due_date, app_path)}
@@ -733,6 +760,15 @@ class Dashboard extends Component {
                   <p>You're all set. No unpaid past due dates.</p>
                 </WithIcon>
               </div>
+            : !this.props.dashboard.past_due_dates.data.length?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                  <div>
+                    <p>An unexpected error occured: {this.props.dashboard.past_due_dates.backend.message}</p>
+                    <p>Please contact the developer about this.</p>
+                  </div>
+                </WithIcon>
+              </div>
             : this.props.dashboard.past_due_dates.data.map((past_due_date, past_due_date_index) =>
               <div className="data-row" key={past_due_date_index}>
                 {this.displayLoanDueDate(past_due_date, app_path)}
@@ -751,6 +787,15 @@ class Dashboard extends Component {
               <div className="data-row">
                 <WithIcon icon={path.join(app_path, 'app/images/check.png')}>
                   <p>You're all set. No one give loans.</p>
+                </WithIcon>
+              </div>
+            : !this.props.dashboard.one_gives.data.length?
+              <div className="data-row">
+                <WithIcon icon={path.join(app_path, 'app/images/cross.png')}>
+                  <div>
+                    <p>An unexpected error occured: {this.props.dashboard.one_gives.backend.message}</p>
+                    <p>Please contact the developer about this.</p>
+                  </div>
                 </WithIcon>
               </div>
             : this.props.dashboard.one_gives.data.map((one_give, one_give_index) =>
