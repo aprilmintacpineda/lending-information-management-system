@@ -1,3 +1,11 @@
+Created July 2017
+Done September 2017
+Open-sourced July 2018
+
+# What's this?
+
+This was my thesis when I was on my 2nd year, 2nd semester in college. I decided to open-source this project since the source code has been dormant since the first and last release.
+
 # Lending Information System
 
 A desktop application to manage your lending business.
